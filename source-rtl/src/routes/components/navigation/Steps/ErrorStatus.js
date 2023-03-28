@@ -1,0 +1,18 @@
+import React from "react";
+import {Card, Steps} from "antd";
+
+const Step = Steps.Step;
+
+const ErrorStatus = () => {
+  return (
+    <Card className="gx-card" title="وضعیت خطا">
+      <Steps current={1} status="error">
+        <Step title="تمام شده" description="این یک توضیحات است"/>
+        <Step title="در جریان" description="این یک توضیحات است"/>
+        <Step title="در انتظار" description="این یک توضیحات است"/>
+      </Steps>
+    </Card>
+  );
+};
+
+export default ErrorStatus;
