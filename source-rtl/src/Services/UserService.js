@@ -11,7 +11,7 @@ class UserService {
       fathername: "عزیز",
       mellicode: 3732026353,
       shenasnameno: "520",
-      birthdate: new DateObject({ date: "1355/06/21", calendar: persian, locale: persian_fa }) ,//"1355/05/21",
+      birthdate: new DateObject({ date: "1355/05/21", calendar: persian, locale: persian_fa }) ,//"1355/05/21",
       sodoordate: new DateObject({ date: "1355/05/31", calendar: persian, locale: persian_fa }),
       sex: 1,
       mobile: "09334252527",

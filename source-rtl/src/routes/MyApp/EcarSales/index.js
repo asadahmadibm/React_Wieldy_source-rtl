@@ -51,7 +51,8 @@ class EcarSales extends Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         let data = values;
-        data.birthdate = values.birthdate.format()
+        data.birthdate = values.birthdate.format().replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d))
+        data.sodoordate = values.sodoordate.format().replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d))
         console.log('Received values of form: ', data);
       }
     });
@@ -67,7 +68,8 @@ class EcarSales extends Component {
       <div className="gx-main-content">
 
         <Card className="gx-card" title="پروفایل کاربری">
-          <Form
+        <Form 
+        //layout="inline"
             onSubmit={this.handleSubmit}
             name="basic"
             // layout="inline"
@@ -152,14 +154,14 @@ class EcarSales extends Component {
                   })(
                     // <Input />
                     // <DatePickerCustom onChange={this.onchangebirthDate}/>
-                    <DatePicker
-                      style={{
-                        backgroundColor: "aliceblue",
-                        height: "24px",
-                        borderRadius: "8px",
-                        fontSize: "14px",
-                        padding: "3px 10px"
-                      }}
+                    <DatePicker 
+                      // style={{
+                      //   backgroundColor: "aliceblue",
+                      //   height: "24px",
+                      //   borderRadius: "8px",
+                      //   fontSize: "14px",
+                      //   padding: "3px 10px"
+                      // }}
                       render={<InputIcon />}
                       calendar={persian}
                       locale={persian_fa}
@@ -175,9 +177,9 @@ class EcarSales extends Component {
                 <Form.Item
                   label=" تاریخ صدور"
                   name="sodoordate"
-                  style={{
-                    width: '100%',
-                  }}
+                  // style={{
+                  //   width: '100%',
+                  // }}
                 >
                   {getFieldDecorator('sodoordate', {
                     rules: [{ required: true, message: 'تاریخ صدور را وارد نمایید' }],
@@ -185,14 +187,14 @@ class EcarSales extends Component {
                     // <Input />
                     // <DatePickerCustom onChange={this.onchangebirthDate}/>
                     <DatePicker //inputClass="ant-input"
-                      style={{
-                        width: "100%",
-                        boxSizing: "border-box",
-                        height: "36px"
-                      }}
-                      containerStyle={{
-                        width: "100%"
-                      }}
+                      // style={{
+                      //   width: "100%",
+                      //   boxSizing: "border-box",
+                      //   height: "36px"
+                      // }}
+                      // containerStyle={{
+                      //   width: "100%"
+                      // }}
                       render={<InputIcon />}
                       calendar={persian}
                       locale={persian_fa}
@@ -450,10 +452,10 @@ class EcarSales extends Component {
                   label="   نشانی"
                   name="address"
                   labelCol={{
-                    span: 2,
+                    span: 4,
                   }}
                   wrapperCol={{
-                    span: 22,
+                    span: 20,
                   }}
                 >
                   {getFieldDecorator('address', {
@@ -471,6 +473,7 @@ class EcarSales extends Component {
               </Col>
             </Row>
           </Form>
+
         </Card>
 
       </div>
