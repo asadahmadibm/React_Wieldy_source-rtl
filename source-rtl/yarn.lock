@@ -10566,6 +10566,11 @@ react-custom-scrollbars@^4.2.1:
     prop-types "^15.5.10"
     raf "^3.1.0"
 
+react-date-object@^2.1.5:
+  version "2.1.7"
+  resolved "https://registry.npmjs.org/react-date-object/-/react-date-object-2.1.7.tgz"
+  integrity sha512-810eaGk/xvQBJNncPvhwXaKcSwPRKX48jtY/5U5T1bSUnGFqmBdMvl4EVl76cyzQ8U3KX6hpF6xZ1c0eY9vvJA==
+
 react-dev-utils@^10.2.1:
   version "10.2.1"
   resolved "https://registry.npmjs.org/react-dev-utils/-/react-dev-utils-10.2.1.tgz"
@@ -10645,6 +10650,11 @@ react-draggable@^2.2.6, "react-draggable@^2.2.6 || ^3.0.3":
   integrity sha512-QWsjxOlKUB+81+f2AKfoleKT6jBm4xloQbA149JDUECCUoDEdTo6ha9C0y84MTiq7m5TmhJ3G2PK2gPTCDxXeQ==
   dependencies:
     classnames "^2.2.5"
+
+react-element-popper@^2.1.6:
+  version "2.1.6"
+  resolved "https://registry.npmjs.org/react-element-popper/-/react-element-popper-2.1.6.tgz"
+  integrity sha512-8va7mUmrKIkUnaM2t5Dyctd8cjgVgVcrv5vVD0FRay0sN6EPBCKa0bDi1/KmVDAjfgSIn7zQnjtc4VojcGrkgQ==
 
 react-error-overlay@^6.0.7:
   version "6.0.11"
@@ -10776,6 +10786,14 @@ react-lifecycles-compat@^3.0.0, react-lifecycles-compat@^3.0.2, react-lifecycles
   version "3.0.4"
   resolved "https://registry.npmjs.org/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
+
+react-multi-date-picker@^3.3.4:
+  version "3.3.4"
+  resolved "https://registry.npmjs.org/react-multi-date-picker/-/react-multi-date-picker-3.3.4.tgz"
+  integrity sha512-bl1aTt3bmAYfsPpIUKsWVl3XWCfY3nxu7BFvLCR7j9iHckmiJNbkMBVGu5AvrcSa3mI39ybdHQuB3YzeM5O6Cg==
+  dependencies:
+    react-date-object "^2.1.5"
+    react-element-popper "^2.1.6"
 
 react-notifications@^1.4.3:
   version "1.4.3"

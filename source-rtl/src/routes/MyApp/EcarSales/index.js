@@ -1,7 +1,13 @@
 import React, { Component } from "react";
 import { Button, Select, Form, Input, Card, Col, Row, InputNumber } from 'antd';
 import UserService from "../../../Services/UserService";
-import AuthService  from '../../../Services/AuthService'
+import AuthService from '../../../Services/AuthService'
+import DatePicker from "react-multi-date-picker"
+import persian from "react-date-object/calendars/persian"
+import persian_fa from "react-date-object/locales/persian_fa"
+import InputIcon from "react-multi-date-picker/components/input_icon"
+import dayjs from 'dayjs'
+import moment, { locale } from 'jalali-moment';
 
 class EcarSales extends Component {
 
@@ -10,33 +16,43 @@ class EcarSales extends Component {
     // console.log(this.props.form.getFieldsValue());
     // this.formRef = React.createRef();
     this.state = {
-        componentDisabled: true,
-        sex: [],
-        date: ''
+      componentDisabled: true,
+      sex: [],
+      date: ''
 
     }
     console.log(this.state);
-}
+  }
+  onchangebirthDate = (value) => {
+    // console.log(value.year + "/" + value.month + "/" + value.day);
+    // this.props.setFieldValue("birthdate", value.year + "/" + value.month + "/" + value.day);
+    // console.log(x);
 
+  }
 
   componentDidMount = () => {
     console.log("hello");
-    let isauthenticate=AuthService.getCurrentUser();
-    if (isauthenticate == null)
-    {
+    let isauthenticate = AuthService.getCurrentUser();
+    if (isauthenticate == null) {
       console.log("Goto Login");
-    this.props.history.push('/signin');
+      this.props.history.push('/signin');
     }
-    this.setState({sex:[{key:1,value:"زن"},{key:2,value:"مرد"}]})
+    this.setState({ sex: [{ key: 1, value: "زن" }, { key: 2, value: "مرد" }] })
     let data = UserService.GetProfile();
     this.props.form.setFieldsValue(data);
+
+    console.log(data);
+
+
   }
 
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log('Received values of form: ', values);
+        let data = values;
+        data.birthdate = values.birthdate.format()
+        console.log('Received values of form: ', data);
       }
     });
   };
@@ -50,7 +66,7 @@ class EcarSales extends Component {
     return (
       <div className="gx-main-content">
 
-        <Card title="پروفایل کاربری">
+        <Card className="gx-card" title="پروفایل کاربری">
           <Form
             onSubmit={this.handleSubmit}
             name="basic"
@@ -130,11 +146,19 @@ class EcarSales extends Component {
                   label=" تاریخ تولد"
                   name="birthdate"
                 >
-                  {/* <DatePickerCustom onChange={onchangebirthDate}/> */}
+
                   {getFieldDecorator('birthdate', {
                     rules: [{ required: true, message: 'تاریخ تولد را وارد نمایید' }],
                   })(
-                    <Input />
+                    // <Input />
+                    // <DatePickerCustom onChange={this.onchangebirthDate}/>
+                    <DatePicker
+                      render={<InputIcon />}
+                      calendar={persian}
+                      locale={persian_fa}
+                      onChange={dateObject => {
+                        console.log(dateObject.format())
+                      }}></DatePicker>
                   )}
 
 
@@ -144,10 +168,26 @@ class EcarSales extends Component {
                 <Form.Item
                   label=" تاریخ صدور"
                   name="sodoordate"
+                  style={{
+                    width: '100%',
+                  }}
                 >
-                  {/* <DatePickerCustom format="YYYY-MM-DD "
-
-                                                onChange={onchangeDate} /> */}
+                  {getFieldDecorator('sodoordate', {
+                    rules: [{ required: true, message: 'تاریخ صدور را وارد نمایید' }],
+                  })(
+                    // <Input />
+                    // <DatePickerCustom onChange={this.onchangebirthDate}/>
+                    <DatePicker //className="ant-input"
+                      style={{
+                        width: '100%',
+                      }}
+                      render={<InputIcon />}
+                      calendar={persian}
+                      locale={persian_fa}
+                      onChange={dateObject => {
+                        console.log(dateObject.format())
+                      }}></DatePicker>
+                  )}
                 </Form.Item>
               </Col>
               <Col lg={8} md={12} xs={24} sm={12} xl={6}  >
@@ -165,7 +205,7 @@ class EcarSales extends Component {
                     //     width: 100,
                     // }}
                     >
-                       {this.state.sex.map(child => <Select.Option  value={child.key} >{child.value}</Select.Option >)}
+                      {this.state.sex.map(child => <Select.Option value={child.key} >{child.value}</Select.Option >)}
                     </Select>
                   )}
                 </Form.Item>
@@ -410,12 +450,12 @@ class EcarSales extends Component {
                   )}
                 </Form.Item>
               </Col>
-
-              {/* <Space> */}
-
-              <Button type="primary" htmlType="submit">اعمال تغییر </Button>
-              <Button onClick={this.handleReset}>پاکسازی فرم </Button>
-              {/* </Space> */}
+            </Row>
+            <Row>
+              <Col lg={8} md={12} xs={24} sm={12} xl={6}  >
+                <Button type="primary" htmlType="submit">اعمال تغییر </Button>
+                <Button onClick={this.handleReset}>پاکسازی فرم </Button>
+              </Col>
             </Row>
           </Form>
         </Card>
