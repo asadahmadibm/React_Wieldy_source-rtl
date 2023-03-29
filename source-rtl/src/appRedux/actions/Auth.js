@@ -24,11 +24,11 @@ export const userSignUp = (user) => {
     payload: user
   };
 };
-export const userSignIn = (user) => {
-  console.log(user);
+export const userSignIn = (authUser) => {
+  console.log(authUser);
   return {
     type: SIGNIN_USER_SUCCESS,
-    payload: user
+    payload: authUser
   };
 };
 export const userSignOut = () => {

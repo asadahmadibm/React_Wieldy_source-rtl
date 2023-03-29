@@ -1,14 +1,14 @@
 
 class AuthService {
     getCurrentUser() {
-        console.log(localStorage.getItem('user'));
-        return JSON.parse(localStorage.getItem('user'));
+        console.log(localStorage.getItem('authUser'));
+        return JSON.parse(localStorage.getItem('authUser'));
     }
     login(user) {
         console.log(user.email);;
         console.log(user.password);;
         if (user.email === "demo@example.com") {
-            localStorage.setItem("user", JSON.stringify("response.data"));
+            localStorage.setItem("authUser", JSON.stringify("response.data"));
             return true;
         }
         return false;
@@ -16,7 +16,7 @@ class AuthService {
     }
 
     logout(){
-        localStorage.removeItem("user");
+        localStorage.removeItem("authUser");
     }
 }
 

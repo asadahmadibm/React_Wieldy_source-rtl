@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import {Avatar, Popover} from "antd";
 import {userSignOut} from "appRedux/actions/Auth";
 import avatar3 from '../../ad-images/avatar-3.png';
-
+import AuthService from "../../Services/AuthService";
 class UserProfile extends Component {
 
   render() {
@@ -11,7 +11,10 @@ class UserProfile extends Component {
       <ul className="gx-user-popover">
         <li>حساب کاربری من</li>
         <li>اتصالات</li>
-        <li onClick={() => this.props.userSignOut()}>خروج
+        <li onClick={() => {
+          AuthService.logout();
+          this.props.userSignOut()
+          }}>خروج
         </li>
       </ul>
     );
