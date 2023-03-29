@@ -2,7 +2,7 @@ import React from "react";
 import {Button, Checkbox, Form, Icon, Input, message} from "antd";
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
-
+import AuthService from "../Services/AuthService";
 import {
   hideMessage,
   showAuthLoader,
@@ -23,8 +23,17 @@ class SignIn extends React.Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        this.props.showAuthLoader();
-        this.props.userSignIn(values);
+        // this.props.showAuthLoader();
+        // this.props.userSignIn(values);
+        var res = AuthService.login(values);
+        if (res === true) {
+          message.info("ورود موفق");
+          this.props.userSignIn(values);
+        }
+        else {
+          message.info("نام کاربری یا رمز عبور اشتباه است");
+          
+        }
       }
     });
   };
