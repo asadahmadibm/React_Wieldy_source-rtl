@@ -153,6 +153,13 @@ class EcarSales extends Component {
                     // <Input />
                     // <DatePickerCustom onChange={this.onchangebirthDate}/>
                     <DatePicker
+                      style={{
+                        backgroundColor: "aliceblue",
+                        height: "24px",
+                        borderRadius: "8px",
+                        fontSize: "14px",
+                        padding: "3px 10px"
+                      }}
                       render={<InputIcon />}
                       calendar={persian}
                       locale={persian_fa}
@@ -177,9 +184,14 @@ class EcarSales extends Component {
                   })(
                     // <Input />
                     // <DatePickerCustom onChange={this.onchangebirthDate}/>
-                    <DatePicker //className="ant-input"
+                    <DatePicker //inputClass="ant-input"
                       style={{
-                        width: '100%',
+                        width: "100%",
+                        boxSizing: "border-box",
+                        height: "36px"
+                      }}
+                      containerStyle={{
+                        width: "100%"
                       }}
                       render={<InputIcon />}
                       calendar={persian}
@@ -189,6 +201,7 @@ class EcarSales extends Component {
                       }}></DatePicker>
                   )}
                 </Form.Item>
+
               </Col>
               <Col lg={8} md={12} xs={24} sm={12} xl={6}  >
                 <Form.Item
