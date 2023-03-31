@@ -1,13 +1,27 @@
 import React, { Component } from "react";
-import { Button, Select, Form, Input, Card, Col, Row, InputNumber } from 'antd';
+import { Button, Select, Form, Input, Card, Col, Row, InputNumber,message } from 'antd';
 import UserService from "../../../Services/UserService";
 import AuthService from '../../../Services/AuthService'
 import DatePicker from "react-multi-date-picker"
 import persian from "react-date-object/calendars/persian"
 import persian_fa from "react-date-object/locales/persian_fa"
 import InputIcon from "react-multi-date-picker/components/input_icon"
+import { DateObject } from "react-multi-date-picker";
 import dayjs from 'dayjs'
 import moment, { locale } from 'jalali-moment';
+import axios from 'axios';
+
+axios.defaults.baseURL = 'https://swagger.tnlink.ir'
+axios.defaults.headers.post['Contetnt-Type'] = 'application/json';
+axios.interceptors.request.use(function (config) {
+    var token = localStorage.getItem('authUser');
+    if (token == null) {
+        console.log("NotLogin");
+
+    }
+    config.headers.Authorization = "Bearer " + token;
+    return config;
+});
 
 class EcarSales extends Component {
 
@@ -38,10 +52,25 @@ class EcarSales extends Component {
       this.props.history.push('/signin');
     }
     this.setState({ sex: [{ key: 1, value: "زن" }, { key: 2, value: "مرد" }] })
-    let data = UserService.GetProfile();
-    this.props.form.setFieldsValue(data);
+    // let data = UserService.GetProfile();
+    // this.props.form.setFieldsValue(data);
 
-    console.log(data);
+    axios.post("/EcarSales", { userName: "demo@example.com" })
+    .then(response => {
+        let res = response.data.data;
+        if (res != null) {
+            res.birthdate = new DateObject({ date: res.birthdate, calendar: persian, locale: persian_fa });//"1355/05/21",
+            res.sodoordate = new DateObject({ date: res.sodoordate, calendar: persian, locale: persian_fa });//"1355/05/21",
+        }
+        else
+        {
+          message.info("اطلاعات کاربر یافت نشد ");
+        }console.log(res);
+        this.props.form.setFieldsValue(res);
+    });
+
+
+
 
 
   }
@@ -140,7 +169,11 @@ class EcarSales extends Component {
                   label=" شماره شناسنامه"
                   name="shenasnameno"
                 >
+                    {getFieldDecorator('shenasnameno', {
+                    rules: [{ required: true, message: 'تاریخ تولد را وارد نمایید' }],
+                  })(
                   <Input />
+                  )}
                 </Form.Item>
               </Col>
               <Col lg={8} md={12} xs={24} sm={12} xl={6}  >
