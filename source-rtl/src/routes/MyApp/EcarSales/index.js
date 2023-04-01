@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Select, Form, Input, Card, Col, Row, InputNumber,message } from 'antd';
+import { Button, Select, Form, Input, Card, Col, Row, InputNumber, message } from 'antd';
 import UserService from "../../../Services/UserService";
 import AuthService from '../../../Services/AuthService'
 import DatePicker from "react-multi-date-picker"
@@ -11,83 +11,70 @@ import dayjs from 'dayjs'
 import moment, { locale } from 'jalali-moment';
 import axios from 'axios';
 
-axios.defaults.baseURL = 'https://swagger.tnlink.ir'
-axios.defaults.headers.post['Contetnt-Type'] = 'application/json';
-axios.interceptors.request.use(function (config) {
-    var token = localStorage.getItem('authUser');
-    if (token == null) {
-        console.log("NotLogin");
-
-    }
-    config.headers.Authorization = "Bearer " + token;
-    return config;
-});
-
 class EcarSales extends Component {
 
   constructor(props) {
     super(props)
-    // console.log(this.props.form.getFieldsValue());
-    // this.formRef = React.createRef();
     this.state = {
       componentDisabled: true,
       sex: [],
       date: ''
 
     }
-    console.log(this.state);
-  }
-  onchangebirthDate = (value) => {
-    // console.log(value.year + "/" + value.month + "/" + value.day);
-    // this.props.setFieldValue("birthdate", value.year + "/" + value.month + "/" + value.day);
-    // console.log(x);
-
   }
 
   componentDidMount = () => {
-    console.log("hello");
-    let isauthenticate = AuthService.getCurrentUser();
-    if (isauthenticate == null) {
-      console.log("Goto Login");
-      this.props.history.push('/signin');
-    }
-    this.setState({ sex: [{ key: 1, value: "زن" }, { key: 2, value: "مرد" }] })
+
+    this.setState({ sex: [{ key: 1, value: "مرد" }, { key: 2, value: "زن" }] })
+
+    this.GetData();
+
+
+  }
+
+  GetData = () => {
     // let data = UserService.GetProfile();
     // this.props.form.setFieldsValue(data);
-
+    document.body.classList.add('loading-indicator');
     axios.post("/EcarSales", { userName: "demo@example.com" })
-    .then(response => {
+      .then(response => {
         let res = response.data.data;
         if (res != null) {
-            res.birthdate = new DateObject({ date: res.birthdate, calendar: persian, locale: persian_fa });//"1355/05/21",
-            res.sodoordate = new DateObject({ date: res.sodoordate, calendar: persian, locale: persian_fa });//"1355/05/21",
+          res.birthdate = new DateObject({ date: res.birthdate, calendar: persian, locale: persian_fa });//"1355/05/21",
+          res.sodoordate = new DateObject({ date: res.sodoordate, calendar: persian, locale: persian_fa });//"1355/05/21",
         }
-        else
-        {
+        else {
           message.info("اطلاعات کاربر یافت نشد ");
-        }console.log(res);
+        }
+        document.body.classList.remove('loading-indicator')
+        console.log(res);
         this.props.form.setFieldsValue(res);
-    });
+      });
+  }
 
-
-
-
-
+  prepareData = (data) => {
+    data.birthdate = data.birthdate.format().replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d))
+    data.sodoordate = data.sodoordate.format().replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d))
+    return data;
   }
 
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        let data = values;
-        data.birthdate = values.birthdate.format().replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d))
-        data.sodoordate = values.sodoordate.format().replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d))
+        var data = this.prepareData(values);
+        message.info("ارسال اطلاعات");
         console.log('Received values of form: ', data);
       }
     });
   };
 
+  handleCancelButtonClick = () => {
+    this.props.history.push('/main/dashboard/crypto')
+  }
+
   handleReset = () => {
+    this.setState({ ecarsaleInfo: {} });
     this.props.form.resetFields();
   };
 
@@ -97,8 +84,8 @@ class EcarSales extends Component {
       <div className="gx-main-content">
 
         <Card className="gx-card" title="پروفایل کاربری">
-        <Form 
-        //layout="inline"
+          <Form
+            //layout="inline"
             onSubmit={this.handleSubmit}
             name="basic"
             // layout="inline"
@@ -169,10 +156,10 @@ class EcarSales extends Component {
                   label=" شماره شناسنامه"
                   name="shenasnameno"
                 >
-                    {getFieldDecorator('shenasnameno', {
+                  {getFieldDecorator('shenasnameno', {
                     rules: [{ required: true, message: 'تاریخ تولد را وارد نمایید' }],
                   })(
-                  <Input />
+                    <Input />
                   )}
                 </Form.Item>
               </Col>
@@ -187,7 +174,7 @@ class EcarSales extends Component {
                   })(
                     // <Input />
                     // <DatePickerCustom onChange={this.onchangebirthDate}/>
-                    <DatePicker 
+                    <DatePicker
                       // style={{
                       //   backgroundColor: "aliceblue",
                       //   height: "24px",
@@ -210,9 +197,9 @@ class EcarSales extends Component {
                 <Form.Item
                   label=" تاریخ صدور"
                   name="sodoordate"
-                  // style={{
-                  //   width: '100%',
-                  // }}
+                // style={{
+                //   width: '100%',
+                // }}
                 >
                   {getFieldDecorator('sodoordate', {
                     rules: [{ required: true, message: 'تاریخ صدور را وارد نمایید' }],
@@ -246,6 +233,7 @@ class EcarSales extends Component {
                   {getFieldDecorator('sex', {
                     rules: [{ required: true, message: 'تاریخ تولد را وارد نمایید' }],
                   })(
+
                     <Select
                       showSearch
                       allowClear
@@ -253,7 +241,9 @@ class EcarSales extends Component {
                     //     width: 100,
                     // }}
                     >
-                      {this.state.sex.map(child => <Select.Option value={child.key} >{child.value}</Select.Option >)}
+                      {this.state.sex.map(child => <Select key={child.key} value={child.key} >{child.value}</Select >)}
+                      {/* <Select value={2}>زن</Select>
+                      <Select value={1}>مزد</Select> */}
                     </Select>
                   )}
                 </Form.Item>
@@ -500,9 +490,10 @@ class EcarSales extends Component {
               </Col>
             </Row>
             <Row>
-              <Col lg={8} md={12} xs={24} sm={12} xl={6}  >
+              <Col lg={8} md={12} xs={24} sm={12} xl={12}  >
                 <Button type="primary" htmlType="submit">اعمال تغییر </Button>
                 <Button onClick={this.handleReset}>پاکسازی فرم </Button>
+                <Button htmlType="button" onClick={this.handleCancelButtonClick}>انصراف</Button>
               </Col>
             </Row>
           </Form>

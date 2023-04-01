@@ -5,6 +5,20 @@ import NextApp from './NextApp';
 import registerServiceWorker from './registerServiceWorker';
 // Add this import:
 import {AppContainer} from 'react-hot-loader';
+import axios from 'axios';
+
+axios.defaults.baseURL = 'https://swagger.tnlink.ir'
+axios.defaults.headers.post['Contetnt-Type'] = 'application/json';
+axios.interceptors.request.use(function (config) {
+  var token = localStorage.getItem('authUser');
+  if (token == null) {
+    console.log("NotLogin");
+
+  }
+  config.headers.Authorization = "Bearer " + token;
+  return config;
+});
+
 
 // Wrap the rendering in a function:
 const render = Component => {

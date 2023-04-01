@@ -3,37 +3,35 @@ import persian_fa from "react-date-object/locales/persian_fa"
 import { DateObject } from "react-multi-date-picker";
 import axios from 'axios';
 
-axios.defaults.baseURL = 'https://swagger.tnlink.ir'
-axios.defaults.headers.post['Contetnt-Type'] = 'application/json';
-axios.interceptors.request.use(function (config) {
-    var token = localStorage.getItem('authUser');
-    if (token == null) {
-        console.log("NotLogin");
+// axios.defaults.baseURL = 'https://swagger.tnlink.ir'
+// axios.defaults.headers.post['Contetnt-Type'] = 'application/json';
+// axios.interceptors.request.use(function (config) {
+//     var token = localStorage.getItem('authUser');
+//     if (token == null) {
+//         console.log("NotLogin");
 
-    }
-    config.headers.Authorization = "Bearer " + token;
-    return config;
-});
-
-
-class UserService {
+//     }
+//     config.headers.Authorization = "Bearer " + token;
+//     return config;
+// });
 
 
-    GetProfile() {
+const UserService= {
 
 
+    GetProfile:() =>{
+
+        document.body.classList.add('loading-indicator');
         axios.post("/EcarSales", { userName: "demo@example.com" })
             .then(response => {
                 let res = response.data.data;
-                if (res != null) {
-                    res.birthdate = new DateObject({ date: res.birthdate, calendar: persian, locale: persian_fa });//"1355/05/21",
-                    res.sodoordate = new DateObject({ date: res.sodoordate, calendar: persian, locale: persian_fa });//"1355/05/21",
-                }
                 console.log(res);
                 console.log("responseaxiosAfter.data");
+                document.body.classList.remove('loading-indicator')
                 return res;
 
             });
+        document.body.classList.remove('loading-indicator')
 
         // var res = {
         //     name: "اسعد",
@@ -63,11 +61,11 @@ class UserService {
         // }
         // return res;
 
-    }
-    SaveProfile(values) {
+    },
+    SaveProfile:(values)=> {
         console.log(values);
         return true;
     }
 
 }
-export default new UserService()
+export default UserService //new UserService()
