@@ -11,6 +11,7 @@ import SignIn from "../SignIn";
 import SignUp from "../SignUp";
 import {setInitUrl} from "appRedux/actions/Auth";
 import {onLayoutTypeChange, onNavStyleChange, setThemeType} from "appRedux/actions/Setting";
+import { ToastContainer, toast } from 'react-toastify';
 
 import {
   LAYOUT_TYPE_BOXED,
@@ -106,6 +107,7 @@ class App extends Component {
     const currentAppLocale = AppLocale[locale.locale];
     return (
       <LocaleProvider locale={currentAppLocale.antd}>
+       <div>
         <IntlProvider
           locale={currentAppLocale.locale}
           messages={currentAppLocale.messages}>
@@ -117,6 +119,17 @@ class App extends Component {
                              component={MainApp}/>
           </Switch>
         </IntlProvider>
+        <ToastContainer position="top-center"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light" />
+          </div>
       </LocaleProvider>
     )
   }

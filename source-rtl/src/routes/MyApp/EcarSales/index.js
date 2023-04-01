@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Button, Select, Form, Input, Card, Col, Row, InputNumber, message } from 'antd';
+
 import UserService from "../../../Services/UserService";
 import AuthService from '../../../Services/AuthService'
 import DatePicker from "react-multi-date-picker"
@@ -10,6 +11,8 @@ import { DateObject } from "react-multi-date-picker";
 import dayjs from 'dayjs'
 import moment, { locale } from 'jalali-moment';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 class EcarSales extends Component {
 
@@ -28,6 +31,7 @@ class EcarSales extends Component {
     this.setState({ sex: [{ key: 1, value: "مرد" }, { key: 2, value: "زن" }] })
 
     this.GetData();
+
 
 
   }
@@ -63,7 +67,7 @@ class EcarSales extends Component {
     this.props.form.validateFields((err, values) => {
       if (!err) {
         var data = this.prepareData(values);
-        message.info("ارسال اطلاعات");
+        toast.success("ارسال اطلاعات با موفقیت انجام شد");
         console.log('Received values of form: ', data);
       }
     });
@@ -82,7 +86,6 @@ class EcarSales extends Component {
     const { getFieldDecorator } = this.props.form;
     return (
       <div className="gx-main-content">
-
         <Card className="gx-card" title="پروفایل کاربری">
           <Form
             //layout="inline"
@@ -499,7 +502,7 @@ class EcarSales extends Component {
           </Form>
 
         </Card>
-
+       
       </div>
     )
   }
