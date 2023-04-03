@@ -3,6 +3,7 @@ import {Button, Checkbox, Form, Icon, Input, message} from "antd";
 import {connect} from "react-redux";
 import {Link} from "react-router-dom";
 import AuthService from "../Services/AuthService";
+import axios from 'axios';
 import {
   hideMessage,
   showAuthLoader,
@@ -23,17 +24,39 @@ class SignIn extends React.Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        // this.props.showAuthLoader();
-        // this.props.userSignIn(values);
-        var res = AuthService.login(values);
-        if (res === true) {
-          message.info("ورود موفق");
-          this.props.userSignIn(values);
-        }
-        else {
-          message.info("نام کاربری یا رمز عبور اشتباه است");
+        // var res = AuthService.login(values);
+        // if (res === true) {
+        //   message.info("ورود موفق");
+        //   this.props.userSignIn(values);
+        // }
+        // else {
+        //   message.info("نام کاربری یا رمز عبور اشتباه است");
           
-        }
+        // }
+        let LoginInputVM={UserName :values.email,Password:values.password}
+        document.body.classList.add('loading-indicator');
+        axios.post("/Auth",  LoginInputVM )
+          .then(response => {
+            document.body.classList.remove('loading-indicator')
+            let res = response.data.token;
+            if (res != null) {
+                // localStorage.setItem("authUser", JSON.stringify(res));
+                localStorage.setItem("authUser", res);
+                message.info("ورود موفق");
+                this.props.userSignIn(values);
+            }
+            else {
+              message.error("اطلاعات کاربر یافت نشد ");
+                return false;
+            }
+          })
+          .catch(res=>{
+            document.body.classList.remove('loading-indicator');
+            message.error("اشکال در فراخوانی سرویس کاربر   ");
+
+            });
+            
+       
       }
     });
   };

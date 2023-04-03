@@ -1,16 +1,35 @@
 
+import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
 class AuthService {
     getCurrentUser() {
         return JSON.parse(localStorage.getItem('authUser'));
     }
     login(user) {
-        console.log(user.email);;
-        console.log(user.password);;
-        if (user.email === "demo@example.com") {
-            localStorage.setItem("authUser", JSON.stringify("response.data"));
-            return true;
-        }
-        return false;
+        let LoginInputVM={UserName :user.email,Password:user.password}
+        document.body.classList.add('loading-indicator');
+        axios.post("/Auth",  LoginInputVM )
+          .then(response => {
+            document.body.classList.remove('loading-indicator')
+            let res = response.data.token;
+            if (res != null) {
+                localStorage.setItem("authUser", JSON.stringify(res));
+                console.log(res);
+                return true;
+            }
+            else {
+                toast.error("اطلاعات کاربر یافت نشد ");
+                return false;
+            }
+          })
+          .catch(res=>{
+            console.log("catch");
+            console.log(res);
+            document.body.classList.remove('loading-indicator');
+            return false;
+
+            });
+
 
     }
 

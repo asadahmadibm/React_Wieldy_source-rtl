@@ -3,19 +3,6 @@ import persian_fa from "react-date-object/locales/persian_fa"
 import { DateObject } from "react-multi-date-picker";
 import axios from 'axios';
 
-// axios.defaults.baseURL = 'https://swagger.tnlink.ir'
-// axios.defaults.headers.post['Contetnt-Type'] = 'application/json';
-// axios.interceptors.request.use(function (config) {
-//     var token = localStorage.getItem('authUser');
-//     if (token == null) {
-//         console.log("NotLogin");
-
-//     }
-//     config.headers.Authorization = "Bearer " + token;
-//     return config;
-// });
-
-
 const UserService= {
 
 

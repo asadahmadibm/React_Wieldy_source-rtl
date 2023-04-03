@@ -10,9 +10,9 @@ import InputIcon from "react-multi-date-picker/components/input_icon"
 import { DateObject } from "react-multi-date-picker";
 import dayjs from 'dayjs'
 import moment, { locale } from 'jalali-moment';
+
+import { toast } from 'react-toastify';
 import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 class EcarSales extends Component {
 
@@ -51,8 +51,10 @@ class EcarSales extends Component {
           message.info("اطلاعات کاربر یافت نشد ");
         }
         document.body.classList.remove('loading-indicator')
-        console.log(res);
         this.props.form.setFieldsValue(res);
+      }).catch(res=>{
+        document.body.classList.remove('loading-indicator')
+        message.error("اشکال در فراخوانی سرویس")
       });
   }
 
