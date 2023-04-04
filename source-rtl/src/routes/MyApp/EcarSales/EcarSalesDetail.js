@@ -22,49 +22,53 @@ class EcarSalesDetail extends Component {
     super(props)
     this.state = {
       mellicode: this.props.mellicode,
-      clearform:this.props.clearform,
+      clearform: this.props.clearform,
       sex: [],
-      ostan:[]
+      ostan: [],
+      citysodoor:[],
+      citysokoonat:[],
+      citybirth:[]
     }
 
   }
 
   componentDidMount = () => {
     this.setState({ sex: [{ key: 1, value: "مرد" }, { key: 2, value: "زن" }] });
+    this.GetDataBase();
   }
 
   componentWillReceiveProps = (nextProps) => {
     //if (this.props.mellicode != nextProps.mellicode) {
     if (this.state.mellicode != nextProps.mellicode) {
-      this.GetDataBase();
+
       this.GetData(nextProps.mellicode.mellicode);
-      this.setState({mellicode:nextProps.mellicode})
+      this.setState({ mellicode: nextProps.mellicode })
     }
     if (this.state.clearform != nextProps.clearform) {
       this.handleReset();
-      this.setState({clearform:false})
+      this.setState({ clearform: false })
     }
   }
 
-GetDataBase=()=>{
-  document.body.classList.add('loading-indicator');
+  GetDataBase = () => {
+    document.body.classList.add('loading-indicator');
     axios.post("/CRM_Region", { id: 1 })
       .then(response => {
-        let res = response.data.data;
+        let res = response.data.data.list;
         if (res != null) {
-       
+
         }
         else {
           message.info("اطلاعات استان یافت نشد ");
         }
         document.body.classList.remove('loading-indicator')
-        this.setState({ ostan: res});
+        this.setState({ ostan: res });
         console.log(res);
       }).catch(res => {
         document.body.classList.remove('loading-indicator')
         message.error("اشکال در فراخوانی سرویس استان")
       });
-}
+  }
 
   GetData = (mellicode) => {
     // let data = UserService.GetProfile();
@@ -83,6 +87,10 @@ GetDataBase=()=>{
         }
         document.body.classList.remove('loading-indicator')
         this.props.form.setFieldsValue(res);
+        this.onchangebirthostan(this.props.form.getFieldValue('ostanbirth'));
+        this.onchangeostansodoor(this.props.form.getFieldValue('ostansodoor'));
+        this.onchangeostansokoonat(this.props.form.getFieldValue('ostansokoonat'));
+
         console.log(res);
       }).catch(res => {
         document.body.classList.remove('loading-indicator')
@@ -91,7 +99,7 @@ GetDataBase=()=>{
   }
 
   prepareData = (data) => {
-    data.mellicode=this.state.mellicode.mellicode;
+    data.mellicode = this.state.mellicode.mellicode;
     data.birthdate = data.birthdate.format().replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
     data.sodoordate = data.sodoordate.format().replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
     return data;
@@ -118,6 +126,71 @@ GetDataBase=()=>{
     this.setState({ ecarsaleInfo: {} });
     this.props.form.resetFields();
   };
+
+  onchangeostansodoor = (value) => {
+    
+    document.body.classList.add('loading-indicator');
+    axios.post("/CRM_Region", { id: value })
+      .then(response => {
+        let res = response.data.data.list;
+        if (res != null) {
+
+        }
+        else {
+          message.info("اطلاعات شهر صدور یافت نشد ");
+        }
+        document.body.classList.remove('loading-indicator')
+        this.setState({ citysodoor: res });
+        console.log(res);
+      }).catch(res => {
+        document.body.classList.remove('loading-indicator')
+        message.error("اشکال در فراخوانی سرویس شهر محل صدور")
+      });
+  }
+  onchangeostansokoonat = (value) => {
+    
+    document.body.classList.add('loading-indicator');
+    axios.post("/CRM_Region", { id: value })
+      .then(response => {
+        let res = response.data.data.list;
+        if (res != null) {
+
+        }
+        else {
+          message.info("اطلاعات شهر صدور یافت نشد ");
+        }
+        document.body.classList.remove('loading-indicator')
+        this.setState({ citysokoonat: res });
+        console.log(res);
+      }).catch(res => {
+        document.body.classList.remove('loading-indicator')
+        message.error("اشکال در فراخوانی سرویس شهر محل صدور")
+      });
+  }
+  onchangebirthostan = (value) => {
+    
+    document.body.classList.add('loading-indicator');
+    axios.post("/CRM_Region", { id: value })
+      .then(response => {
+        let res = response.data.data.list;
+        if (res != null) {
+
+        }
+        else {
+          message.info("اطلاعات شهر صدور یافت نشد ");
+        }
+        document.body.classList.remove('loading-indicator')
+        this.setState({ citybirth: res });
+        console.log(res);
+      }).catch(res => {
+        document.body.classList.remove('loading-indicator')
+        message.error("اشکال در فراخوانی سرویس شهر محل صدور")
+      });
+  }
+  
+
+
+
 
   render() {
     const { getFieldDecorator } = this.props.form;
@@ -329,14 +402,14 @@ GetDataBase=()=>{
 
 
                 <Select
+                  onChange={this.onchangeostansodoor}
                   showSearch
                   allowClear
                 // style={{
                 //     width: 100,
                 // }}
                 >
-                  <Select value="1">همدان</Select>
-                  <Select value="2">تهران</Select>
+                  {this.state.ostan.map(child => <Select.Option key={child.regionID} value={child.regionID} >{child.regionName}</Select.Option >)}
                 </Select>
               )}
             </Form.Item>
@@ -358,8 +431,7 @@ GetDataBase=()=>{
                 //     width: 100,
                 // }}
                 >
-                  <Select value="1">همدان</Select>
-                  <Select value="2">تهران</Select>
+                    {this.state.citysodoor.map(child => <Select.Option key={child.regionID} value={child.regionID} >{child.regionName}</Select.Option >)}
                 </Select>
               )}
             </Form.Item>
@@ -375,14 +447,14 @@ GetDataBase=()=>{
 
 
                 <Select
+                  onChange={this.onchangebirthostan}
                   showSearch
                   allowClear
                 // style={{
                 //     width: 100,
                 // }}
                 >
-                  <Select value="1">همدان</Select>
-                  <Select value="2">تهران</Select>
+                  {this.state.ostan.map(child => <Select key={child.regionID} value={child.regionID} >{child.regionName}</Select >)}
                 </Select>
               )}
             </Form.Item>
@@ -404,8 +476,7 @@ GetDataBase=()=>{
                 //     width: 100,
                 // }}
                 >
-                  <Select value="1">همدان</Select>
-                  <Select value="2">تهران</Select>
+                  {this.state.citybirth.map(child => <Select.Option key={child.regionID} value={child.regionID} >{child.regionName}</Select.Option >)}
                 </Select>
               )}
             </Form.Item>
@@ -421,14 +492,14 @@ GetDataBase=()=>{
 
 
                 <Select
+                  onChange={this.onchangeostansokoonat}
                   showSearch
                   allowClear
                 // style={{
                 //     width: 100,
                 // }}
                 >
-                  <Select value="1">همدان</Select>
-                  <Select value="2">تهران</Select>
+                  {this.state.ostan.map(child => <Select key={child.regionID} value={child.regionID} >{child.regionName}</Select >)}
                 </Select>
               )}
             </Form.Item>
@@ -450,8 +521,7 @@ GetDataBase=()=>{
                 //     width: 100,
                 // }}
                 >
-                  <Select value="1">همدان</Select>
-                  <Select value="2">تهران</Select>
+                 {this.state.citysokoonat.map(child => <Select.Option key={child.regionID} value={child.regionID} >{child.regionName}</Select.Option >)}
                 </Select>
               )}
             </Form.Item>
