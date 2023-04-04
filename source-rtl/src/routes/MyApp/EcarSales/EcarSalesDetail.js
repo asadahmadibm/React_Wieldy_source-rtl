@@ -23,7 +23,8 @@ class EcarSalesDetail extends Component {
     this.state = {
       mellicode: this.props.mellicode,
       clearform:this.props.clearform,
-      sex: []
+      sex: [],
+      ostan:[]
     }
 
   }
@@ -33,8 +34,9 @@ class EcarSalesDetail extends Component {
   }
 
   componentWillReceiveProps = (nextProps) => {
+    //if (this.props.mellicode != nextProps.mellicode) {
     if (this.state.mellicode != nextProps.mellicode) {
-      console.log(nextProps.mellicode.mellicode);
+      this.GetDataBase();
       this.GetData(nextProps.mellicode.mellicode);
       this.setState({mellicode:nextProps.mellicode})
     }
@@ -43,6 +45,26 @@ class EcarSalesDetail extends Component {
       this.setState({clearform:false})
     }
   }
+
+GetDataBase=()=>{
+  document.body.classList.add('loading-indicator');
+    axios.post("/CRM_Region", { id: 1 })
+      .then(response => {
+        let res = response.data.data;
+        if (res != null) {
+       
+        }
+        else {
+          message.info("اطلاعات استان یافت نشد ");
+        }
+        document.body.classList.remove('loading-indicator')
+        this.setState({ ostan: res});
+        console.log(res);
+      }).catch(res => {
+        document.body.classList.remove('loading-indicator')
+        message.error("اشکال در فراخوانی سرویس استان")
+      });
+}
 
   GetData = (mellicode) => {
     // let data = UserService.GetProfile();
