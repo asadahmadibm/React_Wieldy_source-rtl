@@ -284,7 +284,10 @@
   "sidebar.documents.installation": "نصب و راه اندازی",
   "sidebar.dashboard.listing": "فهرستی",
   "sidebar.dashboard.crypto": "رمزنگاری",
-  "sidebar.dashboard.ecarsales": "سامانه یکپارچه خودرو",
+  "sidebar.myapp.ecarsales": "سامانه یکپارچه خودرو",
+  "sidebar.myapp.ecarsales.profile" : "پروفایل کاربر",
+  "sidebar.myapp.ecarsales.ecarsalesList": "لیست کاربران ",
+
   "sidebar.map": "نقشه",
   "sidebar.algolia": "الگولیا (Algolia)",
   "sidebar.firebase.crud": "Firebase Curd",

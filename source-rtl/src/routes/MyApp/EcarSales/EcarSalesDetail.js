@@ -21,7 +21,7 @@ class EcarSalesDetail extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      mellicode: this.props.mellicode,
+      mellicode: '',//this.props.mellicode,
       clearform: this.props.clearform,
       sex: [],
       ostan: [],
@@ -75,7 +75,7 @@ class EcarSalesDetail extends Component {
     // this.props.form.setFieldsValue(data);
     this.props.form.setFieldsValue([]);
     document.body.classList.add('loading-indicator');
-    axios.post("/EcarSales", { mellicode: mellicode.toString() })
+    axios.get("/EcarSales?mellicode="+mellicode.toString())
       .then(response => {
         let res = response.data.data;
         if (res != null) {
@@ -119,7 +119,7 @@ class EcarSalesDetail extends Component {
   };
 
   handleCancelButtonClick = () => {
-    this.props.history.push('/main/dashboard/crypto')
+    this.props.history.push('/myapp/ecarsales/EcarSalesList')
   }
 
   handleReset = () => {

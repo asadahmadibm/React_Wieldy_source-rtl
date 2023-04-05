@@ -9,12 +9,14 @@ class EcarSales extends Component {
     super(props)
     this.state={
 
-      mellicode: '' ,
+      mellicode: '',
       clearform:false
     }
   }
 
   componentDidMount = () => {
+    console.log("componentDidMount");
+    console.log(this.state.mellicode);
 
   }
   handlemellicode = (mellicode) => {

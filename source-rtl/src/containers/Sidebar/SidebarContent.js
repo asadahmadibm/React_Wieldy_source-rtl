@@ -55,14 +55,25 @@ class SidebarContent extends Component {
               mode="inline">
 
               <MenuItemGroup key="myapp-apps" className="gx-menu-group" title={<IntlMessages id="sidebar.myapp" />}>
-                <Menu.Item key="myapp-apps/ecarsales">
-                  <Link to="/myapp/EcarSales">
-                    <i className="icon icon-profile2" />
-                    <IntlMessages id="sidebar.dashboard.ecarsales" />
-                  </Link>
-                </Menu.Item>
 
-                </MenuItemGroup>
+                <SubMenu key="ecarsales" className={this.getNavStyleSubMenuClass(navStyle)}
+                  title={<span> <i className="icon icon-dasbhoard" />
+                    <IntlMessages id="sidebar.myapp.ecarsales" /></span>}>
+                  <Menu.Item key="myapp/ecarsales/profile">
+                    <Link to="/myapp/EcarSales">
+                      <i className="icon icon-profile2" />
+                      <IntlMessages id="sidebar.myapp.ecarsales.profile" />
+                    </Link>
+                  </Menu.Item>
+                  <Menu.Item key="myapp/ecarsales/ecarsalesList">
+                    <Link to="/myapp/EcarSales/EcarSalesList">
+                      <i className="icon icon-profile2" />
+                      <IntlMessages id="sidebar.myapp.ecarsales.ecarsalesList" />
+                    </Link>
+                  </Menu.Item>
+                </SubMenu>
+
+              </MenuItemGroup>
 
               <MenuItemGroup key="main" className="gx-menu-group" title={<IntlMessages id="sidebar.main" />}>
                 <SubMenu key="dashboard" className={this.getNavStyleSubMenuClass(navStyle)}
