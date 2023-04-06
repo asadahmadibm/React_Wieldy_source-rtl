@@ -419,10 +419,10 @@ class AdminGrid extends Component {
             <div>
                 {this.state.isshowdetail == true ?
                     <Row>
-                        <Col span={10} lg={19}>
+                        <Col lg={8} md={12} xs={24} sm={12} xl={6}  >
                             <Alert message="امکان فیلتر نمودن هر یک از ستونها وجود دارد " type="warning" showIcon />
                         </Col>
-                        <Col>
+                        <Col lg={8} md={12} xs={24} sm={12} xl={6}  >
                             <Button icon="search" type="primary" htmlType="button" onClick={this.onFill}>جزییات </Button>
                             <Button icon="search" type="primary" htmlType="button" onClick={this.onclearfilter}>حذف فیلتر </Button>
                         </Col>

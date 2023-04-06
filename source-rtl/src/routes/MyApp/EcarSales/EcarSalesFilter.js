@@ -82,7 +82,7 @@ class EcarSalesFilter extends Component {
         }}
         autoComplete="off"
       >
-        <Row >
+        <Row type="flex" justify="start">
           <Col lg={8} md={12} xs={24} sm={12} xl={6}  >
             <Form.Item
               label="کد ملی "
@@ -95,8 +95,10 @@ class EcarSalesFilter extends Component {
               )}
             </Form.Item>
           </Col>
-          <Button type="primary" htmlType="submit">جستجو </Button>
-          <Button type="danger" onClick={this.handleReset}>حذف جستجو </Button>
+          <Col lg={8} md={12} xs={24} sm={12} xl={6}  >
+            <Button type="primary" htmlType="submit">جستجو </Button>
+            <Button type="danger" onClick={this.handleReset}>حذف جستجو </Button>
+          </Col>
         </Row>
       </Form>
     )
