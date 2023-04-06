@@ -6,10 +6,12 @@ import EcarSalesFilter from "./EcarSalesFilter";
 class EcarSales extends Component {
 
   constructor(props) {
-    super(props)
+    super(props);
+    console.log("this.props.location");
+    console.log(this.props.location);
     this.state={
 
-      mellicode: '',
+      mellicode: this.props.location.state===undefined ? '' : this.props.location.state.mellicode,
       clearform:false
     }
   }
@@ -32,7 +34,7 @@ handleClearSearch = () => {
     return (
       <div className="gx-main-content">
         <Card className="gx-card" title="پروفایل کاربری">
-            <EcarSalesFilter onSetMelliCode={this.handlemellicode} onClearSearch={this.handleClearSearch} ></EcarSalesFilter>
+            <EcarSalesFilter onSetMelliCode={this.handlemellicode} onClearSearch={this.handleClearSearch} mellicode={this.state.mellicode}></EcarSalesFilter>
             <Divider></Divider>
             <EcarSalesDetail mellicode={this.state.mellicode} clearform={this.state.clearform}></EcarSalesDetail>
         </Card>

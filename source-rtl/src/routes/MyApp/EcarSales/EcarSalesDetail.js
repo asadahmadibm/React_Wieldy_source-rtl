@@ -87,7 +87,7 @@ class EcarSalesDetail extends Component {
         }
         document.body.classList.remove('loading-indicator')
         this.props.form.setFieldsValue(res);
-        this.onchangebirthostan(this.props.form.getFieldValue('ostanbirth'));
+        this.onchangeostanbirth(this.props.form.getFieldValue('ostanbirth'));
         this.onchangeostansodoor(this.props.form.getFieldValue('ostansodoor'));
         this.onchangeostansokoonat(this.props.form.getFieldValue('ostansokoonat'));
 
@@ -128,7 +128,16 @@ class EcarSalesDetail extends Component {
   };
 
   onchangeostansodoor = (value) => {
-    
+
+    if(value==undefined)
+    {
+      this.props.form.setFieldsValue({
+        citysodoor: ''
+      });
+      this.setState({citysodoor:[]})
+      return;
+    }
+
     document.body.classList.add('loading-indicator');
     axios.post("/CRM_Region", { id: value })
       .then(response => {
@@ -149,6 +158,14 @@ class EcarSalesDetail extends Component {
   }
   onchangeostansokoonat = (value) => {
     
+    if(value==undefined)
+    {
+      this.props.form.setFieldsValue({
+        citysokoonat: ''
+      });
+      this.setState({citysokoonat:[]})
+      return;
+    }
     document.body.classList.add('loading-indicator');
     axios.post("/CRM_Region", { id: value })
       .then(response => {
@@ -167,8 +184,17 @@ class EcarSalesDetail extends Component {
         message.error("اشکال در فراخوانی سرویس شهر محل صدور")
       });
   }
-  onchangebirthostan = (value) => {
-    
+  onchangeostanbirth = (value) => {
+    console.log("onchangeostanbirth");
+    console.log(value);
+    if(value==undefined)
+    {
+      this.props.form.setFieldsValue({
+        citybirth: ''
+      });
+      this.setState({citybirth:[]})
+      return;
+    }
     document.body.classList.add('loading-indicator');
     axios.post("/CRM_Region", { id: value })
       .then(response => {
@@ -348,7 +374,7 @@ class EcarSalesDetail extends Component {
                 //     width: 100,
                 // }}
                 >
-                  {this.state.sex.map(child => <Select key={child.key} value={child.key} >{child.value}</Select >)}
+                  {this.state.sex.map(child => <Select.Option key={child.key} value={child.key} >{child.value}</Select.Option >)}
                   {/* <Select value={2}>زن</Select>
                       <Select value={1}>مزد</Select> */}
                 </Select>
@@ -439,22 +465,22 @@ class EcarSalesDetail extends Component {
           <Col lg={8} md={12} xs={24} sm={12} xl={6}  >
             <Form.Item
               label=" استان محل تولد "
-              name="birthostan"
+              name="ostanbirth"
             >
-              {getFieldDecorator('birthostan', {
+              {getFieldDecorator('ostanbirth', {
                 // rules: [{ required: true, message: 'تاریخ تولد را وارد نمایید' }],
               })(
 
 
                 <Select
-                  onChange={this.onchangebirthostan}
+                  onChange={this.onchangeostanbirth}
                   showSearch
                   allowClear
                 // style={{
                 //     width: 100,
                 // }}
                 >
-                  {this.state.ostan.map(child => <Select key={child.regionID} value={child.regionID} >{child.regionName}</Select >)}
+                  {this.state.ostan.map(child => <Select.Option key={child.regionID} value={child.regionID} >{child.regionName}</Select.Option >)}
                 </Select>
               )}
             </Form.Item>
@@ -462,9 +488,9 @@ class EcarSalesDetail extends Component {
           <Col lg={8} md={12} xs={24} sm={12} xl={6}  >
             <Form.Item
               label=" شهر محل تولد "
-              name="birthcity"
+              name="citybirth"
             >
-              {getFieldDecorator('birthcity', {
+              {getFieldDecorator('citybirth', {
                 // rules: [{ required: true, message: 'تاریخ تولد را وارد نمایید' }],
               })(
 
@@ -499,7 +525,7 @@ class EcarSalesDetail extends Component {
                 //     width: 100,
                 // }}
                 >
-                  {this.state.ostan.map(child => <Select key={child.regionID} value={child.regionID} >{child.regionName}</Select >)}
+                  {this.state.ostan.map(child => <Select.Option key={child.regionID} value={child.regionID} >{child.regionName}</Select.Option >)}
                 </Select>
               )}
             </Form.Item>

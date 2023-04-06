@@ -24,66 +24,81 @@ class EcarSalesFilter extends Component {
       componentDisabled: true,
       sex: [],
       date: '',
-      disable:false
+      disable: false,
+      mellicode: props.mellicode
 
     }
   }
 
   componentDidMount = () => {
+    console.log("componentDidMount");
+    console.log(this.state.mellicode);
+    if (this.state.mellicode != '') {
+      this.props.form.setFieldsValue({
+        mellicode: this.state.mellicode
+      });
+      this.props.onSetMelliCode({ mellicode: this.state.mellicode });
+      this.setState({ disable: true })
+    }
+    // this.props.onSetMelliCode(3732026353);
+    // this.setState({ disable: true })
 
   }
 
-   handleSubmit = e => {
+
+
+  handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        this.props.onSetMelliCode(values);   
-        this.setState({disable:true})
+        console.log(values);
+        this.props.onSetMelliCode(values);
+        this.setState({ disable: true })
       }
     });
   };
 
   handleReset = () => {
     this.props.form.resetFields();
-    this.setState({disable:false});
-    this.props.onClearSearch(true);   
-    
+    this.setState({ disable: false });
+    this.props.onClearSearch(true);
+
   };
 
 
   render() {
     const { getFieldDecorator } = this.props.form;
     return (
-          <Form
-            //layout="inline"
-            onSubmit={this.handleSubmit}
-            name="basic"
-            // layout="inline"
-            labelCol={{
-              span: 10,
-            }}
-            wrapperCol={{
-              span: 14,
-            }}
-            autoComplete="off"
-          >
-            <Row >
-              <Col lg={8} md={12} xs={24} sm={12} xl={6}  >
-                <Form.Item
-                  label="کد ملی "
-                  name="mellicode"
-                >
-                  {getFieldDecorator('mellicode', {
-                    rules: [{ required: true, message: ' کد ملی را وارد نمایید' }],
-                  })(
-                    <Input disabled={this.state.disable}/>
-                  )}
-                </Form.Item>
-              </Col>
-              <Button type="primary" htmlType="submit">جستجو </Button>
-              <Button type="danger" onClick={this.handleReset}>حذف جستجو </Button>
-            </Row>
-          </Form>
+      <Form
+        //layout="inline"
+        onSubmit={this.handleSubmit}
+        name="basic"
+        // layout="inline"
+        labelCol={{
+          span: 10,
+        }}
+        wrapperCol={{
+          span: 14,
+        }}
+        autoComplete="off"
+      >
+        <Row >
+          <Col lg={8} md={12} xs={24} sm={12} xl={6}  >
+            <Form.Item
+              label="کد ملی "
+              name="mellicode"
+            >
+              {getFieldDecorator('mellicode', {
+                rules: [{ required: true, message: ' کد ملی را وارد نمایید' }],
+              })(
+                <Input disabled={this.state.disable} />
+              )}
+            </Form.Item>
+          </Col>
+          <Button type="primary" htmlType="submit">جستجو </Button>
+          <Button type="danger" onClick={this.handleReset}>حذف جستجو </Button>
+        </Row>
+      </Form>
     )
   }
 }

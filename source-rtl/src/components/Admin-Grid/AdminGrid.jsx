@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { withRouter } from "react-router-dom";
 import { Route, Routes } from "react-router-dom";
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
@@ -17,7 +18,7 @@ class AdminGrid extends Component {
         console.log(props);
         super(props)
         this.state = {
-            isshowInLoad:props.isshowInLoad,
+            isshowInLoad: props.isshowInLoad,
             requestCode: props.requestCode,
             height: props.height,
             isshowdetail: props.isshowdetail,
@@ -34,7 +35,7 @@ class AdminGrid extends Component {
             defaultColDef: {
                 filter: true,
                 sortable: true,
-                floatingFilter: this.props.showfloatingFilter==undefined ? true : this.props.showfloatingFilter,
+                floatingFilter: this.props.showfloatingFilter == undefined ? true : this.props.showfloatingFilter,
                 resizable: true,
             },
             localeText: {
@@ -292,7 +293,7 @@ class AdminGrid extends Component {
     componentWillReceiveProps = (nextProps) => {
 
         // console.log("componentWillReceiveProps");
-       
+
         if (this.params) {
             this.setState({ serverRowsRequest: { ...this.state.serverRowsRequest, fromDate: nextProps.fromDate } });
             // const dataSource = this.getServerSideDatasource();
@@ -304,10 +305,9 @@ class AdminGrid extends Component {
 
     onGridReady = (params) => {
         this.params = params;
-        if(this.state.isshowInLoad==true)
-        {
-        const dataSource = this.getServerSideDatasource();
-        this.params.api.setDatasource(dataSource);
+        if (this.state.isshowInLoad == true) {
+            const dataSource = this.getServerSideDatasource();
+            this.params.api.setDatasource(dataSource);
         }
     };
     getServerSideDatasource() {
@@ -402,7 +402,6 @@ class AdminGrid extends Component {
             message.error("ردیفی را انتخاب نمایید");
             return;
         }
-
         this.props.history.push({ pathname: '/myapp/EcarSales', state: { mellicode: selectedData[0].mellicode } })
 
         //this.props.history.push({ pathname: '/ExchangesDetail', state: { sarafiId: 12 }, })
@@ -411,7 +410,7 @@ class AdminGrid extends Component {
     onCellClicked = (params) => {
         console.log(params);
         let selectedData = this.params.api.getSelectedRows();
-        this.props.parentCallback(selectedData[0].requestCode);
+        this.props.parentCallback(selectedData[0].mellicode);
 
     }
 
@@ -467,4 +466,4 @@ class AdminGrid extends Component {
 
 
 
-export default AdminGrid;
+export default withRouter(AdminGrid);
