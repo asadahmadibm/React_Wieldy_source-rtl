@@ -25,16 +25,16 @@ class EcarSalesDetail extends Component {
       clearform: this.props.clearform,
       sex: [],
       ostan: [],
-      citysodoor:[],
-      citysokoonat:[],
-      citybirth:[]
+      citysodoor: [],
+      citysokoonat: [],
+      citybirth: []
     }
 
   }
 
   componentDidMount = () => {
     this.setState({ sex: [{ key: 1, value: "مرد" }, { key: 2, value: "زن" }] });
-    this.GetDataBase();
+    this.GetDataBase(false);
   }
 
   componentWillReceiveProps = (nextProps) => {
@@ -50,8 +50,19 @@ class EcarSalesDetail extends Component {
     }
   }
 
-  GetDataBase = () => {
+
+  GetDataBase = (shouldLog) => {
     document.body.classList.add('loading-indicator');
+    axios.interceptors.request.use(function (config) {
+      config.headers.IsSOCLog = (shouldLog == false ? "false" : "true");
+      return config;
+    });
+    // const getHeader = (shouldLog) => ({
+    //   "IsSOCLog": (shouldLog == false ? "false" : "true"),
+    //   'Authorization': "bearer " + localStorage.getItem('authUser'),
+    //   "Content-Type": 'application/json',
+    // });
+    // console.log(getHeader(false));
     axios.post("/CRM_Region", { id: 1 })
       .then(response => {
         let res = response.data.data.list;
@@ -75,7 +86,7 @@ class EcarSalesDetail extends Component {
     // this.props.form.setFieldsValue(data);
     this.props.form.setFieldsValue([]);
     document.body.classList.add('loading-indicator');
-    axios.get("/EcarSales?mellicode="+mellicode.toString())
+    axios.get("/EcarSales?mellicode=" + mellicode.toString())
       .then(response => {
         let res = response.data.data;
         if (res != null) {
@@ -129,12 +140,11 @@ class EcarSalesDetail extends Component {
 
   onchangeostansodoor = (value) => {
 
-    if(value==undefined)
-    {
+    if (value == undefined) {
       this.props.form.setFieldsValue({
         citysodoor: ''
       });
-      this.setState({citysodoor:[]})
+      this.setState({ citysodoor: [] })
       return;
     }
 
@@ -157,13 +167,12 @@ class EcarSalesDetail extends Component {
       });
   }
   onchangeostansokoonat = (value) => {
-    
-    if(value==undefined)
-    {
+
+    if (value == undefined) {
       this.props.form.setFieldsValue({
         citysokoonat: ''
       });
-      this.setState({citysokoonat:[]})
+      this.setState({ citysokoonat: [] })
       return;
     }
     document.body.classList.add('loading-indicator');
@@ -187,12 +196,11 @@ class EcarSalesDetail extends Component {
   onchangeostanbirth = (value) => {
     console.log("onchangeostanbirth");
     console.log(value);
-    if(value==undefined)
-    {
+    if (value == undefined) {
       this.props.form.setFieldsValue({
         citybirth: ''
       });
-      this.setState({citybirth:[]})
+      this.setState({ citybirth: [] })
       return;
     }
     document.body.classList.add('loading-indicator');
@@ -213,7 +221,7 @@ class EcarSalesDetail extends Component {
         message.error("اشکال در فراخوانی سرویس شهر محل صدور")
       });
   }
-  
+
 
 
 
@@ -457,7 +465,7 @@ class EcarSalesDetail extends Component {
                 //     width: 100,
                 // }}
                 >
-                    {this.state.citysodoor.map(child => <Select.Option key={child.regionID} value={child.regionID} >{child.regionName}</Select.Option >)}
+                  {this.state.citysodoor.map(child => <Select.Option key={child.regionID} value={child.regionID} >{child.regionName}</Select.Option >)}
                 </Select>
               )}
             </Form.Item>
@@ -547,7 +555,7 @@ class EcarSalesDetail extends Component {
                 //     width: 100,
                 // }}
                 >
-                 {this.state.citysokoonat.map(child => <Select.Option key={child.regionID} value={child.regionID} >{child.regionName}</Select.Option >)}
+                  {this.state.citysokoonat.map(child => <Select.Option key={child.regionID} value={child.regionID} >{child.regionName}</Select.Option >)}
                 </Select>
               )}
             </Form.Item>
