@@ -402,15 +402,15 @@ class AdminGrid extends Component {
             message.error("ردیفی را انتخاب نمایید");
             return;
         }
-        this.props.history.push({ pathname: '/myapp/EcarSales', state: { mellicode: selectedData[0].mellicode } })
-
+        // this.props.history.push({ pathname: '/myapp/EcarSales', state: { mellicode: selectedData[0].mellicode } })
+        this.props.history.push({ pathname: '/myapp/crm/company/companydetail', state: { companyID: selectedData[0].companyID } })
         //this.props.history.push({ pathname: '/ExchangesDetail', state: { sarafiId: 12 }, })
     }
 
     onCellClicked = (params) => {
         console.log(params);
         let selectedData = this.params.api.getSelectedRows();
-        this.props.parentCallback(selectedData[0].mellicode);
+        this.props.parentCallback(selectedData[0].companyID);
 
     }
 
@@ -419,10 +419,10 @@ class AdminGrid extends Component {
             <div>
                 {this.state.isshowdetail == true ?
                     <Row>
-                        <Col lg={8} md={12} xs={24} sm={12} xl={6}  >
+                        <Col lg={12} md={12} xs={24} sm={12} xl={8}  >
                             <Alert message="امکان فیلتر نمودن هر یک از ستونها وجود دارد " type="warning" showIcon />
                         </Col>
-                        <Col lg={8} md={12} xs={24} sm={12} xl={6}  >
+                        <Col lg={12} md={12} xs={24} sm={12} xl={12}  >
                             <Button icon="search" type="primary" htmlType="button" onClick={this.onFill}>جزییات </Button>
                             <Button icon="search" type="primary" htmlType="button" onClick={this.onclearfilter}>حذف فیلتر </Button>
                         </Col>

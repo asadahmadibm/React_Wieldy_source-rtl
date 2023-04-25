@@ -73,6 +73,23 @@ class SidebarContent extends Component {
                   </Menu.Item>
                 </SubMenu>
 
+                <SubMenu key="company" className={this.getNavStyleSubMenuClass(navStyle)}
+                  title={<span> <i className="icon icon-dasbhoard" />
+                    <IntlMessages id="sidebar.myapp.company" /></span>}>
+                  {/* <Menu.Item key="myapp/crm/company/profile">
+                    <Link to="/myapp/EcarSales">
+                      <i className="icon icon-profile2" />
+                      <IntlMessages id="sidebar.myapp.ecarsales.profile" />
+                    </Link>
+                  </Menu.Item> */}
+                  <Menu.Item key="myapp/crm/company/companyList">
+                    <Link to="/myapp/crm/company/companyList">
+                      <i className="icon icon-profile2" />
+                      <IntlMessages id="sidebar.myapp.crm.company.companyList" />
+                    </Link>
+                  </Menu.Item>
+                </SubMenu>
+
               </MenuItemGroup>
 
               <MenuItemGroup key="main" className="gx-menu-group" title={<IntlMessages id="sidebar.main" />}>
