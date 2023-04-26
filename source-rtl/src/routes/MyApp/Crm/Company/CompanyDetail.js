@@ -87,7 +87,7 @@ class CompanyDetail extends Component {
     //   "Content-Type": 'application/json',
     // });
     // console.log(getHeader(false));
-    axios.post("/CRM_Region", { id: 1 })
+    axios.post("/CRM_Region", { id: null })
       .then(response => {
 
         let res = response.data.data.list;
