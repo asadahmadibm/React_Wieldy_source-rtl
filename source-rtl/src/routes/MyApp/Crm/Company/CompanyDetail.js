@@ -1,6 +1,10 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router";
 import { Button, Select, Form, Input, Checkbox, Card, Col, Row, InputNumber, message, Switch } from 'antd';
+import CompanyProductList from "./CompanyProductList";
+import CompanyTelephoneList from "./CompanyTelephoneList";
+import CompanyConnectionList from "./CompanyConnectionList";
+
 
 import DatePicker from "react-multi-date-picker"
 import persian from "react-date-object/calendars/persian"
@@ -178,10 +182,10 @@ class CompanyDetail extends Component {
   }
 
   prepareData = () => {
-    return{
+    return {
       companyID: this.state.crmCompanyDTO.companyID,
       companyName: this.state.crmCompanyDTO.companyName,
-      address:this.state.crmCompanyDTO.address,
+      address: this.state.crmCompanyDTO.address,
       email: this.state.crmCompanyDTO.email,
       groupID: this.state.crmCompanyDTO.groupID,
       // groupName: this.state.crmCompanyDTO,
@@ -198,7 +202,7 @@ class CompanyDetail extends Component {
       registrar: this.state.crmCompanyDTO.registrar,
       registerDate: this.state.crmCompanyDTO.registerDate,
       selectiveGroup: this.state.crmCompanyDTO.selectiveGroup
-  }
+    }
 
   }
 
@@ -222,7 +226,7 @@ class CompanyDetail extends Component {
     //     this.GetData(this.state.currentId, false);
     //     // this.props.action(1)
     // }, () => {})
-}
+  }
 
 
   handleCancelButtonClick = () => {
@@ -236,108 +240,109 @@ class CompanyDetail extends Component {
 
   changeisActive = (e) => {
     this.setState({
-      crmCompanyDTO:{
-            ...this.state.crmCompanyDTO, 
-            isActive: e.target.checked
-        }
+      crmCompanyDTO: {
+        ...this.state.crmCompanyDTO,
+        isActive: e.target.checked
+      }
     })
-}
+  }
 
-changeisCustomer = (e) => {
-  this.setState({
-    crmCompanyDTO:{
-          ...this.state.crmCompanyDTO, 
-         isCustomer : e.target.checked
+  changeisCustomer = (e) => {
+    this.setState({
+      crmCompanyDTO: {
+        ...this.state.crmCompanyDTO,
+        isCustomer: e.target.checked
       }
-  })
-}
+    })
+  }
 
-changeunsubscribed = (e) => {
-  this.setState({
-    crmCompanyDTO:{
-          ...this.state.crmCompanyDTO, 
-          unsubscribed: e.target.checked
+  changeunsubscribed = (e) => {
+    this.setState({
+      crmCompanyDTO: {
+        ...this.state.crmCompanyDTO,
+        unsubscribed: e.target.checked
       }
-  })
-}
+    })
+  }
 
-handelChangecompanyName = (e) => {
-  this.setState({
-    crmCompanyDTO:{
-          ...this.state.crmCompanyDTO, 
-          companyName: e.target.value
+  handelChangecompanyName = (e) => {
+    this.setState({
+      crmCompanyDTO: {
+        ...this.state.crmCompanyDTO,
+        companyName: e.target.value
       }
-  })
-};
+    })
+  };
 
-handelChangegroup = (value, event) => {
-  this.setState({
-    crmCompanyDTO:{
-          ...this.state.crmCompanyDTO, 
-          groupID: value
+  handelChangegroup = (value, event) => {
+    this.setState({
+      crmCompanyDTO: {
+        ...this.state.crmCompanyDTO,
+        groupID: value
       }
-  })
-};
+    })
+  };
 
 
 
 
-handelChangeaddress = (e) => {
-  this.setState({
-    crmCompanyDTO:{
-          ...this.state.crmCompanyDTO, 
-          address: e.target.value
+  handelChangeaddress = (e) => {
+    this.setState({
+      crmCompanyDTO: {
+        ...this.state.crmCompanyDTO,
+        address: e.target.value
       }
-  })
-};
-handelChangeemail = (e) => {
-  this.setState({
-    crmCompanyDTO:{
-          ...this.state.crmCompanyDTO, 
-          email: e.target.value
+    })
+  };
+  handelChangeemail = (e) => {
+    this.setState({
+      crmCompanyDTO: {
+        ...this.state.crmCompanyDTO,
+        email: e.target.value
       }
-  })
-};
+    })
+  };
 
 
-handelChangeindustry = (value, event) => {
-  this.setState({
-    crmCompanyDTO:{
-          ...this.state.crmCompanyDTO, 
-          industryID: value
+  handelChangeindustry = (value, event) => {
+    this.setState({
+      crmCompanyDTO: {
+        ...this.state.crmCompanyDTO,
+        industryID: value
       }
-  })
-};
-handelChangregion = (value, event) => {
-  this.setState({
-    crmCompanyDTO:{
-          ...this.state.crmCompanyDTO, 
-          regionID: value
+    })
+  };
+  handelChangregion = (value, event) => {
+    this.setState({
+      crmCompanyDTO: {
+        ...this.state.crmCompanyDTO,
+        regionID: value
       }
-  })
-};
+    })
+  };
 
   render() {
     const { getFieldDecorator } = this.props.form;
     return (
-      <Card className="gx-card" title="مشخصات شرکت">
-        <Form
-          //layout="inline"
-          onSubmit={this.handleSubmit}
-          name="basic"
-          layout="inline"
-          // labelCol={{
-          //   span: 10,
-          // }}
-          // wrapperCol={{
-          //   span: 14,
-          // }}
-          autoComplete="off"
-        >
-          <Row >
-          <Col lg={8} md={8} xs={24} sm={12} xl={8}  >
-              <Input addonBefore="کد شرکت" value={this.state.crmCompanyDTO.companyID} readOnly />
-              {/* <Form.Item
+      <div>
+        <Card className="gx-card" title="مشخصات شرکت">
+          <Form
+            //layout="inline"
+            onSubmit={this.handleSubmit}
+            name="basic"
+            layout="inline"
+            // labelCol={{
+            //   span: 10,
+            // }}
+            // wrapperCol={{
+            //   span: 14,
+            // }}
+            autoComplete="off"
+          >
+            <Row >
+              <Col lg={8} md={8} xs={24} sm={12} xl={8}  >
+                <Input addonBefore="کد شرکت" value={this.state.crmCompanyDTO.companyID} readOnly />
+                {/* <Form.Item
 
                 label="کد شرکت "
                 name="companyID"
@@ -351,13 +356,13 @@ handelChangregion = (value, event) => {
                   />
                 )}
               </Form.Item> */}
-            </Col>
-            <Col lg={16} md={16} xs={24} sm={12} xl={16}  >
-              <ul className="gx-list-inline">
+              </Col>
+              <Col lg={16} md={16} xs={24} sm={12} xl={16}  >
+                <ul className="gx-list-inline">
 
-                <li key={111}>
-                  <span className="gx-link gx-btn gx-btn-white ">
-                    {/* <Form.Item
+                  <li key={111}>
+                    <span className="gx-link gx-btn gx-btn-white ">
+                      {/* <Form.Item
                       name="isCustomer"
                     >
                       {getFieldDecorator('isCustomer', {
@@ -366,13 +371,13 @@ handelChangregion = (value, event) => {
                         <Checkbox checked={this.state.crmCompanyDTO.isCustomer} >مشتری</Checkbox>
                       )}
                     </Form.Item> */}
-                    <Checkbox checked={this.state.crmCompanyDTO.isCustomer}  onChange={this.changeisCustomer} >مشتری</Checkbox>
-                  </span>
-                </li>
-                <li key={112}>
+                      <Checkbox checked={this.state.crmCompanyDTO.isCustomer} onChange={this.changeisCustomer} >مشتری</Checkbox>
+                    </span>
+                  </li>
+                  <li key={112}>
 
-                  <span className="gx-link gx-btn gx-btn-white ">
-                    {/* <Form.Item>
+                    <span className="gx-link gx-btn gx-btn-white ">
+                      {/* <Form.Item>
                       {getFieldDecorator('isActive', {
                         // valuePropName: 'checked',
                         // initialValue: true,
@@ -381,13 +386,13 @@ handelChangregion = (value, event) => {
                       )}
 
                     </Form.Item>  */}
-                    <Checkbox checked={this.state.crmCompanyDTO.isActive} onChange={this.changeisActive}>فعال</Checkbox>
-                  </span>
-                </li>
-                <li key={113}>
+                      <Checkbox checked={this.state.crmCompanyDTO.isActive} onChange={this.changeisActive}>فعال</Checkbox>
+                    </span>
+                  </li>
+                  <li key={113}>
 
-                  <span className="gx-link gx-btn gx-btn-white ">
-                    {/* <Form.Item>
+                    <span className="gx-link gx-btn gx-btn-white ">
+                      {/* <Form.Item>
                       {getFieldDecorator('unsubscribed', {
                         valuePropName: 'checked',
                         initialValue: true,
@@ -396,18 +401,18 @@ handelChangregion = (value, event) => {
                       )}
 
                     </Form.Item>  */}
-                    <Checkbox checked={this.state.crmCompanyDTO.unsubscribed}  onChange={this.changeunsubscribed}>عدم ارسال ایمیل </Checkbox>
+                      <Checkbox checked={this.state.crmCompanyDTO.unsubscribed} onChange={this.changeunsubscribed}>عدم ارسال ایمیل </Checkbox>
                     </span>
-                </li>
-              </ul>
-            </Col>
-          </Row>
-          <Row gutter={[16, 24]}> 
+                  </li>
+                </ul>
+              </Col>
+            </Row>
+            <Row gutter={[16, 24]}>
 
 
-            {/* <Col span={12} xs={24} > */}
-            <Col lg={8} md={12} xs={24} sm={12} xl={12}   >
-              {/* <Form.Item
+              {/* <Col span={12} xs={24} > */}
+              <Col lg={8} md={12} xs={24} sm={12} xl={12}   >
+                {/* <Form.Item
                 label="نام شرکت "
                 name="companyName"
               >
@@ -417,11 +422,11 @@ handelChangregion = (value, event) => {
                   <Input />
                 )}
               </Form.Item> */}
-              <Input addonBefore="نام شرکت "  value={this.state.crmCompanyDTO.companyName} onChange={this.handelChangecompanyName}/>
-            </Col>
-            {/* <Col span={8} xs={24} > */}
-            <Col lg={8} md={12} xs={24} sm={12} xl={12}  >
-              {/* <Form.Item
+                <Input addonBefore="نام شرکت " value={this.state.crmCompanyDTO.companyName} onChange={this.handelChangecompanyName} />
+              </Col>
+              {/* <Col span={8} xs={24} > */}
+              <Col lg={8} md={12} xs={24} sm={12} xl={12}  >
+                {/* <Form.Item
                 label="گروه"
                 name="groupID"
               >
@@ -440,21 +445,21 @@ handelChangregion = (value, event) => {
                   </Select>
                 )}
               </Form.Item> */}
-              <Select
-                    addonBefore="گروه"
-                    showSearch
-                    value={this.state.crmCompanyDTO.groupID}
-                    // onChange={this.handelChangegroup}
-                    onSelect={(value, event) => this.handelChangegroup(value, event)}
-                  >
-                    {this.state.group.map(child => <Select.Option key={child.groupID} value={child.groupID} >{child.groupName}</Select.Option >)}
-                  </Select>
-            </Col>
-          </Row>
-          <br/>
-          <Row>
-          <Col lg={12} md={12} xs={24} sm={12} xl={12}   >
-              {/* <Form.Item
+                <Select
+                  addonBefore="گروه"
+                  showSearch
+                  value={this.state.crmCompanyDTO.groupID}
+                  // onChange={this.handelChangegroup}
+                  onSelect={(value, event) => this.handelChangegroup(value, event)}
+                >
+                  {this.state.group.map(child => <Select.Option key={child.groupID} value={child.groupID} >{child.groupName}</Select.Option >)}
+                </Select>
+              </Col>
+            </Row>
+            <br />
+            <Row>
+              <Col lg={12} md={12} xs={24} sm={12} xl={12}   >
+                {/* <Form.Item
                 label="  آدرس"
                 name="address"
               >
@@ -464,11 +469,11 @@ handelChangregion = (value, event) => {
                   <Input />
                 )}
               </Form.Item> */}
-               <Input addonBefore=" ادرس "  value={this.state.crmCompanyDTO.address} onChange={this.handelChangeaddress}/>
+                <Input addonBefore=" ادرس " value={this.state.crmCompanyDTO.address} onChange={this.handelChangeaddress} />
 
-            </Col>
-            <Col lg={12} md={12} xs={24} sm={12} xl={12}   >
-              {/* <Form.Item
+              </Col>
+              <Col lg={12} md={12} xs={24} sm={12} xl={12}   >
+                {/* <Form.Item
                 label="صنعت"
                 name="industryID"
               >
@@ -487,8 +492,8 @@ handelChangregion = (value, event) => {
                   </Select>
                 )}
               </Form.Item> */}
-              <span>
-               <Select
+                <span>
+                  <Select
                     addonBefore="صنعت"
                     title="صنعت"
                     showSearch
@@ -498,13 +503,13 @@ handelChangregion = (value, event) => {
                   >
                     {this.state.industry.map(child => <Select.Option key={child.industryID} value={child.industryID} >{child.industryName}</Select.Option >)}
                   </Select>
-                  </span>
-            </Col>
-          </Row>
-          <br></br>
-          <Row>
-            <Col span={12} >
-              {/* <Form.Item
+                </span>
+              </Col>
+            </Row>
+            <br></br>
+            <Row>
+              <Col span={12} >
+                {/* <Form.Item
                 label=" ایمیل "
                 name="email"
 
@@ -515,11 +520,11 @@ handelChangregion = (value, event) => {
                   <Input />
                 )}
               </Form.Item> */}
-                <Input addonBefore=" ایمیل "  value={this.state.crmCompanyDTO.email} onChange={this.handelChangeemail}/>
-            </Col>
+                <Input addonBefore=" ایمیل " value={this.state.crmCompanyDTO.email} onChange={this.handelChangeemail} />
+              </Col>
 
-            <Col span={12}  >
-              {/* <Form.Item
+              <Col span={12}  >
+                {/* <Form.Item
                 label="ناحیه"
                 name="regionID"
               >
@@ -539,29 +544,50 @@ handelChangregion = (value, event) => {
                 )}
               </Form.Item> */}
                 <Select
-                    addonBefore="ناحیه"
-                    showSearch
-                    value={this.state.crmCompanyDTO.regionID}
-                    // onChange={this.handelChangegroup}
-                    onSelect={(value, event) => this.handelChangregion(value, event)}
-                  >
-                    {this.state.ostan.map(child => <Select.Option key={child.regionID} value={child.regionID} >{child.regionName}</Select.Option >)}
-                  </Select>
-            </Col>
+                  addonBefore="ناحیه"
+                  showSearch
+                  value={this.state.crmCompanyDTO.regionID}
+                  // onChange={this.handelChangegroup}
+                  onSelect={(value, event) => this.handelChangregion(value, event)}
+                >
+                  {this.state.ostan.map(child => <Select.Option key={child.regionID} value={child.regionID} >{child.regionName}</Select.Option >)}
+                </Select>
+              </Col>
 
 
-          </Row>
-          <br></br>
-          <Row>
-            <Col lg={8} md={12} xs={24} sm={12} xl={12}  >
-              {/* <Button type="primary" htmlType="submit"> ثبت اطلاعات </Button> */}
-              <Button type="primary" onClick={this.handlesubmitButtonClick}> ثبت اطلاعات </Button>
-              <Button onClick={this.handleReset}>پاکسازی فرم </Button>
-              <Button htmlType="button" onClick={this.handleCancelButtonClick}>انصراف</Button>
-            </Col>
-          </Row>
-        </Form>
-      </Card>
+            </Row>
+            <br></br>
+            <Row>
+              <Col lg={8} md={12} xs={24} sm={12} xl={12}  >
+                {/* <Button type="primary" htmlType="submit"> ثبت اطلاعات </Button> */}
+                <Button type="primary" onClick={this.handlesubmitButtonClick}> ثبت اطلاعات </Button>
+                <Button onClick={this.handleReset}>پاکسازی فرم </Button>
+                <Button htmlType="button" onClick={this.handleCancelButtonClick}>انصراف</Button>
+              </Col>
+            </Row>
+          </Form>
+        </Card>
+        <Row>
+        {/* <Col lg={8} md={12} xs={24} sm={12} xl={8}  > */}
+        <Col xs={24} sm= {24} md={12} lg= {12} xl={8} >
+
+            <Card className="gx-card" title=" محصولات">
+              <CompanyProductList companyID={this.state.companyID}></CompanyProductList>
+            </Card>
+          </Col>
+          <Col xs={24} sm= {24} md={12} lg= {12} xl={8} >
+            <Card className="gx-card" title=" شماره تماس">
+              <CompanyTelephoneList  companyID={this.state.companyID}></CompanyTelephoneList>
+            </Card>
+          </Col>
+          <Col xs={24} sm= {24} md={12} lg= {12} xl={8} >
+            <Card className="gx-card" title="  رابطها">
+            <CompanyConnectionList  companyID={this.state.companyID}></CompanyConnectionList>
+            </Card>
+          </Col>
+
+        </Row>
+      </div>
     )
   }
 }

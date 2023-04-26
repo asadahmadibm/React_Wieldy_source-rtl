@@ -18,6 +18,8 @@ class AdminGrid extends Component {
         console.log(props);
         super(props)
         this.state = {
+            parameterCompanyId: props.parameterCompanyId ?? "",
+            pagination:props.pagination ?? true,
             isshowInLoad: props.isshowInLoad,
             requestCode: props.requestCode,
             height: props.height,
@@ -367,6 +369,26 @@ class AdminGrid extends Component {
                 const page = params.endRow / this.state.perPage;
 
                 document.body.classList.add('loading-indicator');
+                console.log("CrmCompanyProduct/GetByCompanyId",this.state.apiname);
+                if(this.state.apiname==="CrmCompanyProduct/GetByCompanyId" ||
+                   this.state.apiname==="CrmCompanyConnection/GetByCompanyId" || 
+                   this.state.apiname==="CrmCompanyTelephone/GetByCompanyId")
+                {
+                   console.log(this.state.parameterCompanyId);
+                   console.log("this.state.parameterCompanyId");
+                    axios.post("/" + this.state.apiname, {id:this.state.parameterCompanyId},{ timeout: 90000 })
+                    .then(res => {
+                        params.successCallback(res.data.data.list, res.data.data.totalCount);
+                        document.body.classList.remove('loading-indicator')
+                    }).catch(err => {
+                        params.successCallback([], 0);
+                        console.log("اشکال در فراخوانی اطلاعات");
+                        document.body.classList.remove('loading-indicator')
+                    }).finally(() => {
+                    });
+                }
+                else
+                {
                 axios.post("/" + this.state.apiname, this.state.serverRowsRequest, { timeout: 90000 })
                     .then(res => {
                         params.successCallback(res.data.data.list, res.data.data.totalCount);
@@ -377,6 +399,7 @@ class AdminGrid extends Component {
                         document.body.classList.remove('loading-indicator')
                     }).finally(() => {
                     });
+                }
             },
         };
     }
@@ -435,7 +458,7 @@ class AdminGrid extends Component {
                         rowData={this.state.rowData}
                         onGridReady={this.onGridReady}
                         animateRows={true}
-                        pagination="true"
+                        pagination={this.state.pagination}
                         rowModelType={'infinite'}
                         paginationPageSize={this.state.perPage}
                         cacheBlockSize={this.state.perPage}
