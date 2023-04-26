@@ -27,9 +27,9 @@ class CompanyProductList extends Component {
   }
   render() {
     return (
-      <div className="gx-main-content">
+      // <div className="gx-main-content">
         <AdminGrid showfloatingFilter={false} pagination={false}  parentCallback = {this.handleCallback}  isshowInLoad={true} columnDefs={this.state.columnDefs} height="20vh" isshowdetail={false} apiname="CrmCompanyProduct/GetByCompanyId" parameterCompanyId={this.state.companyID} pageDetail="CrmCompanyProduct/GetByCompanyId" />
-      </div>
+      // </div>
     )
   }
 }

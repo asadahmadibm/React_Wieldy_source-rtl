@@ -4,6 +4,8 @@ import { Button, Select, Form, Input, Checkbox, Card, Col, Row, InputNumber, mes
 import CompanyProductList from "./CompanyProductList";
 import CompanyTelephoneList from "./CompanyTelephoneList";
 import CompanyConnectionList from "./CompanyConnectionList";
+import { Tabs } from "antd";
+import Widget from "components/Widget";
 
 
 import DatePicker from "react-multi-date-picker"
@@ -18,6 +20,8 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import { Label } from "recharts";
+
+const TabPane = Tabs.TabPane;
 
 class CompanyDetail extends Component {
 
@@ -325,7 +329,18 @@ class CompanyDetail extends Component {
     const { getFieldDecorator } = this.props.form;
     return (
       <div>
-        <Card className="gx-card" title="مشخصات شرکت">
+        <Card className="gx-card" title="مشخصات شرکت" size="small"
+          style={{
+            marginBottom: 15,
+            padding: 0
+          }}
+          extra={
+            <div>
+              <Button type="primary" onClick={this.handlesubmitButtonClick}> ثبت اطلاعات </Button>
+            <Button onClick={this.handleReset}>پاکسازی فرم </Button>
+            <Button htmlType="button" onClick={this.handleCancelButtonClick}>انصراف</Button>
+            </div>
+          }>
           <Form
             //layout="inline"
             onSubmit={this.handleSubmit}
@@ -558,24 +573,23 @@ class CompanyDetail extends Component {
             </Row>
             <br></br>
             <Row>
-              <Col lg={8} md={12} xs={24} sm={12} xl={12}  >
-                {/* <Button type="primary" htmlType="submit"> ثبت اطلاعات </Button> */}
-                <Button type="primary" onClick={this.handlesubmitButtonClick}> ثبت اطلاعات </Button>
-                <Button onClick={this.handleReset}>پاکسازی فرم </Button>
-                <Button htmlType="button" onClick={this.handleCancelButtonClick}>انصراف</Button>
-              </Col>
+
             </Row>
           </Form>
         </Card>
         <Row>
-        {/* <Col lg={8} md={12} xs={24} sm={12} xl={8}  > */}
-        <Col xs={24} sm= {24} md={12} lg= {12} xl={8} >
+          {/* <Col lg={8} md={12} xs={24} sm={12} xl={8}  > */}
+          <Col xs={24} sm={24} md={12} lg={12} xl={8} >
 
-            <Card className="gx-card" title=" محصولات">
+            <Card className="gx-card" title=" محصولات" size="small"
+              style={{
+                marginBottom: 15
+              }}
+            >
               <CompanyProductList companyID={this.state.companyID}></CompanyProductList>
             </Card>
           </Col>
-          <Col xs={24} sm= {24} md={12} lg= {12} xl={8} >
+          {/* <Col xs={24} sm= {24} md={12} lg= {12} xl={8} >
             <Card className="gx-card" title=" شماره تماس">
               <CompanyTelephoneList  companyID={this.state.companyID}></CompanyTelephoneList>
             </Card>
@@ -584,6 +598,22 @@ class CompanyDetail extends Component {
             <Card className="gx-card" title="  رابطها">
             <CompanyConnectionList  companyID={this.state.companyID}></CompanyConnectionList>
             </Card>
+          </Col> */}
+
+
+          <Col xs={24} sm={24} md={12} lg={12} xl={16} >
+            <Widget styleName="gx-card-tabs"
+              extra={<i className="icon icon-search-new gx-pointer gx-fs-xxl gx-text-primary" />}>
+              <Tabs defaultActiveKey="1" centered={false} size="small">
+                <TabPane tab=" رابطها" key="2">
+                  <CompanyConnectionList companyID={this.state.companyID}></CompanyConnectionList>
+                </TabPane>
+                <TabPane tab=" شماره تماس" key="1">
+                  <CompanyTelephoneList companyID={this.state.companyID}></CompanyTelephoneList>
+                </TabPane>
+
+              </Tabs>
+            </Widget>
           </Col>
 
         </Row>
