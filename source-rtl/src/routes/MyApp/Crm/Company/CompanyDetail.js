@@ -230,7 +230,7 @@ class CompanyDetail extends Component {
   }
 
   handleReset = () => {
-    this.setState({ ecarsaleInfo: {} });
+    this.setState({ crmCompanyDTO: {} });
     this.props.form.resetFields();
   };
 
@@ -335,7 +335,7 @@ handelChangregion = (value, event) => {
           autoComplete="off"
         >
           <Row >
-            <Col span={6}>
+          <Col lg={8} md={8} xs={24} sm={12} xl={8}  >
               <Input addonBefore="کد شرکت" value={this.state.crmCompanyDTO.companyID} readOnly />
               {/* <Form.Item
 
@@ -352,11 +352,11 @@ handelChangregion = (value, event) => {
                 )}
               </Form.Item> */}
             </Col>
-            <Col span={18}>
+            <Col lg={16} md={16} xs={24} sm={12} xl={16}  >
               <ul className="gx-list-inline">
 
                 <li key={111}>
-                  <span className="gx-link gx-btn gx-btn-white gx-mb-10">
+                  <span className="gx-link gx-btn gx-btn-white ">
                     {/* <Form.Item
                       name="isCustomer"
                     >
@@ -371,7 +371,7 @@ handelChangregion = (value, event) => {
                 </li>
                 <li key={112}>
 
-                  <span className="gx-link gx-btn gx-btn-white gx-mb-10">
+                  <span className="gx-link gx-btn gx-btn-white ">
                     {/* <Form.Item>
                       {getFieldDecorator('isActive', {
                         // valuePropName: 'checked',
@@ -386,7 +386,7 @@ handelChangregion = (value, event) => {
                 </li>
                 <li key={113}>
 
-                  <span className="gx-link gx-btn gx-btn-white gx-mb-10">
+                  <span className="gx-link gx-btn gx-btn-white ">
                     {/* <Form.Item>
                       {getFieldDecorator('unsubscribed', {
                         valuePropName: 'checked',
@@ -402,10 +402,11 @@ handelChangregion = (value, event) => {
               </ul>
             </Col>
           </Row>
-          <Row>
+          <Row gutter={[16, 24]}> 
 
 
-            <Col span={12}>
+            {/* <Col span={12} xs={24} > */}
+            <Col lg={8} md={12} xs={24} sm={12} xl={12}   >
               {/* <Form.Item
                 label="نام شرکت "
                 name="companyName"
@@ -418,7 +419,8 @@ handelChangregion = (value, event) => {
               </Form.Item> */}
               <Input addonBefore="نام شرکت "  value={this.state.crmCompanyDTO.companyName} onChange={this.handelChangecompanyName}/>
             </Col>
-            <Col span={8}>
+            {/* <Col span={8} xs={24} > */}
+            <Col lg={8} md={12} xs={24} sm={12} xl={12}  >
               {/* <Form.Item
                 label="گروه"
                 name="groupID"
@@ -451,7 +453,7 @@ handelChangregion = (value, event) => {
           </Row>
           <br/>
           <Row>
-          <Col span={12}>
+          <Col lg={12} md={12} xs={24} sm={12} xl={12}   >
               {/* <Form.Item
                 label="  آدرس"
                 name="address"
@@ -465,7 +467,7 @@ handelChangregion = (value, event) => {
                <Input addonBefore=" ادرس "  value={this.state.crmCompanyDTO.address} onChange={this.handelChangeaddress}/>
 
             </Col>
-            <Col span={8} >
+            <Col lg={12} md={12} xs={24} sm={12} xl={12}   >
               {/* <Form.Item
                 label="صنعت"
                 name="industryID"
