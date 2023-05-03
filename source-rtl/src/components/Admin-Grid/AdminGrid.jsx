@@ -10,6 +10,7 @@ import moment from 'jalali-moment';
 import { CommentOutlined, CustomerServiceOutlined } from '@ant-design/icons';
 import { AutoComplete, Dropdown, Card, Checkbox, Row, Alert, Button, Switch, InputNumber, Select, Form, Input, message, Col } from 'antd';
 import 'react-toastify/dist/ReactToastify.css';
+import CheckboxRenderer from './CheckboxRenderer';
 
 class AdminGrid extends Component {
 
@@ -18,8 +19,9 @@ class AdminGrid extends Component {
         console.log(props);
         super(props)
         this.state = {
+            refresh:false,
             parameterCompanyId: props.parameterCompanyId ?? "",
-            pagination:props.pagination ?? true,
+            pagination: props.pagination ?? true,
             isshowInLoad: props.isshowInLoad,
             requestCode: props.requestCode,
             height: props.height,
@@ -39,6 +41,9 @@ class AdminGrid extends Component {
                 sortable: true,
                 floatingFilter: this.props.showfloatingFilter == undefined ? true : this.props.showfloatingFilter,
                 resizable: true,
+            },
+            frameworkComponents: {
+                checkboxRenderer: CheckboxRenderer,
             },
             localeText: {
                 "selectAll": "(انتخاب همه)",
@@ -283,8 +288,8 @@ class AdminGrid extends Component {
             }
 
         };
-        console.log("this.props.showfloatingFilter");
-        console.log(this.props.showfloatingFilter);
+        // console.log("this.props.showfloatingFilter");
+        // console.log(this.props.showfloatingFilter);
 
     }
 
@@ -294,7 +299,13 @@ class AdminGrid extends Component {
     }
     componentWillReceiveProps = (nextProps) => {
 
-        // console.log("componentWillReceiveProps");
+        if (nextProps.refresh != undefined  && nextProps.refresh != this.state.refresh ) {
+            console.log("nextProps.refresh",nextProps.refresh);
+            //&& this.state.refresh != nextProps.refresh
+            const dataSource = this.getServerSideDatasource();
+            this.params.api.setDatasource(dataSource);
+            this.setState({refresh:false,isshowInLoad:true});
+        }
 
         if (this.params) {
             this.setState({ serverRowsRequest: { ...this.state.serverRowsRequest, fromDate: nextProps.fromDate } });
@@ -369,36 +380,36 @@ class AdminGrid extends Component {
                 const page = params.endRow / this.state.perPage;
 
                 document.body.classList.add('loading-indicator');
-                console.log("CrmCompanyProduct/GetByCompanyId",this.state.apiname);
-                if(this.state.apiname==="CrmCompanyProduct/GetByCompanyId" ||
-                   this.state.apiname==="CrmCompanyConnection/GetByCompanyId" || 
-                   this.state.apiname==="CrmCompanyTelephone/GetByCompanyId")
-                {
-                   console.log(this.state.parameterCompanyId);
-                   console.log("this.state.parameterCompanyId");
-                    axios.post("/" + this.state.apiname, {id:this.state.parameterCompanyId},{ timeout: 90000 })
-                    .then(res => {
-                        params.successCallback(res.data.data.list, res.data.data.totalCount);
-                        document.body.classList.remove('loading-indicator')
-                    }).catch(err => {
-                        params.successCallback([], 0);
-                        console.log("اشکال در فراخوانی اطلاعات");
-                        document.body.classList.remove('loading-indicator')
-                    }).finally(() => {
-                    });
+                console.log("CrmCompanyProduct/GetByCompanyId", this.state.apiname);
+                if (this.state.apiname === "CrmCompanyProduct/GetByCompanyId" ||
+                    this.state.apiname === "CrmCompanyConnection/GetByCompanyId" ||
+                    this.state.apiname === "CrmCompanyTelephone/GetByCompanyId") {
+                    // console.log(this.state.parameterCompanyId);
+                    // console.log("this.state.parameterCompanyId");
+                    axios.post("/" + this.state.apiname, { id: this.state.parameterCompanyId }, { timeout: 90000 })
+                        .then(res => {
+                            console.log("res.data.data.list",res.data.data.list);
+                            params.successCallback(res.data.data.list, res.data.data.totalCount);
+                            document.body.classList.remove('loading-indicator')
+                        }).catch(err => {
+                            params.successCallback([], 0);
+                            console.log("اشکال در فراخوانی اطلاعات");
+                            document.body.classList.remove('loading-indicator')
+                        }).finally(() => {
+                        });
                 }
-                else
-                {
-                axios.post("/" + this.state.apiname, this.state.serverRowsRequest, { timeout: 90000 })
-                    .then(res => {
-                        params.successCallback(res.data.data.list, res.data.data.totalCount);
-                        document.body.classList.remove('loading-indicator')
-                    }).catch(err => {
-                        params.successCallback([], 0);
-                        console.log("اشکال در فراخوانی اطلاعات");
-                        document.body.classList.remove('loading-indicator')
-                    }).finally(() => {
-                    });
+                else {
+                    axios.post("/" + this.state.apiname, this.state.serverRowsRequest, { timeout: 90000 })
+                        .then(res => {
+                            console.log("res.data.data.list",res.data.data.list);
+                            params.successCallback(res.data.data.list, res.data.data.totalCount);
+                            document.body.classList.remove('loading-indicator')
+                        }).catch(err => {
+                            params.successCallback([], 0);
+                            console.log("اشکال در فراخوانی اطلاعات");
+                            document.body.classList.remove('loading-indicator')
+                        }).finally(() => {
+                        });
                 }
             },
         };
@@ -425,6 +436,8 @@ class AdminGrid extends Component {
             message.error("ردیفی را انتخاب نمایید");
             return;
         }
+        console.log("this.state.apiname ", this.state.apiname);
+
         // this.props.history.push({ pathname: '/myapp/EcarSales', state: { mellicode: selectedData[0].mellicode } })
         this.props.history.push({ pathname: '/myapp/crm/company/companydetail', state: { companyID: selectedData[0].companyID } })
         //this.props.history.push({ pathname: '/ExchangesDetail', state: { sarafiId: 12 }, })
@@ -433,7 +446,7 @@ class AdminGrid extends Component {
     onCellClicked = (params) => {
         console.log(params);
         let selectedData = this.params.api.getSelectedRows();
-        this.props.parentCallback(selectedData[0].companyID);
+        this.props.parentCallback(selectedData[0]);
 
     }
 
@@ -462,7 +475,7 @@ class AdminGrid extends Component {
                         rowModelType={'infinite'}
                         paginationPageSize={this.state.perPage}
                         cacheBlockSize={this.state.perPage}
-
+                        frameworkComponents={this.state.frameworkComponents}
                         className="ag-theme-alpine"
                         enableRtl="true"
                         headerHeight="30"

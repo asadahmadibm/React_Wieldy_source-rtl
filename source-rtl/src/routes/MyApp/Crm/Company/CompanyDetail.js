@@ -278,18 +278,6 @@ class CompanyDetail extends Component {
     })
   };
 
-  handelChangegroup = (value, event) => {
-    this.setState({
-      crmCompanyDTO: {
-        ...this.state.crmCompanyDTO,
-        groupID: value
-      }
-    })
-  };
-
-
-
-
   handelChangeaddress = (e) => {
     this.setState({
       crmCompanyDTO: {
@@ -306,7 +294,14 @@ class CompanyDetail extends Component {
       }
     })
   };
-
+  handelChangegroup = (value, event) => {
+    this.setState({
+      crmCompanyDTO: {
+        ...this.state.crmCompanyDTO,
+        groupID: value
+      }
+    })
+  };
 
   handelChangeindustry = (value, event) => {
     this.setState({
@@ -337,8 +332,8 @@ class CompanyDetail extends Component {
           extra={
             <div>
               <Button type="primary" onClick={this.handlesubmitButtonClick}> ثبت اطلاعات </Button>
-            <Button onClick={this.handleReset}>پاکسازی فرم </Button>
-            <Button htmlType="button" onClick={this.handleCancelButtonClick}>انصراف</Button>
+              <Button onClick={this.handleReset}>پاکسازی فرم </Button>
+              <Button htmlType="button" onClick={this.handleCancelButtonClick}>انصراف</Button>
             </div>
           }>
           <Form

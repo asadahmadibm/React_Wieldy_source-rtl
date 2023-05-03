@@ -58,8 +58,11 @@ class EcarSalesList extends Component {
   }
 
   componentDidMount = () => {
+    
 
   }
+
+
   getEnumValue = (code, formattingInfo) => {
     let foundItem = formattingInfo.find(({ indexField }) => indexField === code);
     if (!foundItem) return;
