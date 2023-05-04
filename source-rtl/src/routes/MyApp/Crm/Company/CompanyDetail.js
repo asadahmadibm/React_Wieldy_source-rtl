@@ -63,7 +63,8 @@ class CompanyDetail extends Component {
     this.setState({ sex: [{ key: 1, value: "مرد" }, { key: 2, value: "زن" }] });
     this.GetDataBase(false);
     // console.log(this.state.companyID);
-    this.GetData(this.state.companyID);
+    if (this.state.companyID != null)
+      this.GetData(this.state.companyID);
     // this.setState({ companyID: this.state.companyID})
   }
 
@@ -231,7 +232,6 @@ class CompanyDetail extends Component {
     //     // this.props.action(1)
     // }, () => {})
   }
-
 
   handleCancelButtonClick = () => {
     this.props.history.push('/myapp/ecarsales/EcarSalesList')

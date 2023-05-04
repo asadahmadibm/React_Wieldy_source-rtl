@@ -189,18 +189,34 @@ class CompanyList extends Component {
 
   }
 
+  ClickCrud = (mode,rowselected) => {
+    console.log("rowselected",rowselected);
+    switch (mode) {
 
-  handleCallback = (childData) => {
+      case "Add":
+        this.props.history.push({ pathname: '/myapp/crm/company/companydetail', state: { companyID: null } })
+        break;
+      case "Edit":
+      case "Delete":
+      case "Detail":
+        this.props.history.push({ pathname: '/myapp/crm/company/companydetail', state: { companyID: rowselected.companyID } })
 
-    this.setState({ companyID: childData })
-    console.log(this.state.companyID);
+    }
   }
 
   render() {
     return (
       <div className="gx-main-content">
         <Card className="gx-card" title="لیست شرکتها">
-          <AdminGrid isshowInLoad={true} parentCallback={this.handleCallback} columnDefs={this.state.columnDefs} height="65vh" title="لیست شرکتها" isshowdetail={true} apiname="CrmCompany" pageDetail="companyDetail" />
+          <AdminGrid
+            ClickCrud={this.ClickCrud}
+            isshowInLoad={true}
+            columnDefs={this.state.columnDefs}
+            height="65vh" title="لیست شرکتها"
+            isshowdetail={true}
+            apiname="CrmCompany"
+            pageDetail="companyDetail"
+            showfloatingFilter={true} />
         </Card>
 
       </div>

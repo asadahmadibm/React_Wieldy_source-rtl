@@ -38,15 +38,18 @@ class EcarSalesDetail extends Component {
   }
 
   componentWillReceiveProps = (nextProps) => {
-    //if (this.props.mellicode != nextProps.mellicode) {
-    if (this.state.mellicode != nextProps.mellicode) {
+    console.log("nextPropsmellicode", nextProps.mellicode);
+      if (nextProps.mellicode.mellicode != null) {
+      //if (this.props.mellicode != nextProps.mellicode) {
+      if (this.state.mellicode != nextProps.mellicode) {
 
-      this.GetData(nextProps.mellicode.mellicode);
-      this.setState({ mellicode: nextProps.mellicode })
-    }
-    if (this.state.clearform != nextProps.clearform) {
-      this.handleReset();
-      this.setState({ clearform: false })
+        this.GetData(nextProps.mellicode.mellicode);
+        this.setState({ mellicode: nextProps.mellicode })
+      }
+      if (this.state.clearform != nextProps.clearform) {
+        this.handleReset();
+        this.setState({ clearform: false })
+      }
     }
   }
 

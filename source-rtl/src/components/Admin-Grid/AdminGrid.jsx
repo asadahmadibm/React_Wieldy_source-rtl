@@ -19,7 +19,7 @@ class AdminGrid extends Component {
         console.log(props);
         super(props)
         this.state = {
-            refresh:false,
+            refresh: false,
             parameterCompanyId: props.parameterCompanyId ?? "",
             pagination: props.pagination ?? true,
             isshowInLoad: props.isshowInLoad,
@@ -299,12 +299,12 @@ class AdminGrid extends Component {
     }
     componentWillReceiveProps = (nextProps) => {
 
-        if (nextProps.refresh != undefined  && nextProps.refresh != this.state.refresh ) {
-            console.log("nextProps.refresh",nextProps.refresh);
+        if (nextProps.refresh != undefined && nextProps.refresh != this.state.refresh) {
+            console.log("nextProps.refresh", nextProps.refresh);
             //&& this.state.refresh != nextProps.refresh
             const dataSource = this.getServerSideDatasource();
             this.params.api.setDatasource(dataSource);
-            this.setState({refresh:false,isshowInLoad:true});
+            this.setState({ refresh: false, isshowInLoad: true });
         }
 
         if (this.params) {
@@ -388,7 +388,7 @@ class AdminGrid extends Component {
                     // console.log("this.state.parameterCompanyId");
                     axios.post("/" + this.state.apiname, { id: this.state.parameterCompanyId }, { timeout: 90000 })
                         .then(res => {
-                            console.log("res.data.data.list",res.data.data.list);
+                            console.log("res.data.data.list", res.data.data.list);
                             params.successCallback(res.data.data.list, res.data.data.totalCount);
                             document.body.classList.remove('loading-indicator')
                         }).catch(err => {
@@ -401,7 +401,7 @@ class AdminGrid extends Component {
                 else {
                     axios.post("/" + this.state.apiname, this.state.serverRowsRequest, { timeout: 90000 })
                         .then(res => {
-                            console.log("res.data.data.list",res.data.data.list);
+                            console.log("res.data.data.list", res.data.data.list);
                             params.successCallback(res.data.data.list, res.data.data.totalCount);
                             document.body.classList.remove('loading-indicator')
                         }).catch(err => {
@@ -426,28 +426,45 @@ class AdminGrid extends Component {
         const dataSource = this.getServerSideDatasource();
         this.params.api.setDatasource(dataSource);
     }
-    onFill = () => {
+
+
+    showAdd = () => {
+        this.props.ClickCrud("Add");
+    };
+    showEdit = () => {
         let selectedData = this.params.api.getSelectedRows();
 
         if (selectedData.length < 1) {
-            // message.error("ردیفی را انتخاب نمایید");
-            // toast.warn("ردیفی را انتخاب نمایید");
+            console.log("ردیفی را انتخاب نمایید");
+            message.error("ردیفی را انتخاب نمایید");
+            return;
+        }
+        this.props.ClickCrud("Edit",selectedData[0]);
+    };
+    showDelete = () => {
+        let selectedData = this.params.api.getSelectedRows();
+
+        if (selectedData.length < 1) {
+            console.log("ردیفی را انتخاب نمایید");
+            message.error("ردیفی را انتخاب نمایید");
+            return;
+        }
+        this.props.ClickCrud("Delete",selectedData[0]);
+    };
+    showDetail = () => {
+        let selectedData = this.params.api.getSelectedRows();
+
+        if (selectedData.length < 1) {
             console.log("ردیفی را انتخاب نمایید");
             message.error("ردیفی را انتخاب نمایید");
             return;
         }
         console.log("this.state.apiname ", this.state.apiname);
-
+        this.props.ClickCrud("Detail",selectedData[0]);
+        return;
         // this.props.history.push({ pathname: '/myapp/EcarSales', state: { mellicode: selectedData[0].mellicode } })
         this.props.history.push({ pathname: '/myapp/crm/company/companydetail', state: { companyID: selectedData[0].companyID } })
         //this.props.history.push({ pathname: '/ExchangesDetail', state: { sarafiId: 12 }, })
-    }
-
-    onCellClicked = (params) => {
-        console.log(params);
-        let selectedData = this.params.api.getSelectedRows();
-        this.props.parentCallback(selectedData[0]);
-
     }
 
     render() {
@@ -455,17 +472,25 @@ class AdminGrid extends Component {
             <div>
                 {this.state.isshowdetail == true ?
                     <Row>
-                        <Col lg={12} md={12} xs={24} sm={12} xl={8}  >
+                        {/* <Col lg={12} md={12} xs={24} sm={12} xl={8}  >
                             <Alert message="امکان فیلتر نمودن هر یک از ستونها وجود دارد " type="warning" showIcon />
-                        </Col>
-                        <Col lg={12} md={12} xs={24} sm={12} xl={12}  >
-                            <Button icon="search" type="primary" htmlType="button" onClick={this.onFill}>جزییات </Button>
-                            <Button icon="search" type="primary" htmlType="button" onClick={this.onclearfilter}>حذف فیلتر </Button>
+                        </Col> */}
+                        <Col lg={24} md={24} xs={24} sm={24} xl={24}  >
+                            <Button.Group>
+                                <Button value="Add" onClick={this.showAdd}>ایجاد</Button>
+                                <Button value="Edit" onClick={this.showEdit}>ویرایش</Button>
+                                <Button value="Delete" onClick={this.showDelete}>حذف</Button>
+                                <Button value="Detail" icon="search" onClick={this.showDetail}>جزییات </Button>
+                                {this.state.showfloatingFilter == true ?
+                                    <Button icon="search" onClick={this.onclearfilter}>حذف فیلتر </Button> : ""}
+                            </Button.Group>
+
                         </Col>
                     </Row>
                     : ""}
 
                 <div style={{ height: this.state.height, width: "100%" }}>
+
                     <AgGridReact
                         columnDefs={this.state.columnDefs}
                         rowData={this.state.rowData}
@@ -486,8 +511,6 @@ class AdminGrid extends Component {
                         defaultColDef={this.state.defaultColDef}
 
                         multiSortActive={true}
-                        onCellClicked={this.onCellClicked}
-
                     // onFilterChanged={this.onFilterChanged.bind(this)}
                     >
                     </AgGridReact>

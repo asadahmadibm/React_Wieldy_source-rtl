@@ -5,7 +5,7 @@ import { Form, Button, Row, Col, Radio, Modal, Input } from "antd";
 import 'react-toastify/dist/ReactToastify.css';
 import { toast } from 'react-toastify';
 import axios from 'axios';
-class CompanyProductAdd extends Component {
+class CompanyProductDetail extends Component {
 
   constructor(props) {
     super(props)
@@ -230,6 +230,7 @@ class CompanyProductAdd extends Component {
         visible={this.state.visible}
         onOk={this.handleOk}
         onCancel={this.handleCancel}
+        okType={this.state.mode === "Delete" ? "danger" : "primary" }
         okText={this.state.mode === "Add" ? "ایجاد" : this.state.mode === "Edit" ? "ویرایش" : "حذف"}>
 
         <div className="gx-modal-box-form-item">
@@ -285,4 +286,4 @@ class CompanyProductAdd extends Component {
   }
 }
 
-export default withRouter(CompanyProductAdd);;
+export default withRouter(CompanyProductDetail);;
