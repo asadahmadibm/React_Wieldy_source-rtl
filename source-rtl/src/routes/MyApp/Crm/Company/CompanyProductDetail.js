@@ -269,7 +269,7 @@ class CompanyProductDetail extends Component {
                 margin="none" />
             </Form.Item>
             <Form.Item
-              label=" تعداد"
+              label=" توضیحات"
               name="comment"
             >
               <Input disabled={this.state.mode === "Delete" ? 'disabled' : ''}

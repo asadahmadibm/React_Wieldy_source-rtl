@@ -14,6 +14,7 @@ class CheckboxRenderer extends Component {
     return (
       <input 
         type="checkbox" 
+        disabled="disabled"
         onClick={this.checkedHandler}
         checked={this.props.value}
       />

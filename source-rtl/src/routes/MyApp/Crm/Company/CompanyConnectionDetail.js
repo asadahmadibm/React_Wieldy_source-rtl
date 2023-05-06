@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router";
 import AdminGrid from "../../../../components/Admin-Grid/AdminGrid";
-import { Form, Button, Row, Col, Radio, Modal, Input } from "antd";
+import { Form, Button, Row,Checkbox, Col, Radio, Modal, Input } from "antd";
 import 'react-toastify/dist/ReactToastify.css';
 import { toast } from 'react-toastify';
 import axios from 'axios';
@@ -38,6 +38,7 @@ class CompanyConnectionDetail extends Component {
         }
       })
       if (nextProps.mode != undefined && nextProps.mode != "Add") {
+        console.log("nextProps.product.companyID",nextProps.product.companyID);
         this.GetData(nextProps.product);
         // console.log("this.state.product", this.state);
       }
@@ -49,13 +50,13 @@ class CompanyConnectionDetail extends Component {
       CompanyId: product.companyID,
       RowId: product.rowID
     }
-    console.log("product");
-    console.log(product);
+    console.log("CompanyIdRowId",CompanyIdRowId);
     document.body.classList.add('loading-indicator');
     axios.post("/CrmCompanyConnection/GetById", CompanyIdRowId)
       .then(response => {
         let res = response.data.data;
         if (res != null) {
+          console.log("response.data.data",response.data.data);
           // res.birthdate = new DateObject({ date: res.birthdate, calendar: persian, locale: persian_fa });//"1355/05/21",
           // res.sodoordate = new DateObject({ date: res.sodoordate, calendar: persian, locale: persian_fa });//"1355/05/21",
         }
@@ -301,11 +302,63 @@ class CompanyConnectionDetail extends Component {
                 value={this.state.product.email}
                 margin="none" />
             </Form.Item>
+            <Row>
+            <Col lg={16} md={16} xs={24} sm={12} xl={16}  >
+                <ul className="gx-list-inline">
+
+                  <li key={111}>
+                    <span className="gx-link gx-btn gx-btn-white ">
+                      {/* <Form.Item
+                      name="isCustomer"
+                    >
+                      {getFieldDecorator('isCustomer', {
+                        // valuePropName:this.state.isActive==true ? 'checked' : '',
+                      })(
+                        <Checkbox checked={this.state.crmCompanyDTO.isCustomer} >مشتری</Checkbox>
+                      )}
+                    </Form.Item> */}
+                      <Checkbox 
+                      checked={this.state.product.isActive} 
+                      onChange={(event) => this.setState({ product: { ...this.state.product, isActive: event.target.checked } })}
+                      >فعال</Checkbox>
+                    </span>
+                  </li>
+                  <li key={112}>
+
+                    <span className="gx-link gx-btn gx-btn-white ">
+                      {/* <Form.Item>
+                      {getFieldDecorator('isActive', {
+                        // valuePropName: 'checked',
+                        // initialValue: true,
+                      })(
+                        <Checkbox checked={this.state.crmCompanyDTO.isActive} >فعال</Checkbox>
+                      )}
+
+                    </Form.Item>  */}
+                      <Checkbox 
+                      checked={this.state.product.unsubscribed} 
+                      onChange={(event) => this.setState({ product: { ...this.state.product, unsubscribed: event.target.checked } })}
+                      >عدم ارسال ایمیل</Checkbox>
+                    </span>
+                  </li>
+                </ul>
+              </Col>
+            </Row>
+            <Form.Item
+              label=" توضیحات"
+              name="comment"
+            >
+              <Input disabled={this.state.mode === "Delete" ? 'disabled' : ''}
+                required
+                placeholder="توضیحات"
+                onChange={(event) => this.setState({ product: { ...this.state.product, comment: event.target.value } })}
+                value={this.state.product.comment}
+                margin="none" />
+            </Form.Item>
           </Form>
         </div>
       </Modal>
     )
   }
 }
-
 export default withRouter(CompanyConnectionDetail);;
