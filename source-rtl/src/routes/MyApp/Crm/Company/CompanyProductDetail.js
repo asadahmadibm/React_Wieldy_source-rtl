@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router";
 import AdminGrid from "../../../../components/Admin-Grid/AdminGrid";
-import { Form, Button, Row, Col, Radio, Modal, Input } from "antd";
+import { Form, Button, Select, Row, Col, Radio, Modal, Input } from "antd";
 import 'react-toastify/dist/ReactToastify.css';
 import { toast } from 'react-toastify';
 import axios from 'axios';
@@ -10,6 +10,7 @@ class CompanyProductDetail extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      productList: [],
       visible: props.visible,
       mode: '',
       product: {
@@ -21,8 +22,50 @@ class CompanyProductDetail extends Component {
       },
     };
   }
+
+  componentDidMount = () => {
+
+    this.GetDataBase(false);
+
+  }
+
+  GetDataBase = (shouldLog) => {
+    document.body.classList.add('loading-indicator');
+    axios.interceptors.request.use(function (config) {
+      config.headers.IsSOCLog = (shouldLog == false ? "false" : "true");
+      return config;
+    });
+    // const getHeader = (shouldLog) => ({
+    //   "IsSOCLog": (shouldLog == false ? "false" : "true"),
+    //   'Authorization': "bearer " + localStorage.getItem('authUser'),
+    //   "Content-Type": 'application/json',
+    // });
+    // console.log(getHeader(false));
+    axios.get("/Product/GetAll")
+      .then(response => {
+
+        let res = response.data.data;
+        if (res != null) {
+
+        }
+        else {
+          toast.info("اطلاعات محصول یافت نشد ");
+        }
+        document.body.classList.remove('loading-indicator')
+        console.log("/Product/GetAll", res);
+        this.setState({ productList: res });
+        console.log(res);
+      }).catch(res => {
+        document.body.classList.remove('loading-indicator')
+        toast.error("اشکال در فراخوانی سرویس محصول")
+      });
+
+
+
+  }
+
   componentWillReceiveProps = (nextProps) => {
-    if (nextProps.visible != this.state.visible ) {
+    if (nextProps.visible != this.state.visible) {
       // console.log("nextProps", nextProps.product);
       this.setState({
         visible: nextProps.visible,
@@ -38,6 +81,7 @@ class CompanyProductDetail extends Component {
       }
     }
   }
+
 
   GetData = (product) => {
     const CompanyIdRowId = {
@@ -122,14 +166,14 @@ class CompanyProductDetail extends Component {
     // console.log(product);
     document.body.classList.add('loading-indicator');
     axios.post("/CrmCompanyProduct/Update", product)
-    // .then((response) => {
-    //   // Return a promise with an artificial delay.
-    //   return new Promise((resolve) => {
-    //     setTimeout(() => {
-    //       resolve(response.data);
-    //     }, 2e3);
-    //   });
-    // })
+      // .then((response) => {
+      //   // Return a promise with an artificial delay.
+      //   return new Promise((resolve) => {
+      //     setTimeout(() => {
+      //       resolve(response.data);
+      //     }, 2e3);
+      //   });
+      // })
       .then(data => {
         let res = data.data.data;
         if (res != null) {
@@ -200,7 +244,7 @@ class CompanyProductDetail extends Component {
     }
 
     // console.log('Received values of form: ', data);
-  
+
   };
 
   prepareData = () => {
@@ -213,6 +257,16 @@ class CompanyProductDetail extends Component {
       visible: false,
     });
   };
+
+  handelChangeproduct = (value, event) => {
+    this.setState({
+      product: {
+        ...this.state.product,
+        productID: value
+      }
+    })
+  };
+
   render() {
     const formItemLayout = {
       labelCol: {
@@ -230,16 +284,18 @@ class CompanyProductDetail extends Component {
         visible={this.state.visible}
         onOk={this.handleOk}
         onCancel={this.handleCancel}
-        okType={this.state.mode === "Delete" ? "danger" : "primary" }
+        okType={this.state.mode === "Delete" ? "danger" : "primary"}
         okText={this.state.mode === "Add" ? "ایجاد" : this.state.mode === "Edit" ? "ویرایش" : "حذف"}>
 
         <div className="gx-modal-box-form-item">
           <Form {...formItemLayout} onSubmit={this.handleSubmit}>
             <Form.Item
-              label=" کد شرکت"
+              // label=" کد شرکت"
               name="companyID"
             >
-              <Input disabled={this.state.mode === "Delete" ? 'disabled' : ''}
+              <Input 
+                addonBefore="کد شرکت"
+                disabled={this.state.mode === "Delete" ? 'disabled' : ''}
                 required
                 placeholder="کد شرکت"
                 onChange={(event) => this.setState({ product: { ...this.state.product, companyID: event.target.value } })}
@@ -250,18 +306,30 @@ class CompanyProductDetail extends Component {
               label=" محصول"
               name="productID"
             >
-              <Input disabled={this.state.mode === "Delete" ? 'disabled' : ''}
+              {/* <Input disabled={this.state.mode === "Delete" ? 'disabled' : ''}
                 required
                 placeholder="محصول"
                 onChange={(event) => this.setState({ product: { ...this.state.product, productID: event.target.value } })}
                 value={this.state.product.productID}
-                margin="none" />
+                margin="none" /> */}
+
+              <Select
+                addonBefore="محصول"
+                showSearch
+                value={this.state.product.productID}
+                // onChange={this.handelChangegroup}
+                onSelect={(value, event) => this.handelChangeproduct(value, event)}
+              >
+                {this.state.productList.map(child => <Select.Option key={child.productID} value={child.productID} >{child.productName}</Select.Option >)}
+              </Select>
             </Form.Item>
             <Form.Item
-              label=" تعداد"
+              // label=" تعداد"
               name="productID"
             >
-              <Input disabled={this.state.mode === "Delete" ? 'disabled' : ''}
+              <Input 
+                addonBefore="تعداد"
+                disabled={this.state.mode === "Delete" ? 'disabled' : ''}
                 required
                 placeholder="تعداد"
                 onChange={(event) => this.setState({ product: { ...this.state.product, qty: event.target.value } })}
@@ -269,10 +337,12 @@ class CompanyProductDetail extends Component {
                 margin="none" />
             </Form.Item>
             <Form.Item
-              label=" توضیحات"
+              // label=" توضیحات"
               name="comment"
             >
-              <Input disabled={this.state.mode === "Delete" ? 'disabled' : ''}
+              <Input 
+                 addonBefore="توضیحات"
+                disabled={this.state.mode === "Delete" ? 'disabled' : ''}
                 required
                 placeholder="توضیحات"
                 onChange={(event) => this.setState({ product: { ...this.state.product, comment: event.target.value } })}

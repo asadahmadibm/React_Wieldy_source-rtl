@@ -28,7 +28,6 @@ class CompanyConnectionDetail extends Component {
 
   componentWillReceiveProps = (nextProps) => {
     if (nextProps.visible != this.state.visible ) {
-      // console.log("nextProps", nextProps.product);
       this.setState({
         visible: nextProps.visible,
         mode: nextProps.mode,
@@ -38,9 +37,7 @@ class CompanyConnectionDetail extends Component {
         }
       })
       if (nextProps.mode != undefined && nextProps.mode != "Add") {
-        console.log("nextProps.product.companyID",nextProps.product.companyID);
         this.GetData(nextProps.product);
-        // console.log("this.state.product", this.state);
       }
     }
   }
@@ -50,13 +47,11 @@ class CompanyConnectionDetail extends Component {
       CompanyId: product.companyID,
       RowId: product.rowID
     }
-    console.log("CompanyIdRowId",CompanyIdRowId);
     document.body.classList.add('loading-indicator');
     axios.post("/CrmCompanyConnection/GetById", CompanyIdRowId)
       .then(response => {
         let res = response.data.data;
         if (res != null) {
-          console.log("response.data.data",response.data.data);
           // res.birthdate = new DateObject({ date: res.birthdate, calendar: persian, locale: persian_fa });//"1355/05/21",
           // res.sodoordate = new DateObject({ date: res.sodoordate, calendar: persian, locale: persian_fa });//"1355/05/21",
         }
@@ -229,7 +224,7 @@ class CompanyConnectionDetail extends Component {
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
-        sm: { span: 4 },
+        sm: { span: 8 },
       },
       wrapperCol: {
         xs: { span: 24 },
@@ -238,6 +233,7 @@ class CompanyConnectionDetail extends Component {
     };
     return (
       <Modal
+        // width="80vw"
         title={this.state.mode === "Add" ? "ایجاد" : this.state.mode === "Edit" ? "ویرایش" : "حذف"}
         visible={this.state.visible}
         onOk={this.handleOk}
@@ -248,10 +244,10 @@ class CompanyConnectionDetail extends Component {
         <div className="gx-modal-box-form-item">
           <Form {...formItemLayout} onSubmit={this.handleSubmit}>
             <Form.Item
-              label=" کد شرکت"
+              // label=" کد شرکت"
               name="companyID"
             >
-              <Input disabled={this.state.mode === "Delete" ? 'disabled' : ''}
+              <Input addonBefore="کد شرکت" disabled={this.state.mode === "Delete" ? 'disabled' : ''}
                 required
                 placeholder="کد شرکت"
                 onChange={(event) => this.setState({ product: { ...this.state.product, companyID: event.target.value } })}
@@ -259,10 +255,10 @@ class CompanyConnectionDetail extends Component {
                 margin="none" />
             </Form.Item>
             <Form.Item
-              label="نام و نام خانوادگی"
+              // label="نام و نام خانوادگی"
               name="fullName"
             >
-              <Input disabled={this.state.mode === "Delete" ? 'disabled' : ''}
+              <Input addonBefore="نام و نام خانوادگی" disabled={this.state.mode === "Delete" ? 'disabled' : ''}
                 required
                 placeholder="نام و نام خانوادگی"
                 onChange={(event) => this.setState({ product: { ...this.state.product, fullName: event.target.value } })}
@@ -270,10 +266,10 @@ class CompanyConnectionDetail extends Component {
                 margin="none" />
             </Form.Item>
             <Form.Item
-              label=" سمت"
+              // label=" سمت"
               name="position"
             >
-              <Input disabled={this.state.mode === "Delete" ? 'disabled' : ''}
+              <Input addonBefore=" سمت" disabled={this.state.mode === "Delete" ? 'disabled' : ''}
                 required
                 placeholder="سمت"
                 onChange={(event) => this.setState({ product: { ...this.state.product, position: event.target.value } })}
@@ -281,10 +277,10 @@ class CompanyConnectionDetail extends Component {
                 margin="none" />
             </Form.Item>
             <Form.Item
-              label=" تلفن"
+              // label=" تلفن"
               name="telphone"
             >
-              <Input disabled={this.state.mode === "Delete" ? 'disabled' : ''}
+              <Input addonBefore=" تلفن" disabled={this.state.mode === "Delete" ? 'disabled' : ''}
                 required
                 placeholder="تلفن"
                 onChange={(event) => this.setState({ product: { ...this.state.product, telphone: event.target.value } })}
@@ -292,18 +288,18 @@ class CompanyConnectionDetail extends Component {
                 margin="none" />
             </Form.Item>
             <Form.Item
-              label=" ایمیل"
+              // label=" ایمیل"
               name="email"
             >
-              <Input disabled={this.state.mode === "Delete" ? 'disabled' : ''}
+              <Input addonBefore=" ایمیل" disabled={this.state.mode === "Delete" ? 'disabled' : ''}
                 required
                 placeholder="ایمیل"
                 onChange={(event) => this.setState({ product: { ...this.state.product, email: event.target.value } })}
                 value={this.state.product.email}
                 margin="none" />
             </Form.Item>
-            <Row>
-            <Col lg={16} md={16} xs={24} sm={12} xl={16}  >
+            {/* <Row>
+            <Col lg={16} md={16} xs={24} sm={12} xl={16}  > */}
                 <ul className="gx-list-inline">
 
                   <li key={111}>
@@ -342,13 +338,13 @@ class CompanyConnectionDetail extends Component {
                     </span>
                   </li>
                 </ul>
-              </Col>
-            </Row>
+              {/* </Col>
+            </Row> */}
             <Form.Item
-              label=" توضیحات"
+              // label=" توضیحات"
               name="comment"
             >
-              <Input disabled={this.state.mode === "Delete" ? 'disabled' : ''}
+              <Input addonBefore=" توضیحات" disabled={this.state.mode === "Delete" ? 'disabled' : ''}
                 required
                 placeholder="توضیحات"
                 onChange={(event) => this.setState({ product: { ...this.state.product, comment: event.target.value } })}

@@ -14,7 +14,7 @@ class CompanyTelephoneList extends Component {
 
         { field: 'companyID',hide:true, sortable: true, headerName: "شناسه  ", filter: 'agNumberColumnFilter', width: 120 },
         { field: 'rowID', sortable: true, headerName: " ردیف ", filter: 'agNumberColumnFilter', width: 75 },
-        { field: 'data', sortable: true, headerName: "  تلفن", filter: 'agTextColumnFilter', width: 120 },
+        { field: 'data', sortable: true, headerName: "  تلفن", filter: 'agTextColumnFilter', width: 200 },
         { field: 'dataType', sortable: true, headerName: "نوع  ", filter: 'agTextColumnFilter', width: 250 },
         { field: 'comment', sortable: true, headerName: " توضیحات ", filter: 'agNumberColumnFilter', width: 170 },
       ]
