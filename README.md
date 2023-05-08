@@ -21,6 +21,11 @@ or D:\Git\MyAntWiedlyTheme\src\containers/sidebar      SidebarContent.js
 
 D:\Git\MyAntWiedlyTheme\src\lngProvider\locales   fa_IR.json
 
+## Change In css
+
+D:\Git\React_Wieldy_source-rtl\source-rtl\src\assets\vendors
+
+
 ## Branches
 | Branch                           | Description   |
 | -------------------------------- | ------------- |
