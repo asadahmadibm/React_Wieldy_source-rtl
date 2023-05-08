@@ -23,7 +23,7 @@ D:\Git\MyAntWiedlyTheme\src\lngProvider\locales   fa_IR.json
 
 ## Change In css
 
-D:\Git\React_Wieldy_source-rtl\source-rtl\src\assets\vendors
+D:\Git\React_Wieldy_source-rtl\source-rtl\src\assets\vendors\RTL.css
 
 
 ## Branches
