@@ -5,14 +5,7 @@ body {
   margin: 0;
 }
 
-.rmdp-input {
-  border: 1px solid #c0c4d6;
-  border-radius: 5px;
-  height: 35px !important;
-  width: 100% !important;
-  margin: 1px 0;
-  padding: 2px 5px;
-}
+
 
 #app-site {
   display: flex;
