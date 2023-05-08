@@ -48,6 +48,12 @@ class CompanyConnectionList extends Component {
       ]
     };
   }
+  componentWillReceiveProps = (nextProps) => {
+    this.setState({
+      visible: nextProps.visible,
+      refresh:false
+    })
+  }
 
   RefreshCompanyProduct = () => {
     this.setState({

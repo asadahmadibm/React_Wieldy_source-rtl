@@ -28,6 +28,7 @@ class CompanyDetail extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      visible : false,
       companyID: this.props.location.state === undefined ? '' : this.props.location.state.companyID, //this.props.companyID,
       // clearform: this.props.clearform,
       crmCompanyDTO: {
@@ -288,6 +289,7 @@ class CompanyDetail extends Component {
   };
   handelChangeemail = (e) => {
     this.setState({
+      visible:false,
       crmCompanyDTO: {
         ...this.state.crmCompanyDTO,
         email: e.target.value
@@ -581,7 +583,7 @@ class CompanyDetail extends Component {
                 marginBottom: 15
               }}
             >
-              <CompanyProductList companyID={this.state.companyID}></CompanyProductList>
+              <CompanyProductList companyID={this.state.companyID} visible={this.state.visible}></CompanyProductList>
             </Card>
           </Col>
           {/* <Col xs={24} sm= {24} md={12} lg= {12} xl={8} >
@@ -601,7 +603,7 @@ class CompanyDetail extends Component {
               extra={<i className="icon icon-search-new gx-pointer gx-fs-xxl gx-text-primary" />}>
               <Tabs defaultActiveKey="1" centered={false} size="small">
                 <TabPane tab=" رابطها" key="2">
-                  <CompanyConnectionList companyID={this.state.companyID}></CompanyConnectionList>
+                  <CompanyConnectionList companyID={this.state.companyID} visible={this.state.visible}></CompanyConnectionList>
                 </TabPane>
                 <TabPane tab=" شماره تماس" key="1">
                   <CompanyTelephoneList companyID={this.state.companyID}></CompanyTelephoneList>

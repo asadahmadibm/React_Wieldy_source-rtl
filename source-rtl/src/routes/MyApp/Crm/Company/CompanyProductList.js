@@ -15,7 +15,7 @@ class CompanyProductList extends Component {
       productList:[],
       mode: "",
       refresh: false,
-      visible: false,
+      visible: this.props.visible,
       product: {
         companyID: props.companyID,
         productID: 0,
@@ -45,11 +45,19 @@ class CompanyProductList extends Component {
     return foundItem.productName;
   }
 
+  componentWillReceiveProps = (nextProps) => {
+      this.setState({
+        visible: nextProps.visible,
+        refresh:false
+      })
+    }
+
   componentDidMount = () => {
 
     this.GetDataBase(false);
 
   }
+
 
   GetDataBase = (shouldLog) => {
     document.body.classList.add('loading-indicator');
