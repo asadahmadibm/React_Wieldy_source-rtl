@@ -6,17 +6,22 @@ import AdminGrid from "../../../components/Admin-Grid/AdminGrid";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
+import AdminForm from "../../../components/Admin-Form/AdminForm";
 
 class EcarSalesList extends Component {
 
   constructor(props) {
     super(props)
+    let sexarray = [{ indexField: 2, valueField: "زن " }, { indexField: 1, valueField: "مرد" }]
     this.state = {
-      sex: [{ indexField: 2, valueField: "زن " }, { indexField: 1, valueField: "مرد" }],
+      visibledetail:false,
+      refresh: false,
+      rowselected: [],
+      sex: sexarray,
       mellicode: '',
 
       columnDefs: [
-        { field: 'id', sortable: true, headerName: "شناسه  ", filter: 'agNumberColumnFilter', width: 120 },
+        { field: 'id', sortable: true, headerName: "شناسه  ", filter: 'agNumberColumnFilter', width: 120, required: true },
         { field: 'name', sortable: true, headerName: " نام", filter: 'agTextColumnFilter', width: 138 },
         // {
         //     field: 'date', sortable: true, headerName: "تاریخ معامله ", filter: 'agNumberColumnFilter', width: 130,
@@ -25,7 +30,8 @@ class EcarSalesList extends Component {
         { field: 'family', sortable: true, headerName: "نام خانوادگی ", filter: 'agTextColumnFilter', width: 170 },
         { field: 'mellicode', sortable: true, headerName: "کد ملی ", filter: 'agTextColumnFilter', width: 170 },
         {
-          field: 'sex', sortable: true, headerName: " جنسیت ", filter: 'agSetColumnFilter', width: 130,
+          field: 'sex', sortable: true, headerName: " جنسیت ", filter: 'agSetColumnFilter', width: 130, widget: 'select',
+          options: sexarray,
           valueFormatter: params => this.getEnumValue(params.value, this.state.sex),
           filterParams: {
             valueFormatter: params => this.getEnumValue(params.value, this.state.sex), //this.getEnumValue(Number(params.value), paymentMethod),
@@ -69,35 +75,54 @@ class EcarSalesList extends Component {
     return foundItem.valueField;
   }
 
-  ClickCrud = (mode,rowselected) => {
-    console.log("rowselected",rowselected);
+
+  ClickCrud = (mode, rowselected) => {
+    console.log("rowselected", rowselected);
     switch (mode) {
 
       case "Add":
-        this.props.history.push({ pathname: '/myapp/EcarSales', state: { mellicode: null } })
+        this.setState({ visibledetail: true, mode: "Add",refresh:false })
+        // this.props.history.push({ pathname: '/myapp/EcarSales', state: { mellicode: null } })
         break;
       case "Edit":
       case "Delete":
       case "Detail":
-        this.props.history.push({ pathname: '/myapp/EcarSales', state: { mellicode: rowselected.mellicode } })
+        this.setState({ visibledetail: true, mode: mode, rowselected: rowselected,refresh:false })
+        // this.props.history.push({ pathname: '/myapp/EcarSales', state: { mellicode: rowselected.mellicode } })
         break;
     }
   }
+
+  ClickForm = () => {
+    this.setState({ visibledetail: false, refresh: true })
+  }
+
+
   render() {
     return (
       <div className="gx-main-content">
+        <AdminForm
+          ClickForm={this.ClickForm}
+          mode={this.state.mode}
+          columnDefs={this.state.columnDefs}
+          title="کاربران"
+          listid={[{id:this.state.rowselected.mellicode}]}
+          apiname="EcarSales"
+          visibledetail={this.state.visibledetail}
+        />
+
         <Card className="gx-card" title="لیست کاربران">
           <AdminGrid
             ClickCrud={this.ClickCrud}
-            isshowInLoad={true} 
-            columnDefs={this.state.columnDefs} 
-            height="65vh" 
-            title="لیست کاربران" 
-            isshowdetail={true} 
-            apiname="EcarSales" 
-            pageDetail="index" />
+            isshowInLoad={true}
+            columnDefs={this.state.columnDefs}
+            height="65vh"
+            title="لیست کاربران"
+            isshowdetail={true}
+            apiname="EcarSales"
+            pageDetail="index"
+            refresh={this.state.refresh} />
         </Card>
-
       </div>
     )
   }

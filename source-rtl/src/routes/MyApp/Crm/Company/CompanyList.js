@@ -6,12 +6,16 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import CheckboxRenderer from "../../../../components/Admin-Grid/CheckboxRenderer";
+import AdminForm from "../../../../components/Admin-Form/AdminForm";
 
 class CompanyList extends Component {
 
   constructor(props) {
     super(props)
     this.state = {
+      visibledetail:false,
+      refresh: false,
+      rowselected: [],
       sex: [{ indexField: 2, valueField: "زن " }, { indexField: 1, valueField: "مرد" }],
       companyID: null,
       ostan: [],
@@ -32,7 +36,8 @@ class CompanyList extends Component {
         { field: 'email', sortable: true, headerName: "ایمیل  ", filter: 'agTextColumnFilter', width: 250 },
         // { field: 'groupID', sortable: true, headerName: " گروه ", filter: 'agNumberColumnFilter', width: 170 },
         {
-          field: 'groupID', sortable: true, headerName: " گروه  ", filter: 'agSetColumnFilter', width: 130,
+          field: 'groupID', sortable: true, headerName: " گروه  ", filter: 'agSetColumnFilter', width: 130 , widget: 'select',
+          // options: [],
           valueFormatter: params => this.getEnumValuegroup(params.value, this.state.group),
           filterParams: {
             valueFormatter: params => this.getEnumValuegroup(params.value, this.state.group), //this.getEnumValue(Number(params.value), paymentMethod),
@@ -119,6 +124,9 @@ class CompanyList extends Component {
   componentDidMount = () => {
 
     this.GetDataBase(false);
+    var result=this.columnDefs.filter(it=>it.field=="groupID");
+    console.log(result);
+
 
   }
 
@@ -194,19 +202,35 @@ class CompanyList extends Component {
     switch (mode) {
 
       case "Add":
-        this.props.history.push({ pathname: '/myapp/crm/company/companydetail', state: { companyID: null } })
+        // this.props.history.push({ pathname: '/myapp/crm/company/companydetail', state: { listid: null } })
+        this.setState({ visibledetail: true, mode: "Add",refresh:false })
         break;
       case "Edit":
       case "Delete":
       case "Detail":
-        this.props.history.push({ pathname: '/myapp/crm/company/companydetail', state: { companyID: rowselected.companyID } })
+        this.setState({ visibledetail: true, mode: mode, rowselected: rowselected,refresh:false })  
+      // this.props.history.push({ pathname: '/myapp/crm/company/companydetail', state: { listid: [{ id:rowselected.companyID.toString()}] } })
 
     }
   }
 
+  ClickForm = () => {
+    this.setState({ visibledetail: false, refresh: true })
+  }
+
+
   render() {
     return (
       <div className="gx-main-content">
+          <AdminForm
+          ClickForm={this.ClickForm}
+          mode={this.state.mode}
+          columnDefs={this.state.columnDefs}
+          title="شرکتها"
+          listid={[{id:this.state.rowselected.companyID==undefined ? "" :this.state.rowselected.companyID.toString() }]}
+          apiname="CrmCompany"
+          visibledetail={this.state.visibledetail}
+        />
         <Card className="gx-card" title="لیست شرکتها">
           <AdminGrid
             ClickCrud={this.ClickCrud}

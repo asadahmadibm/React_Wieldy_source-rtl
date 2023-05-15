@@ -12,6 +12,8 @@ class CompanyProductList extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      serverRowsRequest:this.props.serverRowsRequest,
+      visibledetail:false,
       productList:[],
       mode: "",
       refresh: false,
@@ -144,10 +146,11 @@ class CompanyProductList extends Component {
           isshowInLoad={true}
           columnDefs={this.state.columnDefs}
           height="20vh"
+          serverRowsRequest={this.state.serverRowsRequest}
           isshowdetail={true}
-          apiname="CrmCompanyProduct/GetByCompanyId"
+          apiname="CrmCompanyProduct"
           parameterCompanyId={this.state.product.companyID}
-          pageDetail="CrmCompanyProduct/GetByCompanyId" />
+          pageDetail="CrmCompanyProduct" />
         <CompanyProductDetail
           visible={this.state.visible}
           product={this.state.product}

@@ -299,9 +299,10 @@ class AdminGrid extends Component {
     }
     componentWillReceiveProps = (nextProps) => {
 
+        console.log("nextProps.serverRowsRequest",nextProps.serverRowsRequest);
         if (nextProps.refresh != undefined && nextProps.refresh != this.state.refresh) {
             console.log("nextProps.refresh", nextProps.refresh);
-            //&& this.state.refresh != nextProps.refresh
+
             const dataSource = this.getServerSideDatasource();
             this.params.api.setDatasource(dataSource);
             this.setState({ refresh: false, isshowInLoad: true });
@@ -317,6 +318,7 @@ class AdminGrid extends Component {
     }
 
     onGridReady = (params) => {
+        console.log("params",params);
         this.params = params;
         if (this.state.isshowInLoad == true) {
             const dataSource = this.getServerSideDatasource();
@@ -327,19 +329,6 @@ class AdminGrid extends Component {
         return {
             getRows: (params) => {
                 this.state.serverRowsRequest.SortModels = params.sortModel;
-                // if (this.state.serverRowsRequest.SortModels == '') {
-                //     if (this.state.apiname == 'Exchanges')
-                //         this.state.serverRowsRequest.SortModels = [{ sort: 'desc', colId: 'id' }]
-                //     if (this.state.apiname == 'NimaRequest')
-                //         this.state.serverRowsRequest.SortModels = [{ sort: 'desc', colId: 'requestCode' }]
-                //     if (this.state.apiname == 'RialiPaymentReport')
-                //         this.state.serverRowsRequest.SortModels = [{ sort: 'desc', colId: 'paymentId' }]
-
-                //     if (this.state.apiname == 'NimaOffer') {
-                //         this.state.serverRowsRequest.SortModels = [{ sort: 'desc', colId: 'offerId' }]
-                //     }
-
-                // }
                 let filteredFields = params.filterModel;
                 let mappedFilters = [];
                 for (let filteredField in filteredFields) {
@@ -384,9 +373,7 @@ class AdminGrid extends Component {
                 if (this.state.apiname === "CrmCompanyProduct/GetByCompanyId" ||
                     this.state.apiname === "CrmCompanyConnection/GetByCompanyId" ||
                     this.state.apiname === "CrmCompanyTelephone/GetByCompanyId") {
-                    // console.log(this.state.parameterCompanyId);
-                    // console.log("this.state.parameterCompanyId");
-                    axios.post("/" + this.state.apiname, { id: this.state.parameterCompanyId }, { timeout: 90000 })
+                     axios.post("/" + this.state.apiname, { id: this.state.parameterCompanyId }, { timeout: 90000 })
                         .then(res => {
                             console.log("res.data.data.list", res.data.data.list);
                             params.successCallback(res.data.data.list, res.data.data.totalCount);
@@ -399,7 +386,8 @@ class AdminGrid extends Component {
                         });
                 }
                 else {
-                    axios.post("/" + this.state.apiname, this.state.serverRowsRequest, { timeout: 90000 })
+                    console.log("this.state.serverRowsRequest",this.state.serverRowsRequest);
+                    axios.post("/" + this.state.apiname+"/GetAll", this.state.serverRowsRequest, { timeout: 90000 })
                         .then(res => {
                             console.log("res.data.data.list", res.data.data.list);
                             params.successCallback(res.data.data.list, res.data.data.totalCount);

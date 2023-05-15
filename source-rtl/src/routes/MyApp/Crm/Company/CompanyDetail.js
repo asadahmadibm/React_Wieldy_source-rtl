@@ -29,7 +29,8 @@ class CompanyDetail extends Component {
     super(props)
     this.state = {
       visible : false,
-      companyID: this.props.location.state === undefined ? '' : this.props.location.state.companyID, //this.props.companyID,
+      // companyID: this.props.location.state === undefined ? '' : this.props.location.state.companyID, //this.props.companyID,
+      listid: this.props.location.state === undefined ? '' : this.props.location.state.listid, //this.props.companyID,
       // clearform: this.props.clearform,
       crmCompanyDTO: {
         companyID: 0,
@@ -63,26 +64,11 @@ class CompanyDetail extends Component {
   componentDidMount = () => {
     this.setState({ sex: [{ key: 1, value: "مرد" }, { key: 2, value: "زن" }] });
     this.GetDataBase(false);
-    // console.log(this.state.companyID);
-    if (this.state.companyID != null)
-      this.GetData(this.state.companyID);
-    // this.setState({ companyID: this.state.companyID})
+    console.log("componentDidMount", this.state.listid);
+    if (this.state.listid != null)
+      this.GetData(this.state.listid);
   }
 
-  // componentWillReceiveProps = (nextProps) => {
-  //   // if (this.props.companyID != nextProps.companyID) {
-  //     console.log("nextProps");
-  //     console.log(nextProps);
-  //   if (this.state.companyID != nextProps.companyID) {
-
-  //     this.GetData(nextProps.companyID.companyID);
-  //     this.setState({ companyID: nextProps.companyID })
-  //   }
-  //   // if (this.state.clearform != nextProps.clearform) {
-  //   //   this.handleReset();
-  //   //   this.setState({ clearform: false })
-  //   // }
-  // }
 
 
   GetDataBase = (shouldLog) => {
@@ -152,14 +138,11 @@ class CompanyDetail extends Component {
 
   }
 
-  GetData = (companyID) => {
-    // let data = UserService.GetProfile();
-    // this.props.form.setFieldsValue(data);
-    console.log("companyID");
-    console.log(companyID);
+  GetData = (listid) => {
     this.props.form.setFieldsValue([]);
     document.body.classList.add('loading-indicator');
-    axios.get("/CrmCompany?companyID=" + companyID)
+    console.log("JSON.stringify(listid) ",listid );
+    axios.post("/CrmCompany/GetById" ,listid   )
       .then(response => {
         let res = response.data.data;
         if (res != null) {
@@ -575,7 +558,6 @@ class CompanyDetail extends Component {
           </Form>
         </Card>
         <Row>
-          {/* <Col lg={8} md={12} xs={24} sm={12} xl={8}  > */}
           <Col xs={24} sm={24} md={12} lg={12} xl={8} >
 
             <Card className="gx-card" title=" محصولات" size="small"
@@ -583,22 +565,12 @@ class CompanyDetail extends Component {
                 marginBottom: 15
               }}
             >
-              <CompanyProductList companyID={this.state.companyID} visible={this.state.visible}></CompanyProductList>
+              <CompanyProductList 
+              serverRowsRequest={{PageIndex: 1, PageSize: 200, SortModels:[], filterModels: [{Field: 'id', Condition1: {filterType: 'number', type: 'equals', filter: '1'}}]}}
+              visible={this.state.visible}></CompanyProductList>
             </Card>
           </Col>
-          {/* <Col xs={24} sm= {24} md={12} lg= {12} xl={8} >
-            <Card className="gx-card" title=" شماره تماس">
-              <CompanyTelephoneList  companyID={this.state.companyID}></CompanyTelephoneList>
-            </Card>
-          </Col>
-          <Col xs={24} sm= {24} md={12} lg= {12} xl={8} >
-            <Card className="gx-card" title="  رابطها">
-            <CompanyConnectionList  companyID={this.state.companyID}></CompanyConnectionList>
-            </Card>
-          </Col> */}
-
-
-          <Col xs={24} sm={24} md={12} lg={12} xl={16} >
+          {/* <Col xs={24} sm={24} md={12} lg={12} xl={16} >
             <Widget styleName="gx-card-tabs"
               extra={<i className="icon icon-search-new gx-pointer gx-fs-xxl gx-text-primary" />}>
               <Tabs defaultActiveKey="1" centered={false} size="small">
@@ -611,7 +583,7 @@ class CompanyDetail extends Component {
 
               </Tabs>
             </Widget>
-          </Col>
+          </Col> */}
 
         </Row>
       </div>
