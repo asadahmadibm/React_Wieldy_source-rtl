@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router";
-import { Button, Select, Modal, Form, Input, Card, Col, Row, InputNumber, message } from 'antd';
+import { Button, Select, Modal, Form, Input, Card, Col, Row, Checkbox, InputNumber, message } from 'antd';
 
 import AuthService from "../../Services/AuthService";
 import DatePicker from "react-multi-date-picker"
@@ -32,20 +32,22 @@ class AdminForm extends Component {
 
   componentDidMount = () => {
     console.log("this.state.id)", this.state.id);
+
     // this.GetData(this.state.id);
   }
 
   componentWillReceiveProps = (nextProps) => {
+
     if (nextProps.visibledetail != this.state.visibledetail) {
 
       this.setState({
         visibledetail: nextProps.visibledetail,
         mode: nextProps.mode,
+        columnDefs: nextProps.columnDefs
       })
       this.props.form.resetFields();
       if (nextProps.mode != undefined && nextProps.mode != "Add") {
         this.GetData(nextProps.listid);
-        // console.log("this.state.product", this.state);
       }
     }
   }
@@ -56,8 +58,7 @@ class AdminForm extends Component {
     // this.props.form.setFieldsValue(data);
     this.props.form.resetFields();
     document.body.classList.add('loading-indicator');
-    console.log("JSON.stringify(listid) ",listid );
-    axios.post("/" + this.state.apiname + "/GetById" ,listid   )
+    axios.post("/" + this.state.apiname + "/GetById", listid)
       .then(response => {
         let res = response.data.data;
         if (res != null) {
@@ -83,7 +84,7 @@ class AdminForm extends Component {
     return data;
   }
 
-  AddData = (product) => {
+  UpsertData = (product) => {
     // const CreateCompanyProductDTO = {
     //   CompanyId: product.companyID,
     //   ProductID: product.productID,
@@ -93,42 +94,9 @@ class AdminForm extends Component {
     // }
     // console.log("product");
     // console.log(product);
+    console.log("product",product);
     document.body.classList.add('loading-indicator');
-    axios.post("/" + this.state.apiname + "/Insert", product)
-      .then(response => {
-        toast.info("اطلاعات کاربر ایجاد شد ");
-        let res = response.data.data;
-        if (res != null) {
-          this.setState({
-            visible: false,
-          });
-          this.props.parentCallback();
-          // res.birthdate = new DateObject({ date: res.birthdate, calendar: persian, locale: persian_fa });//"1355/05/21",
-          // res.sodoordate = new DateObject({ date: res.sodoordate, calendar: persian, locale: persian_fa });//"1355/05/21",
-        }
-        else {
-          toast.info("اطلاعات کاربر ایجاد نشد ");
-        }
-        document.body.classList.remove('loading-indicator')
-
-      }).catch(res => {
-        document.body.classList.remove('loading-indicator')
-        toast.error("اشکال در فراخوانی سرویس")
-      });
-  }
-
-  UpdateData = (product) => {
-    // const CreateCompanyProductDTO = {
-    //   CompanyId: product.companyID,
-    //   ProductID: product.productID,
-    //   rowID: product.rowID,
-    //   Qty: product.qty,
-    //   Comment : product.comment,
-    // }
-    // console.log("product");
-    // console.log(product);
-    document.body.classList.add('loading-indicator');
-    axios.post("/" + this.state.apiname + "/Update", product)
+    axios.post("/" + this.state.apiname + "/Upsert", product)
       // .then((response) => {
       //   // Return a promise with an artificial delay.
       //   return new Promise((resolve) => {
@@ -140,7 +108,7 @@ class AdminForm extends Component {
       .then(data => {
         let res = data.data.data;
         if (res != null) {
-          toast.warning("اطلاعات کاربر ویرایش شد ");
+          toast.warning("اطلاعات کاربر ثبت شد ");
           this.setState({
             visible: false,
           });
@@ -149,7 +117,7 @@ class AdminForm extends Component {
           // res.sodoordate = new DateObject({ date: res.sodoordate, calendar: persian, locale: persian_fa });//"1355/05/21",
         }
         else {
-          toast.info("اطلاعات کاربر ایجاد نشد ");
+          toast.info("اطلاعات کاربر ثبت نشد ");
         }
         document.body.classList.remove('loading-indicator')
 
@@ -160,14 +128,14 @@ class AdminForm extends Component {
   }
 
   DeleteData = (product) => {
-    const list = [{
-      CompanyId: product.companyID,
-      rowID: product.rowID,
-    }]
-    console.log("product");
-    console.log(product);
+    // const listid = [{
+    //   id: product.id.toString(),
+    // }]
+
+    console.log("product",product);
     document.body.classList.add('loading-indicator');
-    axios.delete("/" + this.state.apiname + "/Delete", { data: list })
+    axios.post("/" + this.state.apiname + "/Delete",product)
+    //axios.delete("/" + this.state.apiname + "/Delete", listid)
       .then(response => {
         let res = response.data.errors;
         if (res.length == 0) {
@@ -200,10 +168,8 @@ class AdminForm extends Component {
         console.log('Received values of form: ', data);
         switch (this.state.mode) {
           case "Add":
-            this.AddData(data);
-            break;
           case "Edit":
-            this.UpdateData(data);
+            this.UpsertData(data);
             break;
           case "Delete":
             this.DeleteData(data);
@@ -230,15 +196,19 @@ class AdminForm extends Component {
     return (
 
       <Modal
+      // footer={null}
         width={1000}
         title={this.state.mode === "Add" ? "ایجاد" : this.state.mode === "Edit" ? "ویرایش" : "حذف"}
         visible={this.state.visibledetail}
         onOk={this.handleSubmit}
+        okButtonProps={{ style: { display: this.state.mode === "Detail" ? 'none' : ''  } }}
+        // cancelButtonProps={{ style: { display: 'none' } }}
         onCancel={this.handleCancelButtonClick}
         okType={this.state.mode === "Delete" ? "danger" : "primary"}
         okText={this.state.mode === "Add" ? "ایجاد" : this.state.mode === "Edit" ? "ویرایش" : "حذف"}>
         {/* <Card className="gx-card" title={(this.state.mode === "Add" ? "ایجاد" : this.state.mode === "Edit" ? "ویرایش" : "حذف") + " " + this.state.title}> */}
         <Form
+          
           onSubmit={this.handleSubmit}
           name="basic"
           // layout="inline"
@@ -253,25 +223,33 @@ class AdminForm extends Component {
           <Row >
 
             {this.state.columnDefs.map(child =>
-              <Col lg={8} md={12} xs={24} sm={12} xl={6}  >
+              <Col lg={8} md={8} xs={24} sm={8} xl={8}  >
                 <Form.Item
                   label={child.headerName}
                   name={child.field}
+
                 >
                   {getFieldDecorator(child.field, {
+                    valuePropName: child.widget == "checkbox" ? "checked" : 'value',
                     rules: [{ required: child.required, message: ' نام کاربری را وارد نمایید' }],
                   })(
-                    
-                    child.widget == 'select' && child.options!=undefined && child.options.length>0 ?
-                      
+
+
+                    child.widget == 'select' && child.options != undefined ?
+
                       <Select
                         showSearch
                         allowClear
                       >
-                        {child.options.map(child1 => <Select.Option key={child1.indexField} value={child1.indexField} >{child1.valueField}</Select.Option >)}
+                        {child.options.map(child1 => <Select.Option key={child1.key} value={child1.key} >{child1.value}</Select.Option >)}
                       </Select>
                       :
-                      <Input />
+                      child.widget == 'checkbox' ?
+
+                        <Checkbox />
+                        :
+
+                        <Input />
                   )}
                 </Form.Item>
               </Col>

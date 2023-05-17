@@ -37,34 +37,36 @@ class CompanyList extends Component {
         // { field: 'groupID', sortable: true, headerName: " گروه ", filter: 'agNumberColumnFilter', width: 170 },
         {
           field: 'groupID', sortable: true, headerName: " گروه  ", filter: 'agSetColumnFilter', width: 130 , widget: 'select',
-          // options: [],
-          valueFormatter: params => this.getEnumValuegroup(params.value, this.state.group),
+           options: [],
+          valueFormatter: params => this.getEnumValue(params.value, this.state.group),
           filterParams: {
-            valueFormatter: params => this.getEnumValuegroup(params.value, this.state.group), //this.getEnumValue(Number(params.value), paymentMethod),
-            values: (params) => { params.success(this.state.group.map(item => item.groupID)) }
+            valueFormatter: params => this.getEnumValue(params.value, this.state.group), //this.getEnumValue(Number(params.value), paymentMethod),
+            values: (params) => { params.success(this.state.group.map(item => item.key)) }
           }
         },
         // { field: 'industryID', sortable: true, headerName: " صنعت ", filter: 'agNumberColumnFilter', width: 170 },
         {
-          field: 'industryID', sortable: true, headerName: " صنعت  ", filter: 'agSetColumnFilter', width: 130,
-          valueFormatter: params => this.getEnumValueindustry(params.value, this.state.industry),
+          field: 'industryID', sortable: true, headerName: " صنعت  ", filter: 'agSetColumnFilter', width: 130, widget: 'select',
+          options: [],
+          valueFormatter: params => this.getEnumValue(params.value, this.state.industry),
           filterParams: {
-            valueFormatter: params => this.getEnumValueindustry(params.value, this.state.industry), //this.getEnumValue(Number(params.value), paymentMethod),
-            values: (params) => { params.success(this.state.industry.map(item => item.industryID)) }
+            valueFormatter: params => this.getEnumValue(params.value, this.state.industry), //this.getEnumValue(Number(params.value), paymentMethod),
+            values: (params) => { params.success(this.state.industry.map(item => item.key)) }
           }
         },
         // { field: 'regionID', sortable: true, headerName: " ناحیه ", filter: 'agNumberColumnFilter', width: 170 },
         {
-          field: 'regionID', sortable: true, headerName: " ناحیه  ", filter: 'agSetColumnFilter', width: 130,
-          valueFormatter: params => this.getEnumValueregion(params.value, this.state.ostan),
+          field: 'regionID', sortable: true, headerName: " ناحیه  ", filter: 'agSetColumnFilter', width: 160
+          , widget: 'select', options: [],
+          valueFormatter: params => this.getEnumValue(params.value, this.state.ostan),
           filterParams: {
-            valueFormatter: params => this.getEnumValueregion(params.value, this.state.ostan), //this.getEnumValue(Number(params.value), paymentMethod),
-            values: (params) => { params.success(this.state.ostan.map(item => item.regionID)) }
+            valueFormatter: params => this.getEnumValue(params.value, this.state.ostan), //this.getEnumValue(Number(params.value), paymentMethod),
+            values: (params) => { params.success(this.state.ostan.map(item => item.key)) }
           }
         },
         // { field: 'recommenderID', sortable: true, headerName: " گروه ", filter: 'agNumberColumnFilter', width: 170 },
         {
-          field: 'isCustomer', sortable: true, headerName: "مشتری", filter: 'agSetColumnFilter', width: 170,
+          field: 'isCustomer', sortable: true, headerName: "مشتری", filter: 'agSetColumnFilter', width: 170,widget: 'checkbox',
           filterParams: {
             values: [true, false]
           },
@@ -72,7 +74,7 @@ class CompanyList extends Component {
 
         },
         {
-          field: 'isActive', sortable: true, headerName: " فعال  ", filter: 'agSetColumnFilter', width: 170,
+          field: 'isActive', sortable: true, headerName: " فعال  ", filter: 'agSetColumnFilter', width: 170,widget: 'checkbox',
           filterParams: {
             values: [true, false]
           },
@@ -80,7 +82,7 @@ class CompanyList extends Component {
 
         },
         {
-          field: 'unsubscribed', sortable: true, headerName: "  عدم ارسال ایمیل ", filter: 'agSetColumnFilter', width: 170,
+          field: 'unsubscribed', sortable: true, headerName: "  عدم ارسال ایمیل ", filter: 'agSetColumnFilter', width: 170,widget: 'checkbox',
           filterParams: {
             values: [true, false]
           },
@@ -91,46 +93,44 @@ class CompanyList extends Component {
         { field: 'registerDate', sortable: true, headerName: " تاریخ ثبت ", filter: 'agTextColumnFilter', width: 170 },
 
         { field: 'selectiveGroup', sortable: true, headerName: " گروه انتخابی ", filter: 'agTextColumnFilter', width: 170 },
-
+        { field: 'address', sortable: true, headerName: " خیابان ", filter: 'agTextColumnFilter', width: 170 },
       ]
     };
 
   }
 
-  getEnumValuegroup = (code, formattingInfo) => {
-    let foundItem = formattingInfo.find(({ groupID }) => groupID === code);
-    if (!foundItem) return;
-    return foundItem.groupName;
-  }
-
-  getEnumValueindustry = (code, formattingInfo) => {
-    let foundItem = formattingInfo.find(({ industryID }) => industryID === code);
-    if (!foundItem) return;
-    return foundItem.industryName;
-  }
-
-  getEnumValueregion = (code, formattingInfo) => {
-    let foundItem = formattingInfo.find(({ regionID }) => regionID === code);
-    if (!foundItem) return;
-    return foundItem.regionName;
-  }
-
   getEnumValue = (code, formattingInfo) => {
-    let foundItem = formattingInfo.find(({ indexField }) => indexField === code);
+    // console.log("formattingInfo",formattingInfo);
+    let foundItem = formattingInfo.find(({ key }) => key === code);
     if (!foundItem) return;
-    return foundItem.valueField;
+    return foundItem.value;
   }
 
-  componentDidMount = () => {
+  componentDidMount = async() => {
 
-    this.GetDataBase(false);
-    var result=this.columnDefs.filter(it=>it.field=="groupID");
-    console.log(result);
+    await this.GetDataBase(false);
+    let columnDefs = [...this.state.columnDefs];
+    const indexgroupID = this.state.columnDefs.findIndex(emp => emp.field === "groupID");
+    let columnDefgroupID = {...columnDefs[indexgroupID]};
+    columnDefgroupID.options=this.state.group;
+    columnDefs[indexgroupID]=columnDefgroupID
+    // this.setState({columnDefs});
+    const indexindustryID = this.state.columnDefs.findIndex(emp => emp.field === "industryID");
+    let columnDefindustryID = {...columnDefs[indexindustryID]};
+    columnDefindustryID.options=this.state.industry;
+    columnDefs[indexindustryID]=columnDefindustryID
+   
+    // console.log("this.state.columnDefs",this.state.columnDefs);
+    const indexostansokoonat = this.state.columnDefs.findIndex(emp => emp.field === "regionID");
+    let columnDefostansokoonat = { ...columnDefs[indexostansokoonat] };
+    columnDefostansokoonat.options = this.state.ostan;
+    columnDefs[indexostansokoonat] = columnDefostansokoonat
 
+    this.setState({columnDefs});
 
   }
 
-  GetDataBase = (shouldLog) => {
+  GetDataBase = async(shouldLog) => {
     document.body.classList.add('loading-indicator');
     axios.interceptors.request.use(function (config) {
       config.headers.IsSOCLog = (shouldLog == false ? "false" : "true");
@@ -142,7 +142,7 @@ class CompanyList extends Component {
     //   "Content-Type": 'application/json',
     // });
     // console.log(getHeader(false));
-    axios.post("/CRM_Region", { id: null })
+    await axios.post("/CRM_Region/GetDropDown", { id: null })
       .then(response => {
 
         let res = response.data.data.list;
@@ -154,13 +154,13 @@ class CompanyList extends Component {
         }
         document.body.classList.remove('loading-indicator')
         this.setState({ ostan: res });
-        console.log(res);
+        // console.log(res);
       }).catch(res => {
         document.body.classList.remove('loading-indicator')
         message.error("اشکال در فراخوانی سرویس استان")
       });
 
-    axios.get("/Group/GetAll")
+      await axios.get("/Group/GetDropDown")
       .then(response => {
         let res = response.data.data;
         if (res != null) {
@@ -171,13 +171,13 @@ class CompanyList extends Component {
         }
         document.body.classList.remove('loading-indicator')
         this.setState({ group: res });
-        console.log(res);
+        // console.log("group:",res);
       }).catch(res => {
         document.body.classList.remove('loading-indicator')
         message.error("اشکال در فراخوانی سرویس گروه")
       });
 
-    axios.get("/Industry/GetAll")
+    await axios.get("/Industry/GetDropDown")
       .then(response => {
         let res = response.data.data;
         if (res != null) {
@@ -188,7 +188,7 @@ class CompanyList extends Component {
         }
         document.body.classList.remove('loading-indicator')
         this.setState({ industry: res });
-        console.log(res);
+        // console.log("industry: ",res);
       }).catch(res => {
         document.body.classList.remove('loading-indicator')
         message.error("اشکال در فراخوانی سرویس صنعت")
@@ -198,17 +198,17 @@ class CompanyList extends Component {
   }
 
   ClickCrud = (mode,rowselected) => {
-    console.log("rowselected",rowselected);
+    // console.log("ClickCrud.this.state.columnDefs",this.state.columnDefs);
     switch (mode) {
 
       case "Add":
         // this.props.history.push({ pathname: '/myapp/crm/company/companydetail', state: { listid: null } })
-        this.setState({ visibledetail: true, mode: "Add",refresh:false })
+        this.setState({ visibledetail: true, mode: "Add",refresh:false ,columnDefs:this.state.columnDefs })
         break;
       case "Edit":
       case "Delete":
       case "Detail":
-        this.setState({ visibledetail: true, mode: mode, rowselected: rowselected,refresh:false })  
+        this.setState({ visibledetail: true, mode: mode, rowselected: rowselected,refresh:false ,columnDefs:this.state.columnDefs})  
       // this.props.history.push({ pathname: '/myapp/crm/company/companydetail', state: { listid: [{ id:rowselected.companyID.toString()}] } })
 
     }
@@ -217,7 +217,13 @@ class CompanyList extends Component {
   ClickForm = () => {
     this.setState({ visibledetail: false, refresh: true })
   }
+  Refreshlist = () => {
+    this.setState({
+      refresh: true,
+      visible: false,
+    });
 
+  }
 
   render() {
     return (
@@ -230,6 +236,7 @@ class CompanyList extends Component {
           listid={[{id:this.state.rowselected.companyID==undefined ? "" :this.state.rowselected.companyID.toString() }]}
           apiname="CrmCompany"
           visibledetail={this.state.visibledetail}
+          parentCallback={this.Refreshlist}
         />
         <Card className="gx-card" title="لیست شرکتها">
           <AdminGrid
@@ -238,6 +245,7 @@ class CompanyList extends Component {
             columnDefs={this.state.columnDefs}
             height="65vh" title="لیست شرکتها"
             isshowdetail={true}
+            refresh={this.state.refresh}
             apiname="CrmCompany"
             pageDetail="companyDetail"
             showfloatingFilter={true} />

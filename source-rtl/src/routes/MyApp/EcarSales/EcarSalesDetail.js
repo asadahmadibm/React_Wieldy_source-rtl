@@ -66,7 +66,7 @@ class EcarSalesDetail extends Component {
     //   "Content-Type": 'application/json',
     // });
     // console.log(getHeader(false));
-    axios.post("/CRM_Region", { id: 1 })
+    axios.post("/CRM_Region/GetCRM_Region", { id: 1 })
       .then(response => {
         let res = response.data.data.list;
         if (res != null) {
@@ -152,7 +152,7 @@ class EcarSalesDetail extends Component {
     }
 
     document.body.classList.add('loading-indicator');
-    axios.post("/CRM_Region", { id: value })
+    axios.post("/CRM_Region/GetCRM_Region", { id: value })
       .then(response => {
         let res = response.data.data.list;
         if (res != null) {
@@ -179,7 +179,7 @@ class EcarSalesDetail extends Component {
       return;
     }
     document.body.classList.add('loading-indicator');
-    axios.post("/CRM_Region", { id: value })
+    axios.post("/CRM_Region/GetCRM_Region", { id: value })
       .then(response => {
         let res = response.data.data.list;
         if (res != null) {
@@ -207,7 +207,7 @@ class EcarSalesDetail extends Component {
       return;
     }
     document.body.classList.add('loading-indicator');
-    axios.post("/CRM_Region", { id: value })
+    axios.post("/CRM_Region/GetCRM_Region", { id: value })
       .then(response => {
         let res = response.data.data.list;
         if (res != null) {
