@@ -14,6 +14,7 @@ class CompanyList extends Component {
     super(props)
     this.state = {
       visibledetail:false,
+      disable:false,
       refresh: false,
       rowselected: [],
       sex: [{ indexField: 2, valueField: "زن " }, { indexField: 1, valueField: "مرد" }],
@@ -208,7 +209,13 @@ class CompanyList extends Component {
       case "Edit":
       case "Delete":
       case "Detail":
-        this.setState({ visibledetail: true, mode: mode, rowselected: rowselected,refresh:false ,columnDefs:this.state.columnDefs})  
+        this.setState({ 
+          visibledetail: true, 
+          mode: mode, 
+          disable:mode=="Delete" || mode=="Detail" ? true : false ,
+          rowselected: rowselected,
+          refresh:false ,
+          columnDefs:this.state.columnDefs})  
       // this.props.history.push({ pathname: '/myapp/crm/company/companydetail', state: { listid: [{ id:rowselected.companyID.toString()}] } })
 
     }
@@ -231,6 +238,7 @@ class CompanyList extends Component {
           <AdminForm
           ClickForm={this.ClickForm}
           mode={this.state.mode}
+          disable={this.state.disable}
           columnDefs={this.state.columnDefs}
           title="شرکتها"
           listid={[{id:this.state.rowselected.companyID==undefined ? "" :this.state.rowselected.companyID.toString() }]}

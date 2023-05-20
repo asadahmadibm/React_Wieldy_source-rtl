@@ -24,6 +24,7 @@ class AdminForm extends Component {
       listid: props.listid,
       apiname: props.apiname,
       mode: props.mode,
+      disable:props.disable,
       title: props.title,
       columnDefs: props.columnDefs
     }
@@ -43,8 +44,10 @@ class AdminForm extends Component {
       this.setState({
         visibledetail: nextProps.visibledetail,
         mode: nextProps.mode,
+        disable:nextProps.disable,
         columnDefs: nextProps.columnDefs
       })
+      console.log("this.state.disable",this.state.disable);
       this.props.form.resetFields();
       if (nextProps.mode != undefined && nextProps.mode != "Add") {
         this.GetData(nextProps.listid);
@@ -238,6 +241,7 @@ class AdminForm extends Component {
                     child.widget == 'select' && child.options != undefined ?
 
                       <Select
+                        disabled={this.state.disable}
                         showSearch
                         allowClear
                       >
@@ -246,10 +250,10 @@ class AdminForm extends Component {
                       :
                       child.widget == 'checkbox' ?
 
-                        <Checkbox />
+                        <Checkbox disabled={this.state.disable}/>
                         :
 
-                        <Input />
+                        <Input disabled={this.state.disable}/>
                   )}
                 </Form.Item>
               </Col>

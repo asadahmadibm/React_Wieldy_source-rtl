@@ -15,6 +15,7 @@ class EcarSalesList extends Component {
     let sexarray = [{ key: 2, value: "زن " }, { key: 1, value: "مرد" }]
     this.state = {
       visibledetail: false,
+      disable:false,
       refresh: false,
       rowselected: [],
       sex: sexarray,
@@ -234,7 +235,13 @@ class EcarSalesList extends Component {
       case "Edit":
       case "Delete":
       case "Detail":
-        this.setState({ visibledetail: true, mode: mode, rowselected: rowselected, refresh: false, columnDefs: this.state.columnDefs })
+        this.setState({ 
+          visibledetail: true, 
+          disable:mode=="Delete" || mode=="Detail" ? true : false ,
+          mode: mode, 
+          rowselected: rowselected, 
+          refresh: false, 
+          columnDefs: this.state.columnDefs })
         // this.props.history.push({ pathname: '/myapp/EcarSales', state: { mellicode: rowselected.mellicode } })
         break;
     }
@@ -257,6 +264,7 @@ class EcarSalesList extends Component {
         <AdminForm
           ClickForm={this.ClickForm}
           mode={this.state.mode}
+          disable={this.state.disable}
           columnDefs={this.state.columnDefs}
           title="کاربران"
           listid={[{ id: this.state.rowselected.mellicode }]}
