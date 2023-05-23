@@ -13,8 +13,8 @@ class CompanyList extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      visibledetail:false,
-      disable:false,
+      visibledetail: false,
+      disable: false,
       refresh: false,
       rowselected: [],
       sex: [{ indexField: 2, valueField: "زن " }, { indexField: 1, valueField: "مرد" }],
@@ -37,8 +37,8 @@ class CompanyList extends Component {
         { field: 'email', sortable: true, headerName: "ایمیل  ", filter: 'agTextColumnFilter', width: 250 },
         // { field: 'groupID', sortable: true, headerName: " گروه ", filter: 'agNumberColumnFilter', width: 170 },
         {
-          field: 'groupID', sortable: true, headerName: " گروه  ", filter: 'agSetColumnFilter', width: 130 , widget: 'select',
-           options: [],
+          field: 'groupID', sortable: true, headerName: " گروه  ", filter: 'agSetColumnFilter', width: 130, widget: 'select',
+          options: [],
           valueFormatter: params => this.getEnumValue(params.value, this.state.group),
           filterParams: {
             valueFormatter: params => this.getEnumValue(params.value, this.state.group), //this.getEnumValue(Number(params.value), paymentMethod),
@@ -67,7 +67,7 @@ class CompanyList extends Component {
         },
         // { field: 'recommenderID', sortable: true, headerName: " گروه ", filter: 'agNumberColumnFilter', width: 170 },
         {
-          field: 'isCustomer', sortable: true, headerName: "مشتری", filter: 'agSetColumnFilter', width: 170,widget: 'checkbox',
+          field: 'isCustomer', sortable: true, headerName: "مشتری", filter: 'agSetColumnFilter', width: 170, widget: 'checkbox',
           filterParams: {
             values: [true, false]
           },
@@ -75,7 +75,7 @@ class CompanyList extends Component {
 
         },
         {
-          field: 'isActive', sortable: true, headerName: " فعال  ", filter: 'agSetColumnFilter', width: 170,widget: 'checkbox',
+          field: 'isActive', sortable: true, headerName: " فعال  ", filter: 'agSetColumnFilter', width: 170, widget: 'checkbox',
           filterParams: {
             values: [true, false]
           },
@@ -83,7 +83,7 @@ class CompanyList extends Component {
 
         },
         {
-          field: 'unsubscribed', sortable: true, headerName: "  عدم ارسال ایمیل ", filter: 'agSetColumnFilter', width: 170,widget: 'checkbox',
+          field: 'unsubscribed', sortable: true, headerName: "  عدم ارسال ایمیل ", filter: 'agSetColumnFilter', width: 170, widget: 'checkbox',
           filterParams: {
             values: [true, false]
           },
@@ -91,7 +91,11 @@ class CompanyList extends Component {
 
         },
         { field: 'registrar', sortable: true, headerName: "  ثبت کننده ", filter: 'agTextColumnFilter', width: 170 },
-        { field: 'registerDate', sortable: true, headerName: " تاریخ ثبت ", filter: 'agTextColumnFilter', width: 170 },
+        {
+          field: 'registerDate', sortable: true, headerName: " تاریخ ثبت ", filter: 'agTextColumnFilter', width: 170,
+
+          widget: 'datepicker'
+        },
 
         { field: 'selectiveGroup', sortable: true, headerName: " گروه انتخابی ", filter: 'agTextColumnFilter', width: 170 },
         { field: 'address', sortable: true, headerName: " خیابان ", filter: 'agTextColumnFilter', width: 170 },
@@ -107,31 +111,31 @@ class CompanyList extends Component {
     return foundItem.value;
   }
 
-  componentDidMount = async() => {
+  componentDidMount = async () => {
 
     await this.GetDataBase(false);
     let columnDefs = [...this.state.columnDefs];
     const indexgroupID = this.state.columnDefs.findIndex(emp => emp.field === "groupID");
-    let columnDefgroupID = {...columnDefs[indexgroupID]};
-    columnDefgroupID.options=this.state.group;
-    columnDefs[indexgroupID]=columnDefgroupID
+    let columnDefgroupID = { ...columnDefs[indexgroupID] };
+    columnDefgroupID.options = this.state.group;
+    columnDefs[indexgroupID] = columnDefgroupID
     // this.setState({columnDefs});
     const indexindustryID = this.state.columnDefs.findIndex(emp => emp.field === "industryID");
-    let columnDefindustryID = {...columnDefs[indexindustryID]};
-    columnDefindustryID.options=this.state.industry;
-    columnDefs[indexindustryID]=columnDefindustryID
-   
+    let columnDefindustryID = { ...columnDefs[indexindustryID] };
+    columnDefindustryID.options = this.state.industry;
+    columnDefs[indexindustryID] = columnDefindustryID
+
     // console.log("this.state.columnDefs",this.state.columnDefs);
     const indexostansokoonat = this.state.columnDefs.findIndex(emp => emp.field === "regionID");
     let columnDefostansokoonat = { ...columnDefs[indexostansokoonat] };
     columnDefostansokoonat.options = this.state.ostan;
     columnDefs[indexostansokoonat] = columnDefostansokoonat
 
-    this.setState({columnDefs});
+    this.setState({ columnDefs });
 
   }
 
-  GetDataBase = async(shouldLog) => {
+  GetDataBase = async (shouldLog) => {
     document.body.classList.add('loading-indicator');
     axios.interceptors.request.use(function (config) {
       config.headers.IsSOCLog = (shouldLog == false ? "false" : "true");
@@ -161,7 +165,7 @@ class CompanyList extends Component {
         message.error("اشکال در فراخوانی سرویس استان")
       });
 
-      await axios.get("/Group/GetDropDown")
+    await axios.get("/Group/GetDropDown")
       .then(response => {
         let res = response.data.data;
         if (res != null) {
@@ -198,24 +202,25 @@ class CompanyList extends Component {
 
   }
 
-  ClickCrud = (mode,rowselected) => {
+  ClickCrud = (mode, rowselected) => {
     // console.log("ClickCrud.this.state.columnDefs",this.state.columnDefs);
     switch (mode) {
 
       case "Add":
         // this.props.history.push({ pathname: '/myapp/crm/company/companydetail', state: { listid: null } })
-        this.setState({ visibledetail: true, mode: "Add",refresh:false ,columnDefs:this.state.columnDefs })
+        this.setState({ visibledetail: true, mode: "Add", refresh: false, columnDefs: this.state.columnDefs })
         break;
       case "Edit":
       case "Delete":
       case "Detail":
-        this.setState({ 
-          visibledetail: true, 
-          mode: mode, 
-          disable:mode=="Delete" || mode=="Detail" ? true : false ,
+        this.setState({
+          visibledetail: true,
+          mode: mode,
+          disable: mode == "Delete" || mode == "Detail" ? true : false,
           rowselected: rowselected,
-          refresh:false ,
-          columnDefs:this.state.columnDefs})  
+          refresh: false,
+          columnDefs: this.state.columnDefs
+        })
       // this.props.history.push({ pathname: '/myapp/crm/company/companydetail', state: { listid: [{ id:rowselected.companyID.toString()}] } })
 
     }
@@ -235,13 +240,13 @@ class CompanyList extends Component {
   render() {
     return (
       <div className="gx-main-content">
-          <AdminForm
+        <AdminForm
           ClickForm={this.ClickForm}
           mode={this.state.mode}
           disable={this.state.disable}
           columnDefs={this.state.columnDefs}
           title="شرکتها"
-          listid={[{id:this.state.rowselected.companyID==undefined ? "" :this.state.rowselected.companyID.toString() }]}
+          listid={[{ id: this.state.rowselected.companyID == undefined ? "" : this.state.rowselected.companyID.toString() }]}
           apiname="CrmCompany"
           visibledetail={this.state.visibledetail}
           parentCallback={this.Refreshlist}

@@ -42,7 +42,7 @@ class EcarSalesList extends Component {
           }
         },
         { field: 'shenasnameno', sortable: true, headerName: " شماره شناسنامه ", filter: 'agTextColumnFilter', width: 170 },
-        { field: 'birthdate', sortable: true, headerName: " تاریخ تولد ", filter: 'agTextColumnFilter', width: 170 },
+        { field: 'birthdate', sortable: true, headerName: " تاریخ تولد ", filter: 'agTextColumnFilter', width: 170 , widget: 'datepicker'},
         { field: 'sodoordate', sortable: true, headerName: " تاریخ صدور ", filter: 'agTextColumnFilter', width: 170 },
         { field: 'fathername', sortable: true, headerName: " نام پدر ", filter: 'agTextColumnFilter', width: 170 },
         { field: 'mobile', sortable: true, headerName: " موبایل ", filter: 'agTextColumnFilter', width: 170 },

@@ -87,9 +87,11 @@ class EcarSalesDetail extends Component {
   GetData = (mellicode) => {
     // let data = UserService.GetProfile();
     // this.props.form.setFieldsValue(data);
+    let listid=[{ id: mellicode }];
     this.props.form.setFieldsValue([]);
     document.body.classList.add('loading-indicator');
-    axios.get("/EcarSales?mellicode=" + mellicode.toString())
+    axios.post("/EcarSales/GetById", listid)
+    // axios.get("/EcarSales?mellicode=" + mellicode.toString())
       .then(response => {
         let res = response.data.data;
         if (res != null) {
@@ -327,6 +329,8 @@ class EcarSalesDetail extends Component {
                   //   padding: "3px 10px"
                   // }}
                   render={<InputIcon />}
+                  disabled={true}
+                  editable={false}
                   calendar={persian}
                   locale={persian_fa}
                   onChange={dateObject => {

@@ -30,13 +30,6 @@ class AdminForm extends Component {
     }
 
   }
-
-  componentDidMount = () => {
-    console.log("this.state.id)", this.state.id);
-
-    // this.GetData(this.state.id);
-  }
-
   componentWillReceiveProps = (nextProps) => {
 
     if (nextProps.visibledetail != this.state.visibledetail) {
@@ -57,16 +50,14 @@ class AdminForm extends Component {
 
 
   GetData = (listid) => {
-    // let data = UserService.GetProfile();
-    // this.props.form.setFieldsValue(data);
     this.props.form.resetFields();
     document.body.classList.add('loading-indicator');
     axios.post("/" + this.state.apiname + "/GetById", listid)
       .then(response => {
         let res = response.data.data;
         if (res != null) {
-          //   res.birthdate = new DateObject({ date: res.birthdate, calendar: persian, locale: persian_fa });//"1355/05/21",
-          //   res.sodoordate = new DateObject({ date: res.sodoordate, calendar: persian, locale: persian_fa });//"1355/05/21",
+             res.birthdate = new DateObject({ date: res.birthdate, calendar: persian, locale: persian_fa });//"1355/05/21",
+             res.sodoordate = new DateObject({ date: res.sodoordate, calendar: persian, locale: persian_fa });//"1355/05/21",
         }
         else {
           message.info("اطلاعات کاربر یافت نشد ");
@@ -251,6 +242,18 @@ class AdminForm extends Component {
                       child.widget == 'checkbox' ?
 
                         <Checkbox disabled={this.state.disable}/>
+                        :
+                        child.widget == 'datepicker' ?
+
+                        <DatePicker
+                        disabled={this.state.disable}
+                        editable={!this.state.disable}
+                        render={<InputIcon />}
+                        calendar={persian}
+                        locale={persian_fa}
+                        onChange={dateObject => {
+                          console.log(dateObject.format())
+                        }}/>
                         :
 
                         <Input disabled={this.state.disable}/>
