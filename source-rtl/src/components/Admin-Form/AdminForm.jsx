@@ -14,6 +14,7 @@ import moment, { locale } from 'jalali-moment';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
+import httpCaller from "../../Services/HttpService";
 
 class AdminForm extends Component {
 
@@ -43,32 +44,20 @@ class AdminForm extends Component {
       console.log("this.state.disable", this.state.disable);
       this.props.form.resetFields();
       if (nextProps.mode != undefined && nextProps.mode != "Add") {
-        this.GetData(nextProps.listid);
+        this.GetData(nextProps.listid, true);
       }
     }
   }
 
 
-  GetData = (listid) => {
+  GetData = (listid, isSOCLog) => {
+
     this.props.form.resetFields();
-    document.body.classList.add('loading-indicator');
-    axios.post("/" + this.state.apiname + "/GetById", listid)
-      .then(response => {
-        let res = response.data.data;
-        if (res != null) {
-          res.birthdate = new DateObject({ date: res.birthdate, calendar: persian, locale: persian_fa });//"1355/05/21",
-          res.sodoordate = new DateObject({ date: res.sodoordate, calendar: persian, locale: persian_fa });//"1355/05/21",
-        }
-        else {
-          message.info("اطلاعات کاربر یافت نشد ");
-        }
-        document.body.classList.remove('loading-indicator')
-        this.props.form.setFieldsValue(res);
-        console.log(res);
-      }).catch(res => {
-        document.body.classList.remove('loading-indicator')
-        message.error("اشکال در فراخوانی سرویس")
-      });
+
+    httpCaller.CRUDGrid.GetById( this.state.apiname,listid, (result) => {
+      this.props.form.setFieldsValue(result.data);
+    }, () => { }, isSOCLog)
+
   }
 
   prepareData = (data) => {
@@ -78,78 +67,40 @@ class AdminForm extends Component {
     return data;
   }
 
-  UpsertData = (product) => {
-    // const CreateCompanyProductDTO = {
-    //   CompanyId: product.companyID,
-    //   ProductID: product.productID,
-    //   rowID: product.rowID,
-    //   Qty: product.qty,
-    //   Comment : product.comment,
-    // }
-    // console.log("product");
-    // console.log(product);
-    console.log("product", product);
-    document.body.classList.add('loading-indicator');
-    axios.post("/" + this.state.apiname + "/Upsert", product)
-      // .then((response) => {
-      //   // Return a promise with an artificial delay.
-      //   return new Promise((resolve) => {
-      //     setTimeout(() => {
-      //       resolve(response.data);
-      //     }, 2e3);
-      //   });
-      // })
-      .then(data => {
-        let res = data.data.data;
-        if (res != null) {
-          toast.warning("اطلاعات کاربر ثبت شد ");
-          this.setState({
-            visible: false,
-          });
-          this.props.parentCallback();
-          // res.birthdate = new DateObject({ date: res.birthdate, calendar: persian, locale: persian_fa });//"1355/05/21",
-          // res.sodoordate = new DateObject({ date: res.sodoordate, calendar: persian, locale: persian_fa });//"1355/05/21",
-        }
-        else {
-          toast.info("اطلاعات کاربر ثبت نشد ");
-        }
-        document.body.classList.remove('loading-indicator')
+  UpsertData = (product,isSOCLog) => {
 
-      }).catch(res => {
-        document.body.classList.remove('loading-indicator')
-        toast.error("اشکال در فراخوانی سرویس")
-      });
+    httpCaller.CRUDGrid.Upsert( this.state.apiname,product, (result) => {
+      let res = result.data;
+      if (res != null) {
+        toast.warning("اطلاعات کاربر ثبت شد ");
+        this.setState({
+          visible: false,
+        });
+        this.props.parentCallback();
+      }
+      else {
+        toast.info("اطلاعات کاربر ثبت نشد ");
+      }
+    }, () => { }, isSOCLog)
+
+
   }
 
-  DeleteData = (product) => {
-    // const listid = [{
-    //   id: product.id.toString(),
-    // }]
-
-    console.log("product", product);
-    document.body.classList.add('loading-indicator');
-    axios.post("/" + this.state.apiname + "/Delete", product)
-      //axios.delete("/" + this.state.apiname + "/Delete", listid)
-      .then(response => {
-        let res = response.data.errors;
+  DeleteData = (product,isSOCLog) => {
+    httpCaller.CRUDGrid.Delete( this.state.apiname,product, (result) => {
+      let res = result.errors;
         if (res.length == 0) {
           toast.error("اطلاعات کاربر حذف شد ");
           this.setState({
             visible: false,
           });
           this.props.parentCallback();
-          // res.birthdate = new DateObject({ date: res.birthdate, calendar: persian, locale: persian_fa });//"1355/05/21",
-          // res.sodoordate = new DateObject({ date: res.sodoordate, calendar: persian, locale: persian_fa });//"1355/05/21",
         }
         else {
           toast.error(res[0] + "اطلاعات کاربر حذف نشد ");
         }
-        document.body.classList.remove('loading-indicator')
+    }, () => { }, isSOCLog)
 
-      }).catch(res => {
-        document.body.classList.remove('loading-indicator')
-        toast.error("اشکال در فراخوانی سرویس")
-      });
   }
 
   handleSubmit = e => {
@@ -163,7 +114,7 @@ class AdminForm extends Component {
         switch (this.state.mode) {
           case "Add":
           case "Edit":
-            this.UpsertData(data);
+            this.UpsertData(data,true);
             break;
           case "Delete":
             this.DeleteData(data);

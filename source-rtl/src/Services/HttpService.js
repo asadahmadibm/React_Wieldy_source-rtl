@@ -16,7 +16,7 @@ const getHeader = (shouldLog) => ({
 });
 
 function GetAuthToken() {
-  return  localStorage.getItem('authUser');
+  return localStorage.getItem('authUser');
   return window.sessionStorage.getItem("auth_token");
 }
 
@@ -699,19 +699,72 @@ const newsinformation = {
 
 }
 
-const EcarSales  =  {
-    GetDropDown : async (data, onFulfilled, onRejected) => httpCall.Post(`/CRM_Region/GetDropDown`, data, onFulfilled, onRejected),
-    GetCRM_Region: async (data, onFulfilled, onRejected) => httpCall.Post(`/CRM_Region/GetCRM_Region`, data, onFulfilled, onRejected),
-    GetById: async (data, onFulfilled, onRejected) => httpCall.Post(`/EcarSales/GetById`, data, onFulfilled, onRejected),
-  }
-  
-  const Group  =  {
-    GetDropDown : async (onFulfilled, onRejected) => httpCall.Get(`/Group/GetDropDown`,  onFulfilled, onRejected),
-  }
+const EcarSales = {
+  GetDropDown: async (data, onFulfilled, onRejected) => httpCall.Post(`/CRM_Region/GetDropDown`, data, onFulfilled, onRejected),
+  GetCRM_Region: async (data, onFulfilled, onRejected) => httpCall.Post(`/CRM_Region/GetCRM_Region`, data, onFulfilled, onRejected),
+  // GetById: async (data, onFulfilled, onRejected) => httpCall.Post(`/EcarSales/GetById`, data, onFulfilled, onRejected),
+}
+// const CrmCompany = {
+//   GetById: async (data, onFulfilled, onRejected) => httpCall.Post(`/CrmCompany/GetById`, data, onFulfilled, onRejected),
+// }
 
-  const Industry  =  {
-    GetDropDown : async (onFulfilled, onRejected) => httpCall.Get(`/Industry/GetDropDown`,  onFulfilled, onRejected),
-  }
+const Group = {
+  GetDropDown: async (onFulfilled, onRejected) => httpCall.Get(`/Group/GetDropDown`, onFulfilled, onRejected),
+}
+
+const Industry = {
+  GetDropDown: async (onFulfilled, onRejected) => httpCall.Get(`/Industry/GetDropDown`, onFulfilled, onRejected),
+}
+
+
+const CRUDGrid = {
+
+  GetAll: async (apiname, data, onFulfilled, onRejected) => {
+    switch (apiname) {
+      case "EcarSales":
+        httpCall.Post(`/EcarSales/GetAll`, data, onFulfilled, onRejected);
+        break;
+      case "CrmCompany":
+        httpCall.Post(`/CrmCompany/GetAll`, data, onFulfilled, onRejected);
+        break;
+    }
+
+  },
+  GetById: async (apiname, data, onFulfilled, onRejected) => {
+    switch (apiname) {
+      case "EcarSales":
+        httpCall.Post(`/EcarSales/GetById`, data, onFulfilled, onRejected);
+        break;
+      case "CrmCompany":
+        httpCall.Post(`/CrmCompany/GetById`, data, onFulfilled, onRejected);
+        break;
+    }
+
+  },
+  Upsert: async (apiname, data, onFulfilled, onRejected) => {
+    switch (apiname) {
+      case "EcarSales":
+        httpCall.Post(`/EcarSales/Upsert`, data, onFulfilled, onRejected);
+        break;
+      case "CrmCompany":
+        httpCall.Post(`/CrmCompany/Upsert`, data, onFulfilled, onRejected);
+        break;
+    }
+  },
+  Delete: async (apiname, data, onFulfilled, onRejected) => {
+    switch (apiname) {
+      case "EcarSales":
+        httpCall.Post(`/EcarSales/Delete`, data, onFulfilled, onRejected);
+        break;
+      case "CrmCompany":
+        httpCall.Post(`/CrmCompany/Delete`, data, onFulfilled, onRejected);
+        break;
+    }
+  },
+
+}
+
+
 
 export default {
   Sarafi: Sarafi,
@@ -731,6 +784,8 @@ export default {
   Merchant,
   newsinformation,
   EcarSales,
+  // CrmCompany,
   Group,
-  Industry
+  Industry,
+  CRUDGrid
 };

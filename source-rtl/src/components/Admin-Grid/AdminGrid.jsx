@@ -375,11 +375,6 @@ class AdminGrid extends Component {
                     this.state.apiname === "CrmCompanyConnection/GetByCompanyId" ||
                     this.state.apiname === "CrmCompanyTelephone/GetByCompanyId") {
 
-                    // var data={ id: this.state.parameterCompanyId }
-                    // httpCaller.EcarSales.GetDropDown(data, (result) => {
-                    //     console.log("result.data.list", result.data.list);
-                    //     this.setState({ ostan: result.data.list });
-                    //   }, () => { }, isSOCLog)
                     axios.defaults.baseURL = 'https://localhost:7012' //'https://swagger.tnlink.ir'//
                     axios.defaults.headers.post['Contetnt-Type'] = 'application/json';
                     axios.interceptors.request.use(function (config) {
@@ -392,7 +387,9 @@ class AdminGrid extends Component {
                         config.headers.Authorization = "Bearer " + token;
                         return config;
                     });
-
+                    // this.state.serverRowsRequest.filterModels = [{Field: 'companyID', 
+                    // Condition1: {filterType: 'number', type: 'equals', filter: '1'}}];
+    
 
                     axios.post("/" + this.state.apiname, { id: this.state.parameterCompanyId }, { timeout: 90000 })
                         .then(res => {
@@ -407,31 +404,11 @@ class AdminGrid extends Component {
                         });
                 }
                 else {
-                    console.log("this.state.serverRowsRequest", this.state.serverRowsRequest);
-                    axios.defaults.baseURL = 'https://localhost:7012' //'https://swagger.tnlink.ir'//
-                    axios.defaults.headers.post['Contetnt-Type'] = 'application/json';
-                    axios.interceptors.request.use(function (config) {
-                        var token = localStorage.getItem('authUser');
-                        if (token == null) {
-                            console.log("NotLogin");
-                            // this.props.history.push('/signin');
 
-                        }
-                        config.headers.Authorization = "Bearer " + token;
-                        return config;
-                    });
-
-                    axios.post("/" + this.state.apiname + "/GetAll", this.state.serverRowsRequest, { timeout: 90000 })
-                        .then(res => {
-                            console.log("res.data.data.list", res.data.data.list);
-                            params.successCallback(res.data.data.list, res.data.data.totalCount);
-                            document.body.classList.remove('loading-indicator')
-                        }).catch(err => {
-                            params.successCallback([], 0);
-                            console.log("اشکال در فراخوانی اطلاعات");
-                            document.body.classList.remove('loading-indicator')
-                        }).finally(() => {
-                        });
+                    httpCaller.CRUDGrid.GetAll( this.state.apiname,this.state.serverRowsRequest, (result) => {
+                        params.successCallback(result.data.list, result.data.totalCount);
+                      }, () => { }, true)
+ 
                 }
             },
         };
