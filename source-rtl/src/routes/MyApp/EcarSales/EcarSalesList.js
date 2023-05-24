@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { withRouter } from "react-router";
 import { Button, Select, Form, Input, Card, Col, Row, InputNumber, message } from 'antd';
 import AdminGrid from "../../../components/Admin-Grid/AdminGrid";
-
+import httpCaller from "../../../Services/HttpService";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
@@ -49,7 +49,7 @@ class EcarSalesList extends Component {
         { field: 'tel', sortable: true, headerName: " تلفن ", filter: 'agTextColumnFilter', width: 170 },
         { field: 'posticode', sortable: true, headerName: " کدپستی ", filter: 'agTextColumnFilter', width: 170 },
         {
-          field: 'ostansodoor', sortable: true, headerName: "استان صدور  ", filter: 'agNumberColumnFilter', width: 160
+          field: 'ostansodoor', sortable: true, headerName: "استان صدور  ", filter: 'agSetColumnFilter', width: 160
           , widget: 'select', options: [],
           valueFormatter: params => this.getEnumValue(params.value, this.state.ostan),
           filterParams: {
@@ -58,7 +58,7 @@ class EcarSalesList extends Component {
           }
         },
         {
-          field: 'citysodoor', sortable: true, headerName: "شهر صدور  ", filter: 'agNumberColumnFilter', width: 160
+          field: 'citysodoor', sortable: true, headerName: "شهر صدور  ", filter: 'agSetColumnFilter', width: 160
           , widget: 'select', options: [],
           valueFormatter: params => this.getEnumValue(params.value, this.state.city),
           filterParams: {
@@ -123,97 +123,93 @@ class EcarSalesList extends Component {
 
   componentDidMount = async () => {
 
+    // (async () => {
+    // })();
+
     await this.GetDataBase(false);
-    let columnDefs = [...this.state.columnDefs];
-    const indexostansodoor = this.state.columnDefs.findIndex(emp => emp.field === "ostansodoor");
-    let columnDefostansodoor = { ...columnDefs[indexostansodoor] };
-    columnDefostansodoor.options = this.state.ostan;
-    columnDefs[indexostansodoor] = columnDefostansodoor
 
-    const indexostanbirth = this.state.columnDefs.findIndex(emp => emp.field === "ostanbirth");
-    let columnDefostanbirth = { ...columnDefs[indexostanbirth] };
-    columnDefostanbirth.options = this.state.ostan;
-    columnDefs[indexostanbirth] = columnDefostanbirth
-
-
-    const indexostansokoonat = this.state.columnDefs.findIndex(emp => emp.field === "ostansokoonat");
-    let columnDefostansokoonat = { ...columnDefs[indexostansokoonat] };
-    columnDefostansokoonat.options = this.state.ostan;
-    columnDefs[indexostansokoonat] = columnDefostansokoonat
-
-    const indexcitysodoor = this.state.columnDefs.findIndex(emp => emp.field === "citysodoor");
-    let columnDefcitysodoor = { ...columnDefs[indexcitysodoor] };
-    columnDefcitysodoor.options = this.state.city;
-    columnDefs[indexcitysodoor] = columnDefcitysodoor
-
-    const indexcitybirth = this.state.columnDefs.findIndex(emp => emp.field === "citybirth");
-    let columnDefcitybirth = { ...columnDefs[indexcitybirth] };
-    columnDefcitybirth.options = this.state.city;
-    columnDefs[indexcitybirth] = columnDefcitybirth
-
-
-    const indexcitysokoonat = this.state.columnDefs.findIndex(emp => emp.field === "citysokoonat");
-    let columnDefcitysokoonat = { ...columnDefs[indexcitysokoonat] };
-    columnDefcitysokoonat.options = this.state.city;
-    columnDefs[indexcitysokoonat] = columnDefcitysokoonat
     // this.setState({columnDefs});
     // const indexindustryID = this.state.columnDefs.findIndex(emp => emp.field === "industryID");
     // let columnDefindustryID = {...columnDefs[indexindustryID]};
     // columnDefindustryID.options=this.state.industry;
     // columnDefs[indexindustryID]=columnDefindustryID
-    this.setState({ columnDefs });
+    console.log("this.state.ostan", this.state.columnDefs);
     // console.log("this.state.columnDefs",this.state.columnDefs);
-
+    console.log("this.state.columnDefs1", this.state.columnDefs);
 
   }
 
-  GetDataBase = async (shouldLog) => {
-    document.body.classList.add('loading-indicator');
-    axios.interceptors.request.use(function (config) {
-      config.headers.IsSOCLog = (shouldLog == false ? "false" : "true");
-      return config;
-    });
-    // const getHeader = (shouldLog) => ({
-    //   "IsSOCLog": (shouldLog == false ? "false" : "true"),
-    //   'Authorization': "bearer " + localStorage.getItem('authUser'),
-    //   "Content-Type": 'application/json',
-    // });
-    // console.log(getHeader(false));
-    await axios.post("/CRM_Region/GetDropDown", { id: 1 })
-      .then(response => {
+  prepareData = (pageIdx) => {
+    return {
+      pageIndex: parseInt(pageIdx),
+      pageSize: parseInt(this.state.pageSize),
+    }
+  }
 
-        let res = response.data.data.list;
-        if (res != null) {
+  prepareDataParent = () => {
+    return {
+      id: 1,
+    }
+  }
+  GetDataBase = async (isSOCLog) => {
 
-        }
-        else {
-          message.info("اطلاعات استان یافت نشد ");
-        }
-        document.body.classList.remove('loading-indicator')
-        this.setState({ ostan: res });
-        // console.log(res);
-      }).catch(res => {
-        document.body.classList.remove('loading-indicator')
-        message.error("اشکال در فراخوانی سرویس استان")
-      });
+    var data = {id: 1};
+    httpCaller.EcarSales.GetDropDown(data,(result) => {
+      console.log("result.data.list.ostan", result.data.list);
+      this.setState({ ostan: result.data.list });
+      console.log("this.state.ostan1",this.state.ostan);
+      let columnDefs = [...this.state.columnDefs];
+      const indexostansodoor = this.state.columnDefs.findIndex(emp => emp.field === "ostansodoor");
+      let columnDefostansodoor = { ...columnDefs[indexostansodoor] };
+      console.log("this.state.ostanafter getdatabase",this.state.ostan);
+      columnDefostansodoor.options = this.state.ostan;
+      columnDefs[indexostansodoor] = columnDefostansodoor
+      
+      const indexostanbirth = this.state.columnDefs.findIndex(emp => emp.field === "ostanbirth");
+      let columnDefostanbirth = { ...columnDefs[indexostanbirth] };
+      columnDefostanbirth.options = this.state.ostan;
+      columnDefs[indexostanbirth] = columnDefostanbirth
+  
+  
+      const indexostansokoonat = this.state.columnDefs.findIndex(emp => emp.field === "ostansokoonat");
+      let columnDefostansokoonat = { ...columnDefs[indexostansokoonat] };
+      columnDefostansokoonat.options = this.state.ostan;
+      columnDefs[indexostansokoonat] = columnDefostansokoonat
 
-    await axios.post("/CRM_Region/GetDropDown", { id: null })
-      .then(response => {
+      this.setState({columnDefs})
+  
 
-        let res = response.data.data.list;
-        if (res != null) {
+  
+    }
+    , () => { }, isSOCLog)
 
-        }
-        else {
-          message.info("اطلاعات استان یافت نشد ");
-        }
-        document.body.classList.remove('loading-indicator')
-        this.setState({ city: res });
-        // console.log(res);
-      }).catch(res => {
-        document.body.classList.remove('loading-indicator')
-        message.error("اشکال در فراخوانی سرویس استان")
-      });
+    var data = { id: null };
+
+    httpCaller.EcarSales.GetDropDown(data,(result) => {
+      console.log("result.data.list", result.data.list);
+      this.setState({ city: result.data.list });
+
+      let columnDefs = [...this.state.columnDefs];
+      const indexcitysodoor = this.state.columnDefs.findIndex(emp => emp.field === "citysodoor");
+      let columnDefcitysodoor = { ...columnDefs[indexcitysodoor] };
+      columnDefcitysodoor.options = this.state.city;
+      columnDefs[indexcitysodoor] = columnDefcitysodoor
+  
+      const indexcitybirth = this.state.columnDefs.findIndex(emp => emp.field === "citybirth");
+      let columnDefcitybirth = { ...columnDefs[indexcitybirth] };
+      columnDefcitybirth.options = this.state.city;
+      columnDefs[indexcitybirth] = columnDefcitybirth
+  
+  
+      const indexcitysokoonat = this.state.columnDefs.findIndex(emp => emp.field === "citysokoonat");
+      let columnDefcitysokoonat = { ...columnDefs[indexcitysokoonat] };
+      columnDefcitysokoonat.options = this.state.city;
+      columnDefs[indexcitysokoonat] = columnDefcitysokoonat
+
+      this.setState({columnDefs})
+
+    }, () => { }, isSOCLog)
+
   }
 
 

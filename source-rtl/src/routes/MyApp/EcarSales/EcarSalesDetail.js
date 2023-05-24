@@ -15,6 +15,7 @@ import moment, { locale } from 'jalali-moment';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
+import httpCaller from "../../../Services/HttpService";
 
 class EcarSalesDetail extends Component {
 
@@ -39,11 +40,11 @@ class EcarSalesDetail extends Component {
 
   componentWillReceiveProps = (nextProps) => {
     console.log("nextPropsmellicode", nextProps.mellicode);
-      if (nextProps.mellicode.mellicode != null) {
+    if (nextProps.mellicode.mellicode != null) {
       //if (this.props.mellicode != nextProps.mellicode) {
       if (this.state.mellicode != nextProps.mellicode) {
 
-        this.GetData(nextProps.mellicode.mellicode);
+        this.GetData(nextProps.mellicode.mellicode,true);
         this.setState({ mellicode: nextProps.mellicode })
       }
       if (this.state.clearform != nextProps.clearform) {
@@ -53,65 +54,35 @@ class EcarSalesDetail extends Component {
     }
   }
 
-
-  GetDataBase = (shouldLog) => {
-    document.body.classList.add('loading-indicator');
-    axios.interceptors.request.use(function (config) {
-      config.headers.IsSOCLog = (shouldLog == false ? "false" : "true");
-      return config;
-    });
-    // const getHeader = (shouldLog) => ({
-    //   "IsSOCLog": (shouldLog == false ? "false" : "true"),
-    //   'Authorization': "bearer " + localStorage.getItem('authUser'),
-    //   "Content-Type": 'application/json',
-    // });
-    // console.log(getHeader(false));
-    axios.post("/CRM_Region/GetCRM_Region", { id: 1 })
-      .then(response => {
-        let res = response.data.data.list;
-        if (res != null) {
-
-        }
-        else {
-          message.info("اطلاعات استان یافت نشد ");
-        }
-        document.body.classList.remove('loading-indicator')
-        this.setState({ ostan: res });
-        console.log(res);
-      }).catch(res => {
-        document.body.classList.remove('loading-indicator')
-        message.error("اشکال در فراخوانی سرویس استان")
-      });
+  GetDataBase = (isSOCLog) => {
+    var data = { id: 1 };
+    httpCaller.EcarSales.GetDropDown(data, (result) => {
+      console.log("result.data.list", result.data.list);
+      this.setState({ ostan: result.data.list });
+    }, () => { }, isSOCLog)
   }
 
-  GetData = (mellicode) => {
-    // let data = UserService.GetProfile();
-    // this.props.form.setFieldsValue(data);
-    let listid=[{ id: mellicode }];
+  GetData = (mellicode,isSOCLog) => {
     this.props.form.setFieldsValue([]);
-    document.body.classList.add('loading-indicator');
-    axios.post("/EcarSales/GetById", listid)
-    // axios.get("/EcarSales?mellicode=" + mellicode.toString())
-      .then(response => {
-        let res = response.data.data;
-        if (res != null) {
-          res.birthdate = new DateObject({ date: res.birthdate, calendar: persian, locale: persian_fa });//"1355/05/21",
-          res.sodoordate = new DateObject({ date: res.sodoordate, calendar: persian, locale: persian_fa });//"1355/05/21",
-        }
-        else {
-          message.info("اطلاعات کاربر یافت نشد ");
-        }
-        document.body.classList.remove('loading-indicator')
+
+    var data =  [{ id: mellicode }];
+    httpCaller.EcarSales.GetById(data, (result) => {
+      console.log("result.data", result.data);
+      let res = result.data;
+      if (res != null) {
+        res.birthdate = new DateObject({ date: res.birthdate, calendar: persian, locale: persian_fa });//"1355/05/21",
+        res.sodoordate = new DateObject({ date: res.sodoordate, calendar: persian, locale: persian_fa });//"1355/05/21",
         this.props.form.setFieldsValue(res);
         this.onchangeostanbirth(this.props.form.getFieldValue('ostanbirth'));
         this.onchangeostansodoor(this.props.form.getFieldValue('ostansodoor'));
         this.onchangeostansokoonat(this.props.form.getFieldValue('ostansokoonat'));
+      }
+      else {
+        message.info("اطلاعات کاربر یافت نشد ");
+      }
+      
+    }, () => { }, isSOCLog)
 
-        console.log(res);
-      }).catch(res => {
-        document.body.classList.remove('loading-indicator')
-        message.error("اشکال در فراخوانی سرویس")
-      });
   }
 
   prepareData = (data) => {
@@ -152,24 +123,12 @@ class EcarSalesDetail extends Component {
       this.setState({ citysodoor: [] })
       return;
     }
+    var data = { id: value }
+    httpCaller.EcarSales.GetDropDown(data, (result) => {
+      console.log("result.data.list", result.data.list);
+      this.setState({ citysodoor: result.data.list });
+    }, () => { }, false)
 
-    document.body.classList.add('loading-indicator');
-    axios.post("/CRM_Region/GetCRM_Region", { id: value })
-      .then(response => {
-        let res = response.data.data.list;
-        if (res != null) {
-
-        }
-        else {
-          message.info("اطلاعات شهر صدور یافت نشد ");
-        }
-        document.body.classList.remove('loading-indicator')
-        this.setState({ citysodoor: res });
-        console.log(res);
-      }).catch(res => {
-        document.body.classList.remove('loading-indicator')
-        message.error("اشکال در فراخوانی سرویس شهر محل صدور")
-      });
   }
   onchangeostansokoonat = (value) => {
 
@@ -180,23 +139,12 @@ class EcarSalesDetail extends Component {
       this.setState({ citysokoonat: [] })
       return;
     }
-    document.body.classList.add('loading-indicator');
-    axios.post("/CRM_Region/GetCRM_Region", { id: value })
-      .then(response => {
-        let res = response.data.data.list;
-        if (res != null) {
+    var data = { id: value }
+    httpCaller.EcarSales.GetDropDown(data, (result) => {
+      console.log("result.data.list", result.data.list);
+      this.setState({ citysokoonat: result.data.list });
+    }, () => { }, false)
 
-        }
-        else {
-          message.info("اطلاعات شهر صدور یافت نشد ");
-        }
-        document.body.classList.remove('loading-indicator')
-        this.setState({ citysokoonat: res });
-        console.log(res);
-      }).catch(res => {
-        document.body.classList.remove('loading-indicator')
-        message.error("اشکال در فراخوانی سرویس شهر محل صدور")
-      });
   }
   onchangeostanbirth = (value) => {
     console.log("onchangeostanbirth");
@@ -208,28 +156,14 @@ class EcarSalesDetail extends Component {
       this.setState({ citybirth: [] })
       return;
     }
-    document.body.classList.add('loading-indicator');
-    axios.post("/CRM_Region/GetCRM_Region", { id: value })
-      .then(response => {
-        let res = response.data.data.list;
-        if (res != null) {
 
-        }
-        else {
-          message.info("اطلاعات شهر صدور یافت نشد ");
-        }
-        document.body.classList.remove('loading-indicator')
-        this.setState({ citybirth: res });
-        console.log(res);
-      }).catch(res => {
-        document.body.classList.remove('loading-indicator')
-        message.error("اشکال در فراخوانی سرویس شهر محل صدور")
-      });
+    var data = { id: value }
+    httpCaller.EcarSales.GetDropDown(data, (result) => {
+      console.log("result.data.list", result.data.list);
+      this.setState({ citybirth: result.data.list });
+    }, () => { }, false)
+
   }
-
-
-
-
 
   render() {
     const { getFieldDecorator } = this.props.form;
@@ -450,7 +384,7 @@ class EcarSalesDetail extends Component {
                 //     width: 100,
                 // }}
                 >
-                  {this.state.ostan.map(child => <Select.Option key={child.regionID} value={child.regionID} >{child.regionName}</Select.Option >)}
+                  {this.state.ostan.map(child => <Select.Option key={child.key} value={child.key} >{child.value}</Select.Option >)}
                 </Select>
               )}
             </Form.Item>
@@ -472,7 +406,7 @@ class EcarSalesDetail extends Component {
                 //     width: 100,
                 // }}
                 >
-                  {this.state.citysodoor.map(child => <Select.Option key={child.regionID} value={child.regionID} >{child.regionName}</Select.Option >)}
+                  {this.state.citysodoor.map(child => <Select.Option key={child.key} value={child.key} >{child.value}</Select.Option >)}
                 </Select>
               )}
             </Form.Item>
@@ -495,7 +429,7 @@ class EcarSalesDetail extends Component {
                 //     width: 100,
                 // }}
                 >
-                  {this.state.ostan.map(child => <Select.Option key={child.regionID} value={child.regionID} >{child.regionName}</Select.Option >)}
+                  {this.state.ostan.map(child => <Select.Option key={child.key} value={child.key} >{child.value}</Select.Option >)}
                 </Select>
               )}
             </Form.Item>
@@ -517,7 +451,7 @@ class EcarSalesDetail extends Component {
                 //     width: 100,
                 // }}
                 >
-                  {this.state.citybirth.map(child => <Select.Option key={child.regionID} value={child.regionID} >{child.regionName}</Select.Option >)}
+                  {this.state.citybirth.map(child => <Select.Option key={child.key} value={child.key} >{child.value}</Select.Option >)}
                 </Select>
               )}
             </Form.Item>
@@ -540,7 +474,7 @@ class EcarSalesDetail extends Component {
                 //     width: 100,
                 // }}
                 >
-                  {this.state.ostan.map(child => <Select.Option key={child.regionID} value={child.regionID} >{child.regionName}</Select.Option >)}
+                  {this.state.ostan.map(child => <Select.Option key={child.key} value={child.key} >{child.value}</Select.Option >)}
                 </Select>
               )}
             </Form.Item>
@@ -562,7 +496,7 @@ class EcarSalesDetail extends Component {
                 //     width: 100,
                 // }}
                 >
-                  {this.state.citysokoonat.map(child => <Select.Option key={child.regionID} value={child.regionID} >{child.regionName}</Select.Option >)}
+                  {this.state.citysokoonat.map(child => <Select.Option key={child.key} value={child.key} >{child.value}</Select.Option >)}
                 </Select>
               )}
             </Form.Item>

@@ -24,23 +24,23 @@ class AdminForm extends Component {
       listid: props.listid,
       apiname: props.apiname,
       mode: props.mode,
-      disable:props.disable,
+      disable: props.disable,
       title: props.title,
       columnDefs: props.columnDefs
     }
 
   }
   componentWillReceiveProps = (nextProps) => {
-
+    console.log("nextProps.columnDefs", nextProps.columnDefs);
     if (nextProps.visibledetail != this.state.visibledetail) {
 
       this.setState({
         visibledetail: nextProps.visibledetail,
         mode: nextProps.mode,
-        disable:nextProps.disable,
+        disable: nextProps.disable,
         columnDefs: nextProps.columnDefs
       })
-      console.log("this.state.disable",this.state.disable);
+      console.log("this.state.disable", this.state.disable);
       this.props.form.resetFields();
       if (nextProps.mode != undefined && nextProps.mode != "Add") {
         this.GetData(nextProps.listid);
@@ -56,8 +56,8 @@ class AdminForm extends Component {
       .then(response => {
         let res = response.data.data;
         if (res != null) {
-             res.birthdate = new DateObject({ date: res.birthdate, calendar: persian, locale: persian_fa });//"1355/05/21",
-             res.sodoordate = new DateObject({ date: res.sodoordate, calendar: persian, locale: persian_fa });//"1355/05/21",
+          res.birthdate = new DateObject({ date: res.birthdate, calendar: persian, locale: persian_fa });//"1355/05/21",
+          res.sodoordate = new DateObject({ date: res.sodoordate, calendar: persian, locale: persian_fa });//"1355/05/21",
         }
         else {
           message.info("اطلاعات کاربر یافت نشد ");
@@ -88,7 +88,7 @@ class AdminForm extends Component {
     // }
     // console.log("product");
     // console.log(product);
-    console.log("product",product);
+    console.log("product", product);
     document.body.classList.add('loading-indicator');
     axios.post("/" + this.state.apiname + "/Upsert", product)
       // .then((response) => {
@@ -126,10 +126,10 @@ class AdminForm extends Component {
     //   id: product.id.toString(),
     // }]
 
-    console.log("product",product);
+    console.log("product", product);
     document.body.classList.add('loading-indicator');
-    axios.post("/" + this.state.apiname + "/Delete",product)
-    //axios.delete("/" + this.state.apiname + "/Delete", listid)
+    axios.post("/" + this.state.apiname + "/Delete", product)
+      //axios.delete("/" + this.state.apiname + "/Delete", listid)
       .then(response => {
         let res = response.data.errors;
         if (res.length == 0) {
@@ -190,19 +190,19 @@ class AdminForm extends Component {
     return (
 
       <Modal
-      // footer={null}
+        // footer={null}
         width={1000}
         title={this.state.mode === "Add" ? "ایجاد" : this.state.mode === "Edit" ? "ویرایش" : "حذف"}
         visible={this.state.visibledetail}
         onOk={this.handleSubmit}
-        okButtonProps={{ style: { display: this.state.mode === "Detail" ? 'none' : ''  } }}
+        okButtonProps={{ style: { display: this.state.mode === "Detail" ? 'none' : '' } }}
         // cancelButtonProps={{ style: { display: 'none' } }}
         onCancel={this.handleCancelButtonClick}
         okType={this.state.mode === "Delete" ? "danger" : "primary"}
         okText={this.state.mode === "Add" ? "ایجاد" : this.state.mode === "Edit" ? "ویرایش" : "حذف"}>
         {/* <Card className="gx-card" title={(this.state.mode === "Add" ? "ایجاد" : this.state.mode === "Edit" ? "ویرایش" : "حذف") + " " + this.state.title}> */}
         <Form
-          
+
           onSubmit={this.handleSubmit}
           name="basic"
           // layout="inline"
@@ -241,22 +241,22 @@ class AdminForm extends Component {
                       :
                       child.widget == 'checkbox' ?
 
-                        <Checkbox disabled={this.state.disable}/>
+                        <Checkbox disabled={this.state.disable} />
                         :
                         child.widget == 'datepicker' ?
 
-                        <DatePicker
-                        disabled={this.state.disable}
-                        editable={!this.state.disable}
-                        render={<InputIcon />}
-                        calendar={persian}
-                        locale={persian_fa}
-                        onChange={dateObject => {
-                          console.log(dateObject.format())
-                        }}/>
-                        :
+                          <DatePicker
+                            disabled={this.state.disable}
+                            editable={!this.state.disable}
+                            render={<InputIcon />}
+                            calendar={persian}
+                            locale={persian_fa}
+                            onChange={dateObject => {
+                              console.log(dateObject.format())
+                            }} />
+                          :
 
-                        <Input disabled={this.state.disable}/>
+                          <Input disabled={this.state.disable} />
                   )}
                 </Form.Item>
               </Col>

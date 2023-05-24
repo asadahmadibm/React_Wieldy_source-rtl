@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import CheckboxRenderer from "../../../../components/Admin-Grid/CheckboxRenderer";
 import AdminForm from "../../../../components/Admin-Form/AdminForm";
+import httpCaller from "../../../../Services/HttpService";
 
 class CompanyList extends Component {
 
@@ -105,100 +106,60 @@ class CompanyList extends Component {
   }
 
   getEnumValue = (code, formattingInfo) => {
-    // console.log("formattingInfo",formattingInfo);
     let foundItem = formattingInfo.find(({ key }) => key === code);
     if (!foundItem) return;
     return foundItem.value;
   }
 
-  componentDidMount = async () => {
-
-    await this.GetDataBase(false);
-    let columnDefs = [...this.state.columnDefs];
-    const indexgroupID = this.state.columnDefs.findIndex(emp => emp.field === "groupID");
-    let columnDefgroupID = { ...columnDefs[indexgroupID] };
-    columnDefgroupID.options = this.state.group;
-    columnDefs[indexgroupID] = columnDefgroupID
-    // this.setState({columnDefs});
-    const indexindustryID = this.state.columnDefs.findIndex(emp => emp.field === "industryID");
-    let columnDefindustryID = { ...columnDefs[indexindustryID] };
-    columnDefindustryID.options = this.state.industry;
-    columnDefs[indexindustryID] = columnDefindustryID
-
-    // console.log("this.state.columnDefs",this.state.columnDefs);
-    const indexostansokoonat = this.state.columnDefs.findIndex(emp => emp.field === "regionID");
-    let columnDefostansokoonat = { ...columnDefs[indexostansokoonat] };
-    columnDefostansokoonat.options = this.state.ostan;
-    columnDefs[indexostansokoonat] = columnDefostansokoonat
-
-    this.setState({ columnDefs });
-
+  componentDidMount = () => {
+    this.GetDataBase(false);
   }
 
-  GetDataBase = async (shouldLog) => {
-    document.body.classList.add('loading-indicator');
-    axios.interceptors.request.use(function (config) {
-      config.headers.IsSOCLog = (shouldLog == false ? "false" : "true");
-      return config;
-    });
-    // const getHeader = (shouldLog) => ({
-    //   "IsSOCLog": (shouldLog == false ? "false" : "true"),
-    //   'Authorization': "bearer " + localStorage.getItem('authUser'),
-    //   "Content-Type": 'application/json',
-    // });
-    // console.log(getHeader(false));
-    await axios.post("/CRM_Region/GetDropDown", { id: null })
-      .then(response => {
+  GetDataBase = (isSOCLog) => {
 
-        let res = response.data.data.list;
-        if (res != null) {
+    var data = { id: null };
 
-        }
-        else {
-          message.info("اطلاعات استان یافت نشد ");
-        }
-        document.body.classList.remove('loading-indicator')
-        this.setState({ ostan: res });
-        // console.log(res);
-      }).catch(res => {
-        document.body.classList.remove('loading-indicator')
-        message.error("اشکال در فراخوانی سرویس استان")
-      });
+    httpCaller.EcarSales.GetDropDown(data,(result) => {
+      
+      this.setState({ ostan: result.data.list });
+      let columnDefs = [...this.state.columnDefs];
+      const indexostansokoonat = this.state.columnDefs.findIndex(emp => emp.field === "regionID");
+      let columnDefostansokoonat = { ...columnDefs[indexostansokoonat] };
+      columnDefostansokoonat.options = this.state.ostan;
+      columnDefs[indexostansokoonat] = columnDefostansokoonat
+  
+      this.setState({ columnDefs });
 
-    await axios.get("/Group/GetDropDown")
-      .then(response => {
-        let res = response.data.data;
-        if (res != null) {
+    }, () => { }, isSOCLog)
 
-        }
-        else {
-          message.info("اطلاعات گروه یافت نشد ");
-        }
-        document.body.classList.remove('loading-indicator')
-        this.setState({ group: res });
-        // console.log("group:",res);
-      }).catch(res => {
-        document.body.classList.remove('loading-indicator')
-        message.error("اشکال در فراخوانی سرویس گروه")
-      });
+    httpCaller.Group.GetDropDown((result) => {
+      
+      this.setState({ group: result.data });
+      let columnDefs = [...this.state.columnDefs];
+      const indexgroupID = this.state.columnDefs.findIndex(emp => emp.field === "groupID");
+      let columnDefgroupID = { ...columnDefs[indexgroupID] };
+      columnDefgroupID.options = this.state.group;
+      columnDefs[indexgroupID] = columnDefgroupID
+      this.setState({ columnDefs });
 
-    await axios.get("/Industry/GetDropDown")
-      .then(response => {
-        let res = response.data.data;
-        if (res != null) {
+    }, () => { }, isSOCLog)
 
-        }
-        else {
-          message.info("اطلاعات صنعت یافت نشد ");
-        }
-        document.body.classList.remove('loading-indicator')
-        this.setState({ industry: res });
-        // console.log("industry: ",res);
-      }).catch(res => {
-        document.body.classList.remove('loading-indicator')
-        message.error("اشکال در فراخوانی سرویس صنعت")
-      });
+   
+    httpCaller.Industry.GetDropDown((result) => {
 
+      this.setState({ industry: result.data });
+      let columnDefs = [...this.state.columnDefs];
+      const indexindustryID = this.state.columnDefs.findIndex(emp => emp.field === "industryID");
+      let columnDefindustryID = { ...columnDefs[indexindustryID] };
+      columnDefindustryID.options = this.state.industry;
+      columnDefs[indexindustryID] = columnDefindustryID
+  
+      this.setState({ columnDefs });
+
+    }, () => { }, isSOCLog)
+
+    
+  
 
   }
 

@@ -11,6 +11,7 @@ import { CommentOutlined, CustomerServiceOutlined } from '@ant-design/icons';
 import { AutoComplete, Dropdown, Card, Checkbox, Row, Alert, Button, Switch, InputNumber, Select, Form, Input, message, Col } from 'antd';
 import 'react-toastify/dist/ReactToastify.css';
 import CheckboxRenderer from './CheckboxRenderer';
+import httpCaller from '../../Services/HttpService';
 
 class AdminGrid extends Component {
 
@@ -299,7 +300,7 @@ class AdminGrid extends Component {
     }
     componentWillReceiveProps = (nextProps) => {
 
-        console.log("nextProps.serverRowsRequest",nextProps.serverRowsRequest);
+        console.log("nextProps.serverRowsRequest", nextProps.serverRowsRequest);
         if (nextProps.refresh != undefined && nextProps.refresh != this.state.refresh) {
             console.log("nextProps.refresh", nextProps.refresh);
 
@@ -318,7 +319,7 @@ class AdminGrid extends Component {
     }
 
     onGridReady = (params) => {
-        console.log("params",params);
+        console.log("params", params);
         this.params = params;
         if (this.state.isshowInLoad == true) {
             const dataSource = this.getServerSideDatasource();
@@ -373,7 +374,27 @@ class AdminGrid extends Component {
                 if (this.state.apiname === "CrmCompanyProduct/GetByCompanyId" ||
                     this.state.apiname === "CrmCompanyConnection/GetByCompanyId" ||
                     this.state.apiname === "CrmCompanyTelephone/GetByCompanyId") {
-                     axios.post("/" + this.state.apiname, { id: this.state.parameterCompanyId }, { timeout: 90000 })
+
+                    // var data={ id: this.state.parameterCompanyId }
+                    // httpCaller.EcarSales.GetDropDown(data, (result) => {
+                    //     console.log("result.data.list", result.data.list);
+                    //     this.setState({ ostan: result.data.list });
+                    //   }, () => { }, isSOCLog)
+                    axios.defaults.baseURL = 'https://localhost:7012' //'https://swagger.tnlink.ir'//
+                    axios.defaults.headers.post['Contetnt-Type'] = 'application/json';
+                    axios.interceptors.request.use(function (config) {
+                        var token = localStorage.getItem('authUser');
+                        if (token == null) {
+                            console.log("NotLogin");
+                            // this.props.history.push('/signin');
+
+                        }
+                        config.headers.Authorization = "Bearer " + token;
+                        return config;
+                    });
+
+
+                    axios.post("/" + this.state.apiname, { id: this.state.parameterCompanyId }, { timeout: 90000 })
                         .then(res => {
                             console.log("res.data.data.list", res.data.data.list);
                             params.successCallback(res.data.data.list, res.data.data.totalCount);
@@ -386,8 +407,21 @@ class AdminGrid extends Component {
                         });
                 }
                 else {
-                    console.log("this.state.serverRowsRequest",this.state.serverRowsRequest);
-                    axios.post("/" + this.state.apiname+"/GetAll", this.state.serverRowsRequest, { timeout: 90000 })
+                    console.log("this.state.serverRowsRequest", this.state.serverRowsRequest);
+                    axios.defaults.baseURL = 'https://localhost:7012' //'https://swagger.tnlink.ir'//
+                    axios.defaults.headers.post['Contetnt-Type'] = 'application/json';
+                    axios.interceptors.request.use(function (config) {
+                        var token = localStorage.getItem('authUser');
+                        if (token == null) {
+                            console.log("NotLogin");
+                            // this.props.history.push('/signin');
+
+                        }
+                        config.headers.Authorization = "Bearer " + token;
+                        return config;
+                    });
+
+                    axios.post("/" + this.state.apiname + "/GetAll", this.state.serverRowsRequest, { timeout: 90000 })
                         .then(res => {
                             console.log("res.data.data.list", res.data.data.list);
                             params.successCallback(res.data.data.list, res.data.data.totalCount);
@@ -427,7 +461,7 @@ class AdminGrid extends Component {
             message.error("ردیفی را انتخاب نمایید");
             return;
         }
-        this.props.ClickCrud("Edit",selectedData[0]);
+        this.props.ClickCrud("Edit", selectedData[0]);
     };
     showDelete = () => {
         let selectedData = this.params.api.getSelectedRows();
@@ -437,7 +471,7 @@ class AdminGrid extends Component {
             message.error("ردیفی را انتخاب نمایید");
             return;
         }
-        this.props.ClickCrud("Delete",selectedData[0]);
+        this.props.ClickCrud("Delete", selectedData[0]);
     };
     showDetail = () => {
         let selectedData = this.params.api.getSelectedRows();
@@ -448,7 +482,7 @@ class AdminGrid extends Component {
             return;
         }
         console.log("this.state.apiname ", this.state.apiname);
-        this.props.ClickCrud("Detail",selectedData[0]);
+        this.props.ClickCrud("Detail", selectedData[0]);
         return;
         // this.props.history.push({ pathname: '/myapp/EcarSales', state: { mellicode: selectedData[0].mellicode } })
         this.props.history.push({ pathname: '/myapp/crm/company/companydetail', state: { companyID: selectedData[0].companyID } })
