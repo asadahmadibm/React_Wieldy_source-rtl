@@ -33,13 +33,14 @@ class AdminForm extends Component {
   }
   componentWillReceiveProps = (nextProps) => {
     console.log("nextProps.columnDefs", nextProps.columnDefs);
-    if (nextProps.visibledetail != this.state.visibledetail) {
+    if (nextProps.visibledetail != this.state.visibledetail || nextProps.listid !=this.state.listid) {
 
       this.setState({
         visibledetail: nextProps.visibledetail,
         mode: nextProps.mode,
         disable: nextProps.disable,
-        columnDefs: nextProps.columnDefs
+        columnDefs: nextProps.columnDefs,
+        listid:nextProps.listid
       })
       console.log("this.state.disable", this.state.disable);
       this.props.form.resetFields();
@@ -140,18 +141,17 @@ class AdminForm extends Component {
     const { getFieldDecorator } = this.props.form;
     return (
 
-      <Modal
-        // footer={null}
-        width={1000}
-        title={this.state.mode === "Add" ? "ایجاد" : this.state.mode === "Edit" ? "ویرایش" : "حذف"}
-        visible={this.state.visibledetail}
-        onOk={this.handleSubmit}
-        okButtonProps={{ style: { display: this.state.mode === "Detail" ? 'none' : '' } }}
-        // cancelButtonProps={{ style: { display: 'none' } }}
-        onCancel={this.handleCancelButtonClick}
-        okType={this.state.mode === "Delete" ? "danger" : "primary"}
-        okText={this.state.mode === "Add" ? "ایجاد" : this.state.mode === "Edit" ? "ویرایش" : "حذف"}>
-        {/* <Card className="gx-card" title={(this.state.mode === "Add" ? "ایجاد" : this.state.mode === "Edit" ? "ویرایش" : "حذف") + " " + this.state.title}> */}
+      // <Modal
+      //   // footer={null}
+      //   width={1000}
+      //   title={this.state.mode === "Add" ? "ایجاد" : this.state.mode === "Edit" ? "ویرایش" : "حذف"}
+      //   visible={this.state.visibledetail}
+      //   onOk={this.handleSubmit}
+      //   okButtonProps={{ style: { display: this.state.mode === "Detail" ? 'none' : '' } }}
+      //   onCancel={this.handleCancelButtonClick}
+      //   okType={this.state.mode === "Delete" ? "danger" : "primary"}
+      //   okText={this.state.mode === "Add" ? "ایجاد" : this.state.mode === "Edit" ? "ویرایش" : "حذف"}>
+        <Card className="gx-card" title={(this.state.mode === "Add" ? "ایجاد" : this.state.mode === "Edit" ? "ویرایش" : "حذف") + " " + this.state.title}> 
         <Form
 
           onSubmit={this.handleSubmit}
@@ -216,16 +216,16 @@ class AdminForm extends Component {
 
 
           </Row>
-          {/* <Row>
+          <Row>
               <Col lg={8} md={12} xs={24} sm={12} xl={12}  >
                 <Button type={this.state.mode === "Delete" ? "danger" : "primary"} htmlType="submit"> {this.state.mode === "Add" ? "ایجاد" : this.state.mode === "Edit" ? "ویرایش" : "حذف"}</Button>
                 <Button onClick={this.handleReset}>پاکسازی فرم </Button>
                 <Button htmlType="button" onClick={this.handleCancelButtonClick}>بازگشت</Button>
               </Col>
-            </Row> */}
+            </Row>
         </Form>
-        {/* </Card> */}
-      </Modal>
+         </Card> 
+      // </Modal>
     )
   }
 }

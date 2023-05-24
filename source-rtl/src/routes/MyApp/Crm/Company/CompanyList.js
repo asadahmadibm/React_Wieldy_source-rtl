@@ -164,7 +164,7 @@ class CompanyList extends Component {
   }
 
   ClickCrud = (mode, rowselected) => {
-    // console.log("ClickCrud.this.state.columnDefs",this.state.columnDefs);
+    console.log("rowselected",rowselected);
     switch (mode) {
 
       case "Add":
@@ -217,6 +217,7 @@ class CompanyList extends Component {
             ClickCrud={this.ClickCrud}
             isshowInLoad={true}
             columnDefs={this.state.columnDefs}
+            filterExternal={[{Field: 'companyID', Condition1: {filterType: 'number', type: 'equals', filter: '1'}}]}
             height="65vh" title="لیست شرکتها"
             isshowdetail={true}
             refresh={this.state.refresh}

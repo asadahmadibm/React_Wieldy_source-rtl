@@ -31,6 +31,8 @@ class AdminGrid extends Component {
             apiname: props.apiname,
             title: props.title,
             columnDefs: props.columnDefs,
+            filterExternal: props.filterExternal,
+            params :props.params,
             serverRowsRequest: {
                 PageIndex: 1,
                 PageSize: 20,
@@ -301,12 +303,18 @@ class AdminGrid extends Component {
     componentWillReceiveProps = (nextProps) => {
 
         console.log("nextProps.serverRowsRequest", nextProps.serverRowsRequest);
-        if (nextProps.refresh != undefined && nextProps.refresh != this.state.refresh) {
+        if (
+            //(nextProps.refresh != undefined && nextProps.refresh != this.state.refresh) ||
+            nextProps.filterExternal != this.state.filterExternal) {
             console.log("nextProps.refresh", nextProps.refresh);
 
-            const dataSource = this.getServerSideDatasource();
-            this.params.api.setDatasource(dataSource);
-            this.setState({ refresh: false, isshowInLoad: true });
+             const dataSource = this.getServerSideDatasource(nextProps.filterExternal );
+             console.log("this.params",this.params);
+            if(this.params!= undefined)
+            {
+             this.params.api.setDatasource(dataSource);
+             this.setState({ refresh: false, isshowInLoad: true,filterExternal:nextProps.filterExternal });
+            }
         }
 
         if (this.params) {
@@ -319,17 +327,29 @@ class AdminGrid extends Component {
     }
 
     onGridReady = (params) => {
-        console.log("params", params);
-        this.params = params;
+        this.setState({params:params})
+        // console.log("params", params);
+         this.params = params;
         if (this.state.isshowInLoad == true) {
-            const dataSource = this.getServerSideDatasource();
+            const dataSource = this.getServerSideDatasource(null);
             this.params.api.setDatasource(dataSource);
         }
     };
-    getServerSideDatasource() {
+    getServerSideDatasource(filterExternal) {
+        
+
         return {
+            
             getRows: (params) => {
                 this.state.serverRowsRequest.SortModels = params.sortModel;
+                console.log("filterExternal",filterExternal);
+                console.log("params.filterModel;",params.filterModel);
+                // if(filterExternal!=null && params.filterModel)
+                // {
+                //     console.log("before");
+                //     params.filterModel = {Field: 'companyID', Condition1: {filterType: 'number', type: 'equals', filter: '1'}});
+                //     console.log("after",params.filterModel );
+                // }
                 let filteredFields = params.filterModel;
                 let mappedFilters = [];
                 for (let filteredField in filteredFields) {
@@ -366,6 +386,11 @@ class AdminGrid extends Component {
 
                 }
                 this.state.serverRowsRequest.filterModels = mappedFilters;
+                if(filterExternal!=null && params.filterModel)
+                {
+                    this.state.serverRowsRequest.filterModels = filterExternal;
+                }
+                
                 this.state.serverRowsRequest.PageIndex = (params.startRow / this.state.perPage) + 1;
                 const page = params.endRow / this.state.perPage;
 
@@ -389,7 +414,7 @@ class AdminGrid extends Component {
                     });
                     // this.state.serverRowsRequest.filterModels = [{Field: 'companyID', 
                     // Condition1: {filterType: 'number', type: 'equals', filter: '1'}}];
-    
+
 
                     axios.post("/" + this.state.apiname, { id: this.state.parameterCompanyId }, { timeout: 90000 })
                         .then(res => {
@@ -405,10 +430,10 @@ class AdminGrid extends Component {
                 }
                 else {
 
-                    httpCaller.CRUDGrid.GetAll( this.state.apiname,this.state.serverRowsRequest, (result) => {
+                    httpCaller.CRUDGrid.GetAll(this.state.apiname, this.state.serverRowsRequest, (result) => {
                         params.successCallback(result.data.list, result.data.totalCount);
-                      }, () => { }, true)
- 
+                    }, () => { }, true)
+
                 }
             },
         };
