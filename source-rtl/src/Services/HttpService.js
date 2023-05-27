@@ -716,16 +716,30 @@ const Industry = {
   GetDropDown: async (onFulfilled, onRejected) => httpCall.Get(`/Industry/GetDropDown`, onFulfilled, onRejected),
 }
 
+const Product = {
+  GetDropDown: async (onFulfilled, onRejected) => httpCall.Get(`/Product/GetDropDown`, onFulfilled, onRejected),
+}
+
+
 
 const CRUDGrid = {
 
   GetAll: async (apiname, data, onFulfilled, onRejected) => {
     switch (apiname) {
+      case "Product":
+        httpCall.Post(`/Product/GetAll`, data, onFulfilled, onRejected);
+        break;
       case "EcarSales":
         httpCall.Post(`/EcarSales/GetAll`, data, onFulfilled, onRejected);
         break;
       case "CrmCompany":
         httpCall.Post(`/CrmCompany/GetAll`, data, onFulfilled, onRejected);
+        break;
+      case "CrmCompanyProduct":
+        httpCall.Post(`/CrmCompanyProduct/GetAll`, data, onFulfilled, onRejected);
+        break;
+      case "CrmCompanyTelephone":
+        httpCall.Post(`/CrmCompanyTelephone/GetAll`, data, onFulfilled, onRejected);
         break;
     }
 

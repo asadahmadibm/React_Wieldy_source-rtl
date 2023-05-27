@@ -14,10 +14,6 @@ class CompanyList extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      visibledetail: false,
-      disable: false,
-      refresh: false,
-      rowselected: [],
       sex: [{ indexField: 2, valueField: "زن " }, { indexField: 1, valueField: "مرد" }],
       companyID: null,
       ostan: [],
@@ -100,6 +96,49 @@ class CompanyList extends Component {
 
         { field: 'selectiveGroup', sortable: true, headerName: " گروه انتخابی ", filter: 'agTextColumnFilter', width: 170 },
         { field: 'address', sortable: true, headerName: " خیابان ", filter: 'agTextColumnFilter', width: 170 },
+      ],
+      subsets: [
+        {
+          columnDefs: [
+
+            { field: 'companyID', hide: true, sortable: true, headerName: "شناسه  ", filter: 'agNumberColumnFilter', width: 50 },
+            { field: 'rowID', sortable: true, headerName: " ردیف ", filter: 'agNumberColumnFilter', width: 75 },
+            {
+              field: 'productID', sortable: true, headerName: "  کد محصول", filter: 'agSetColumnFilter', width: 130,
+              valueFormatter: params => this.getEnumValue(params.value, this.state.productList),
+              filterParams: {
+                valueFormatter: params => this.getEnumValue(params.value, this.state.productList), //this.getEnumValue(Number(params.value), paymentMethod),
+                values: (params) => { params.success(this.state.productList.map(item => item.productID)) }
+              }
+            },
+            { field: 'qty', sortable: true, headerName: "تعداد  ", filter: 'agTextColumnFilter', width: 250 },
+            { field: 'comment', sortable: true, headerName: " توضیحات ", filter: 'agNumberColumnFilter', width: 170 },
+          ],
+          filterExternal: [{ Field: 'companyID', Condition1: { filterType: 'number', type: 'equals',  
+          filter:  "1" // this.state.rowselected.companyID.toString()
+        } }],
+          apiname: 'CrmCompanyProduct',
+          title: 'لیست محصولات',
+        },
+        {
+          columnDefs: [
+
+            { field: 'companyID', hide: true, sortable: true, headerName: "شناسه  ", filter: 'agNumberColumnFilter', width: 120 },
+            { field: 'rowID', sortable: true, headerName: " ردیف ", filter: 'agNumberColumnFilter', width: 75 },
+            { field: 'data', sortable: true, headerName: "  تلفن", filter: 'agTextColumnFilter', width: 200 },
+            { field: 'dataType', sortable: true, headerName: "نوع  ", filter: 'agTextColumnFilter', width: 250 },
+            { field: 'comment', sortable: true, headerName: " توضیحات ", filter: 'agNumberColumnFilter', width: 170 },
+          ],
+          
+          filterExternal: [{ Field: 'companyID', Condition1: { filterType: 'number', type: 'equals', 
+          filter: "2"
+         } }],
+         idname:"companyID",
+          apiname: 'CrmCompanyTelephone',
+          title: 'لیست تلفن ها',
+        }
+
+
       ]
     };
 
@@ -119,21 +158,21 @@ class CompanyList extends Component {
 
     var data = { id: null };
 
-    httpCaller.EcarSales.GetDropDown(data,(result) => {
-      
+    httpCaller.EcarSales.GetDropDown(data, (result) => {
+
       this.setState({ ostan: result.data.list });
       let columnDefs = [...this.state.columnDefs];
       const indexostansokoonat = this.state.columnDefs.findIndex(emp => emp.field === "regionID");
       let columnDefostansokoonat = { ...columnDefs[indexostansokoonat] };
       columnDefostansokoonat.options = this.state.ostan;
       columnDefs[indexostansokoonat] = columnDefostansokoonat
-  
+
       this.setState({ columnDefs });
 
     }, () => { }, isSOCLog)
 
     httpCaller.Group.GetDropDown((result) => {
-      
+
       this.setState({ group: result.data });
       let columnDefs = [...this.state.columnDefs];
       const indexgroupID = this.state.columnDefs.findIndex(emp => emp.field === "groupID");
@@ -144,7 +183,7 @@ class CompanyList extends Component {
 
     }, () => { }, isSOCLog)
 
-   
+
     httpCaller.Industry.GetDropDown((result) => {
 
       this.setState({ industry: result.data });
@@ -153,77 +192,39 @@ class CompanyList extends Component {
       let columnDefindustryID = { ...columnDefs[indexindustryID] };
       columnDefindustryID.options = this.state.industry;
       columnDefs[indexindustryID] = columnDefindustryID
-  
+
       this.setState({ columnDefs });
 
     }, () => { }, isSOCLog)
 
-    
-  
+    httpCaller.Industry.GetDropDown((result) => {
+
+      this.setState({ productList: result.data });
+
+
+    }, () => { }, isSOCLog)
 
   }
 
-  ClickCrud = (mode, rowselected) => {
-    console.log("rowselected",rowselected);
-    switch (mode) {
-
-      case "Add":
-        // this.props.history.push({ pathname: '/myapp/crm/company/companydetail', state: { listid: null } })
-        this.setState({ visibledetail: true, mode: "Add", refresh: false, columnDefs: this.state.columnDefs })
-        break;
-      case "Edit":
-      case "Delete":
-      case "Detail":
-        this.setState({
-          visibledetail: true,
-          mode: mode,
-          disable: mode == "Delete" || mode == "Detail" ? true : false,
-          rowselected: rowselected,
-          refresh: false,
-          columnDefs: this.state.columnDefs
-        })
-      // this.props.history.push({ pathname: '/myapp/crm/company/companydetail', state: { listid: [{ id:rowselected.companyID.toString()}] } })
-
-    }
-  }
-
-  ClickForm = () => {
-    this.setState({ visibledetail: false, refresh: true })
-  }
-  Refreshlist = () => {
-    this.setState({
-      refresh: true,
-      visible: false,
-    });
-
-  }
+ 
 
   render() {
     return (
       <div className="gx-main-content">
-        <AdminForm
-          ClickForm={this.ClickForm}
-          mode={this.state.mode}
-          disable={this.state.disable}
-          columnDefs={this.state.columnDefs}
-          title="شرکتها"
-          listid={[{ id: this.state.rowselected.companyID == undefined ? "" : this.state.rowselected.companyID.toString() }]}
-          apiname="CrmCompany"
-          visibledetail={this.state.visibledetail}
-          parentCallback={this.Refreshlist}
-        />
         <Card className="gx-card" title="لیست شرکتها">
           <AdminGrid
-            ClickCrud={this.ClickCrud}
             isshowInLoad={true}
             columnDefs={this.state.columnDefs}
-            filterExternal={[{Field: 'companyID', Condition1: {filterType: 'number', type: 'equals', filter: '1'}}]}
-            height="65vh" title="لیست شرکتها"
-            isshowdetail={true}
+            idname="companyID"
+            // filterExternal={[{Field: 'companyID', Condition1: {filterType: 'number', type: 'equals', filter: '1'}}]}
+            height="65vh" 
+            title="شرکتها"
+            isshowbutton={true}
             refresh={this.state.refresh}
             apiname="CrmCompany"
-            pageDetail="companyDetail"
-            showfloatingFilter={true} />
+            showfloatingFilter={true}
+            subsets={this.state.subsets}
+            />
         </Card>
 
       </div>

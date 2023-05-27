@@ -12,6 +12,7 @@ import { AutoComplete, Dropdown, Card, Checkbox, Row, Alert, Button, Switch, Inp
 import 'react-toastify/dist/ReactToastify.css';
 import CheckboxRenderer from './CheckboxRenderer';
 import httpCaller from '../../Services/HttpService';
+import AdminForm from '../Admin-Form/AdminForm';
 
 class AdminGrid extends Component {
 
@@ -20,19 +21,26 @@ class AdminGrid extends Component {
         console.log(props);
         super(props)
         this.state = {
+            idname:props.idname,
+            visibledetail: false,
+            disable: false,
+            refresh: false,
+            listid:[],
+            productList: [],
+            rowselected: [],
             refresh: false,
             parameterCompanyId: props.parameterCompanyId ?? "",
             pagination: props.pagination ?? true,
             isshowInLoad: props.isshowInLoad,
             requestCode: props.requestCode,
             height: props.height,
-            isshowdetail: props.isshowdetail,
-            pageDetail: props.pageDetail,
+            isshowbutton: props.isshowbutton,
             apiname: props.apiname,
             title: props.title,
             columnDefs: props.columnDefs,
+            subsets:props.subsets,
             filterExternal: props.filterExternal,
-            params :props.params,
+            params: props.params,
             serverRowsRequest: {
                 PageIndex: 1,
                 PageSize: 20,
@@ -302,54 +310,46 @@ class AdminGrid extends Component {
     }
     componentWillReceiveProps = (nextProps) => {
 
-        console.log("nextProps.serverRowsRequest", nextProps.serverRowsRequest);
-        if (
-            //(nextProps.refresh != undefined && nextProps.refresh != this.state.refresh) ||
-            nextProps.filterExternal != this.state.filterExternal) {
-            console.log("nextProps.refresh", nextProps.refresh);
 
-             const dataSource = this.getServerSideDatasource(nextProps.filterExternal );
-             console.log("this.params",this.params);
-            if(this.params!= undefined)
-            {
-             this.params.api.setDatasource(dataSource);
-             this.setState({ refresh: false, isshowInLoad: true,filterExternal:nextProps.filterExternal });
-            }
-        }
+        // if (
+        //     nextProps.filterExternal != this.state.filterExternal) {
+        console.log("nextProps.filterExternal", nextProps.filterExternal);
 
-        if (this.params) {
-            this.setState({ serverRowsRequest: { ...this.state.serverRowsRequest, fromDate: nextProps.fromDate } });
-            // const dataSource = this.getServerSideDatasource();
-            // this.params.api.setDatasource(dataSource);
+        const dataSource = this.getServerSideDatasource(nextProps.filterExternal);
+        console.log("this.params", this.params);
+        if (this.params != undefined) {
+            this.params.api.setDatasource(dataSource);
+            this.setState({ refresh: false, isshowInLoad: true, filterExternal: nextProps.filterExternal });
         }
+        // }
+
+        // if (this.params) {
+        //     this.setState({ serverRowsRequest: { ...this.state.serverRowsRequest, fromDate: nextProps.fromDate } });
+        //     // const dataSource = this.getServerSideDatasource();
+        //     // this.params.api.setDatasource(dataSource);
+        // }
 
 
     }
 
     onGridReady = (params) => {
-        this.setState({params:params})
+        this.setState({ params: params })
         // console.log("params", params);
-         this.params = params;
+        this.params = params;
         if (this.state.isshowInLoad == true) {
             const dataSource = this.getServerSideDatasource(null);
             this.params.api.setDatasource(dataSource);
         }
     };
-    getServerSideDatasource(filterExternal) {
-        
+    getServerSideDatasource = (filterExternal) => {
+
 
         return {
-            
-            getRows: (params) => {
+
+            getRows: async (params) => {
                 this.state.serverRowsRequest.SortModels = params.sortModel;
-                console.log("filterExternal",filterExternal);
-                console.log("params.filterModel;",params.filterModel);
-                // if(filterExternal!=null && params.filterModel)
-                // {
-                //     console.log("before");
-                //     params.filterModel = {Field: 'companyID', Condition1: {filterType: 'number', type: 'equals', filter: '1'}});
-                //     console.log("after",params.filterModel );
-                // }
+                console.log("filterExternal", filterExternal);
+
                 let filteredFields = params.filterModel;
                 let mappedFilters = [];
                 for (let filteredField in filteredFields) {
@@ -386,55 +386,17 @@ class AdminGrid extends Component {
 
                 }
                 this.state.serverRowsRequest.filterModels = mappedFilters;
-                if(filterExternal!=null && params.filterModel)
-                {
+                if (filterExternal != null && params.filterModel) {
                     this.state.serverRowsRequest.filterModels = filterExternal;
                 }
-                
+
                 this.state.serverRowsRequest.PageIndex = (params.startRow / this.state.perPage) + 1;
                 const page = params.endRow / this.state.perPage;
 
-                document.body.classList.add('loading-indicator');
-                console.log("CrmCompanyProduct/GetByCompanyId", this.state.apiname);
-                if (this.state.apiname === "CrmCompanyProduct/GetByCompanyId" ||
-                    this.state.apiname === "CrmCompanyConnection/GetByCompanyId" ||
-                    this.state.apiname === "CrmCompanyTelephone/GetByCompanyId") {
+                await httpCaller.CRUDGrid.GetAll(this.state.apiname, this.state.serverRowsRequest, (result) => {
+                    params.successCallback(result.data.list, result.data.totalCount);
+                }, () => { }, true)
 
-                    axios.defaults.baseURL = 'https://localhost:7012' //'https://swagger.tnlink.ir'//
-                    axios.defaults.headers.post['Contetnt-Type'] = 'application/json';
-                    axios.interceptors.request.use(function (config) {
-                        var token = localStorage.getItem('authUser');
-                        if (token == null) {
-                            console.log("NotLogin");
-                            // this.props.history.push('/signin');
-
-                        }
-                        config.headers.Authorization = "Bearer " + token;
-                        return config;
-                    });
-                    // this.state.serverRowsRequest.filterModels = [{Field: 'companyID', 
-                    // Condition1: {filterType: 'number', type: 'equals', filter: '1'}}];
-
-
-                    axios.post("/" + this.state.apiname, { id: this.state.parameterCompanyId }, { timeout: 90000 })
-                        .then(res => {
-                            console.log("res.data.data.list", res.data.data.list);
-                            params.successCallback(res.data.data.list, res.data.data.totalCount);
-                            document.body.classList.remove('loading-indicator')
-                        }).catch(err => {
-                            params.successCallback([], 0);
-                            console.log("اشکال در فراخوانی اطلاعات");
-                            document.body.classList.remove('loading-indicator')
-                        }).finally(() => {
-                        });
-                }
-                else {
-
-                    httpCaller.CRUDGrid.GetAll(this.state.apiname, this.state.serverRowsRequest, (result) => {
-                        params.successCallback(result.data.list, result.data.totalCount);
-                    }, () => { }, true)
-
-                }
             },
         };
     }
@@ -453,7 +415,7 @@ class AdminGrid extends Component {
 
 
     showAdd = () => {
-        this.props.ClickCrud("Add");
+        this.ClickCrud("Add");
     };
     showEdit = () => {
         let selectedData = this.params.api.getSelectedRows();
@@ -463,7 +425,7 @@ class AdminGrid extends Component {
             message.error("ردیفی را انتخاب نمایید");
             return;
         }
-        this.props.ClickCrud("Edit", selectedData[0]);
+        this.ClickCrud("Edit", selectedData[0]);
     };
     showDelete = () => {
         let selectedData = this.params.api.getSelectedRows();
@@ -473,7 +435,7 @@ class AdminGrid extends Component {
             message.error("ردیفی را انتخاب نمایید");
             return;
         }
-        this.props.ClickCrud("Delete", selectedData[0]);
+        this.ClickCrud("Delete", selectedData[0]);
     };
     showDetail = () => {
         let selectedData = this.params.api.getSelectedRows();
@@ -484,17 +446,78 @@ class AdminGrid extends Component {
             return;
         }
         console.log("this.state.apiname ", this.state.apiname);
-        this.props.ClickCrud("Detail", selectedData[0]);
+        this.ClickCrud("Detail", selectedData[0]);
         return;
         // this.props.history.push({ pathname: '/myapp/EcarSales', state: { mellicode: selectedData[0].mellicode } })
         this.props.history.push({ pathname: '/myapp/crm/company/companydetail', state: { companyID: selectedData[0].companyID } })
         //this.props.history.push({ pathname: '/ExchangesDetail', state: { sarafiId: 12 }, })
     }
 
+    ClickCrud = (mode, rowselected) => {
+        console.log("rowselected", rowselected);
+        switch (mode) {
+
+            case "Add":
+                // this.props.history.push({ pathname: '/myapp/crm/company/companydetail', state: { listid: null } })
+                this.setState({ 
+                    visibledetail: true, 
+                    mode: "Add", 
+                    disable: false,
+                    refresh: false, 
+                    columnDefs: this.state.columnDefs ,
+                    listid:""})
+                break;
+            case "Edit":
+            case "Delete":
+            case "Detail":
+               
+                this.setState({
+                    visibledetail: true,
+                    mode: mode,
+                    disable: mode == "Delete" || mode == "Detail" ? true : false,
+                    rowselected: rowselected,
+                    refresh: false,
+                    columnDefs: this.state.columnDefs,
+                    listid: [{ id: rowselected[this.state.idname] == undefined ? "" : rowselected[this.state.idname].toString() }]
+
+                })
+                console.log("this.state.listid",this.state.listid);
+            // this.props.history.push({ pathname: '/myapp/crm/company/companydetail', state: { listid: [{ id:rowselected.companyID.toString()}] } })
+
+        }
+    }
+
+    ClickForm = () => {
+        this.setState({ visibledetail: false, refresh: true })
+    }
+    Refreshlist = () => {
+
+        const dataSource = this.getServerSideDatasource(this.state.filterExternal);
+        this.params.api.setDatasource(dataSource);
+        this.setState({
+            refresh: true,
+            visible: false,
+        });
+
+    }
+
     render() {
         return (
+
             <div>
-                {this.state.isshowdetail == true ?
+                <AdminForm
+                    ClickForm={this.ClickForm}
+                    mode={this.state.mode}
+                    disable={this.state.disable}
+                    columnDefs={this.state.columnDefs}
+                    title={this.state.title}
+                    listid={this.state.listid}
+                    apiname={this.state.apiname}
+                    visibledetail={this.state.visibledetail}
+                    parentCallback={this.Refreshlist}
+                    subsets={this.state.subsets}
+                />
+                {this.state.isshowbutton == true ?
                     <Row>
                         {/* <Col lg={12} md={12} xs={24} sm={12} xl={8}  >
                             <Alert message="امکان فیلتر نمودن هر یک از ستونها وجود دارد " type="warning" showIcon />

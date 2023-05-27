@@ -15,6 +15,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import httpCaller from "../../Services/HttpService";
+import AdminGrid from "../Admin-Grid/AdminGrid";
 
 class AdminForm extends Component {
 
@@ -27,20 +28,21 @@ class AdminForm extends Component {
       mode: props.mode,
       disable: props.disable,
       title: props.title,
-      columnDefs: props.columnDefs
+      columnDefs: props.columnDefs,
+      subsets: props.subsets
     }
 
   }
   componentWillReceiveProps = (nextProps) => {
     console.log("nextProps.columnDefs", nextProps.columnDefs);
-    if (nextProps.visibledetail != this.state.visibledetail || nextProps.listid !=this.state.listid) {
+    if (nextProps.visibledetail != this.state.visibledetail || nextProps.listid != this.state.listid) {
 
       this.setState({
         visibledetail: nextProps.visibledetail,
         mode: nextProps.mode,
         disable: nextProps.disable,
         columnDefs: nextProps.columnDefs,
-        listid:nextProps.listid
+        listid: nextProps.listid
       })
       console.log("this.state.disable", this.state.disable);
       this.props.form.resetFields();
@@ -55,7 +57,7 @@ class AdminForm extends Component {
 
     this.props.form.resetFields();
 
-    httpCaller.CRUDGrid.GetById( this.state.apiname,listid, (result) => {
+    httpCaller.CRUDGrid.GetById(this.state.apiname, listid, (result) => {
       this.props.form.setFieldsValue(result.data);
     }, () => { }, isSOCLog)
 
@@ -68,9 +70,9 @@ class AdminForm extends Component {
     return data;
   }
 
-  UpsertData = (product,isSOCLog) => {
+  UpsertData = (product, isSOCLog) => {
 
-    httpCaller.CRUDGrid.Upsert( this.state.apiname,product, (result) => {
+    httpCaller.CRUDGrid.Upsert(this.state.apiname, product, (result) => {
       let res = result.data;
       if (res != null) {
         toast.warning("اطلاعات کاربر ثبت شد ");
@@ -87,19 +89,19 @@ class AdminForm extends Component {
 
   }
 
-  DeleteData = (product,isSOCLog) => {
-    httpCaller.CRUDGrid.Delete( this.state.apiname,product, (result) => {
+  DeleteData = (product, isSOCLog) => {
+    httpCaller.CRUDGrid.Delete(this.state.apiname, product, (result) => {
       let res = result.errors;
-        if (res.length == 0) {
-          toast.error("اطلاعات کاربر حذف شد ");
-          this.setState({
-            visible: false,
-          });
-          this.props.parentCallback();
-        }
-        else {
-          toast.error(res[0] + "اطلاعات کاربر حذف نشد ");
-        }
+      if (res.length == 0) {
+        toast.error("اطلاعات کاربر حذف شد ");
+        this.setState({
+          visible: false,
+        });
+        this.props.parentCallback();
+      }
+      else {
+        toast.error(res[0].desc + "اطلاعات کاربر حذف نشد ");
+      }
     }, () => { }, isSOCLog)
 
   }
@@ -115,7 +117,7 @@ class AdminForm extends Component {
         switch (this.state.mode) {
           case "Add":
           case "Edit":
-            this.UpsertData(data,true);
+            this.UpsertData(data, true);
             break;
           case "Delete":
             this.DeleteData(data);
@@ -141,17 +143,17 @@ class AdminForm extends Component {
     const { getFieldDecorator } = this.props.form;
     return (
 
-      // <Modal
-      //   // footer={null}
-      //   width={1000}
-      //   title={this.state.mode === "Add" ? "ایجاد" : this.state.mode === "Edit" ? "ویرایش" : "حذف"}
-      //   visible={this.state.visibledetail}
-      //   onOk={this.handleSubmit}
-      //   okButtonProps={{ style: { display: this.state.mode === "Detail" ? 'none' : '' } }}
-      //   onCancel={this.handleCancelButtonClick}
-      //   okType={this.state.mode === "Delete" ? "danger" : "primary"}
-      //   okText={this.state.mode === "Add" ? "ایجاد" : this.state.mode === "Edit" ? "ویرایش" : "حذف"}>
-        <Card className="gx-card" title={(this.state.mode === "Add" ? "ایجاد" : this.state.mode === "Edit" ? "ویرایش" : "حذف") + " " + this.state.title}> 
+      <Modal
+        footer={null}
+        width={1000}
+        title={this.state.mode === "Add" ? "ایجاد" : this.state.mode === "Edit" ? "ویرایش" : "حذف"}
+        visible={this.state.visibledetail}
+        onOk={this.handleSubmit}
+        okButtonProps={{ style: { display: this.state.mode === "Detail" ? 'none' : '' } }}
+        onCancel={this.handleCancelButtonClick}
+        okType={this.state.mode === "Delete" ? "danger" : "primary"}
+        okText={this.state.mode === "Add" ? "ایجاد" : this.state.mode === "Edit" ? "ویرایش" : "حذف"}>
+      {/* <Card className="gx-card" style={{paddingRight:30}} title={(this.state.mode === "Add" ? "ایجاد" : this.state.mode === "Edit" ? "ویرایش" : this.state.mode === "Delete" ? "حذف" : "" ) + " " + this.state.title}> */}
         <Form
 
           onSubmit={this.handleSubmit}
@@ -217,15 +219,42 @@ class AdminForm extends Component {
 
           </Row>
           <Row>
-              <Col lg={8} md={12} xs={24} sm={12} xl={12}  >
-                <Button type={this.state.mode === "Delete" ? "danger" : "primary"} htmlType="submit"> {this.state.mode === "Add" ? "ایجاد" : this.state.mode === "Edit" ? "ویرایش" : "حذف"}</Button>
-                <Button onClick={this.handleReset}>پاکسازی فرم </Button>
-                <Button htmlType="button" onClick={this.handleCancelButtonClick}>بازگشت</Button>
-              </Col>
-            </Row>
+            <Col lg={8} md={12} xs={24} sm={12} xl={12}  >
+              { this.state.mode!="Detail" ?
+              <Button type={this.state.mode === "Delete" ? "danger" : "primary"} htmlType="submit"> {this.state.mode === "Add" ? "ایجاد" : this.state.mode === "Edit" ? "ویرایش" : "حذف"}</Button> : ""}
+              <Button onClick={this.handleReset}>پاکسازی فرم </Button>
+              <Button htmlType="button" onClick={this.handleCancelButtonClick}>بازگشت</Button>
+            </Col>
+          </Row>
         </Form>
-         </Card> 
-      // </Modal>
+
+        <Row>
+          {
+            this.state.subsets != undefined && this.state.subsets.length != 0
+            ?
+          this.state.subsets.map(item =>
+            <Col lg={12}>
+              <Card className="gx-card" title={item.title} style={{paddingRight:20 }}>
+                <AdminGrid
+                  isshowInLoad={true}
+                  columnDefs={item.columnDefs}
+                  filterExternal={item.filterExternal}
+                  height="35vh" title="لیست محصولات"
+                  isshowdetail={true}
+                  // refresh={this.state.refresh}
+                  apiname={item.apiname}
+                  showfloatingFilter={false} />
+              </Card>
+            </Col>
+          
+          )
+          : ""
+        }
+        </Row>
+
+
+      {/* </Card> */}
+      </Modal>
     )
   }
 }

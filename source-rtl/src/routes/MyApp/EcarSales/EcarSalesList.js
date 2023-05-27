@@ -14,10 +14,6 @@ class EcarSalesList extends Component {
     super(props)
     let sexarray = [{ key: 2, value: "زن " }, { key: 1, value: "مرد" }]
     this.state = {
-      visibledetail: false,
-      disable:false,
-      refresh: false,
-      rowselected: [],
       sex: sexarray,
       mellicode: '',
       ostan: [],
@@ -109,7 +105,8 @@ class EcarSalesList extends Component {
         { field: 'mantaghecode', sortable: true, headerName: " کد منطقه ", filter: 'agTextColumnFilter', width: 170 },
         { field: 'address', sortable: true, headerName: " ادرس ", filter: 'agTextColumnFilter', width: 170 },
 
-      ]
+      ],
+      subsets: []
     };
 
   }
@@ -256,32 +253,17 @@ class EcarSalesList extends Component {
 
   render() {
     return (
-      <div className="gx-main-content">
-        <AdminForm
-          ClickForm={this.ClickForm}
-          mode={this.state.mode}
-          disable={this.state.disable}
-          columnDefs={this.state.columnDefs}
-          title="کاربران"
-          listid={[{ id: this.state.rowselected.mellicode }]}
-          apiname="EcarSales"
-          visibledetail={this.state.visibledetail}
-          parentCallback={this.Refreshlist}
-        />
-
         <Card className="gx-card" title="لیست کاربران">
           <AdminGrid
-            ClickCrud={this.ClickCrud}
             isshowInLoad={true}
             columnDefs={this.state.columnDefs}
+            idname="mellicode"
             height="65vh"
             title="لیست کاربران"
-            isshowdetail={true}
+            isshowbutton={true}
             apiname="EcarSales"
-            pageDetail="index"
             refresh={this.state.refresh} />
         </Card>
-      </div>
     )
   }
 }
