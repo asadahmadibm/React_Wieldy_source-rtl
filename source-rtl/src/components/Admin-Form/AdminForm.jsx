@@ -33,31 +33,30 @@ class AdminForm extends Component {
     }
 
   }
-  componentWillReceiveProps = (nextProps) => {
-    console.log("nextProps.columnDefs", nextProps.columnDefs);
+  componentWillReceiveProps = async (nextProps) => {
+    console.log("nextProps.columnDefs", nextProps.subsets);
     if (nextProps.visibledetail != this.state.visibledetail || nextProps.listid != this.state.listid) {
 
-      this.setState({
+     await this.setState({
         visibledetail: nextProps.visibledetail,
         mode: nextProps.mode,
         disable: nextProps.disable,
         columnDefs: nextProps.columnDefs,
-        listid: nextProps.listid
+        listid: nextProps.listid,
+        subsets:nextProps.subsets
       })
-      console.log("this.state.disable", this.state.disable);
-      this.props.form.resetFields();
+      console.log("nextProps.listid", nextProps.listid);
       if (nextProps.mode != undefined && nextProps.mode != "Add") {
-        this.GetData(nextProps.listid, true);
+       await this.GetData(nextProps.listid, true);
       }
     }
   }
 
 
-  GetData = (listid, isSOCLog) => {
+  GetData = async (listid, isSOCLog) => {
 
     this.props.form.resetFields();
-
-    httpCaller.CRUDGrid.GetById(this.state.apiname, listid, (result) => {
+    await httpCaller.CRUDGrid.GetById(this.state.apiname, listid, (result) => {
       this.props.form.setFieldsValue(result.data);
     }, () => { }, isSOCLog)
 
@@ -240,7 +239,8 @@ class AdminForm extends Component {
                   columnDefs={item.columnDefs}
                   filterExternal={item.filterExternal}
                   height="35vh" title="لیست محصولات"
-                  isshowdetail={true}
+                  isshowbutton={true}
+                  idname={item.idname}
                   // refresh={this.state.refresh}
                   apiname={item.apiname}
                   showfloatingFilter={false} />

@@ -21,11 +21,11 @@ class AdminGrid extends Component {
         console.log(props);
         super(props)
         this.state = {
-            idname:props.idname,
+            idname: props.idname,
             visibledetail: false,
             disable: false,
             refresh: false,
-            listid:[],
+            listid: [],
             productList: [],
             rowselected: [],
             refresh: false,
@@ -38,7 +38,7 @@ class AdminGrid extends Component {
             apiname: props.apiname,
             title: props.title,
             columnDefs: props.columnDefs,
-            subsets:props.subsets,
+            subsets: props.subsets,
             filterExternal: props.filterExternal,
             params: props.params,
             serverRowsRequest: {
@@ -307,28 +307,15 @@ class AdminGrid extends Component {
 
     componentDidMount = () => {
 
+
+
     }
-    componentWillReceiveProps = (nextProps) => {
+    componentWillReceiveProps = async (nextProps) => {
 
-
-        // if (
-        //     nextProps.filterExternal != this.state.filterExternal) {
-        console.log("nextProps.filterExternal", nextProps.filterExternal);
-
-        const dataSource = this.getServerSideDatasource(nextProps.filterExternal);
-        console.log("this.params", this.params);
+        const dataSource = await this.getServerSideDatasource(this.state.filterExternal);
         if (this.params != undefined) {
             this.params.api.setDatasource(dataSource);
-            this.setState({ refresh: false, isshowInLoad: true, filterExternal: nextProps.filterExternal });
         }
-        // }
-
-        // if (this.params) {
-        //     this.setState({ serverRowsRequest: { ...this.state.serverRowsRequest, fromDate: nextProps.fromDate } });
-        //     // const dataSource = this.getServerSideDatasource();
-        //     // this.params.api.setDatasource(dataSource);
-        // }
-
 
     }
 
@@ -341,15 +328,13 @@ class AdminGrid extends Component {
             this.params.api.setDatasource(dataSource);
         }
     };
-    getServerSideDatasource = (filterExternal) => {
+    getServerSideDatasource = async (filterExternal) => {
 
 
         return {
 
             getRows: async (params) => {
                 this.state.serverRowsRequest.SortModels = params.sortModel;
-                console.log("filterExternal", filterExternal);
-
                 let filteredFields = params.filterModel;
                 let mappedFilters = [];
                 for (let filteredField in filteredFields) {
@@ -453,35 +438,56 @@ class AdminGrid extends Component {
         //this.props.history.push({ pathname: '/ExchangesDetail', state: { sarafiId: 12 }, })
     }
 
-    ClickCrud = (mode, rowselected) => {
+    ClickCrud = async (mode, rowselected) => {
         console.log("rowselected", rowselected);
         switch (mode) {
 
             case "Add":
                 // this.props.history.push({ pathname: '/myapp/crm/company/companydetail', state: { listid: null } })
-                this.setState({ 
-                    visibledetail: true, 
-                    mode: "Add", 
+                this.state.subsets.map(item => {
+                    item.filterExternal[0]["Condition1"]["filter"] = ""
+                })
+                this.setState({
+                    visibledetail: true,
+                    mode: "Add",
                     disable: false,
-                    refresh: false, 
-                    columnDefs: this.state.columnDefs ,
-                    listid:""})
+                    refresh: false,
+                    columnDefs: this.state.columnDefs,
+                    listid: ""
+                })
                 break;
             case "Edit":
             case "Delete":
             case "Detail":
-               
-                this.setState({
+                //let filterExternal0 = { ...filterExternal[0] };
+
+                if (this.state.subsets != undefined) {
+                    // console.log("this.state.subsets", this.state.subsets);
+                    this.state.subsets.map(item => {
+                        item.filterExternal[0]["Condition1"]["filter"] = rowselected[this.state.idname.split(',')[0]] == undefined ? "" : rowselected[this.state.idname.split(',')[0]].toString()
+                        // console.log("item..filterExternal[0]['Condition1']['filter']", item.filterExternal[0]["Condition1"]["filter"]);
+
+                        // this.setState({ subsets });
+                    })
+                }
+                let listid = []
+                this.state.idname.split(',').map(item => {
+                    let itemarray={id:rowselected[item].toString() }
+                    listid.push(itemarray);
+
+                });
+
+               await this.setState({
                     visibledetail: true,
                     mode: mode,
                     disable: mode == "Delete" || mode == "Detail" ? true : false,
                     rowselected: rowselected,
                     refresh: false,
                     columnDefs: this.state.columnDefs,
-                    listid: [{ id: rowselected[this.state.idname] == undefined ? "" : rowselected[this.state.idname].toString() }]
+                    listid: listid// [{ id: rowselected[this.state.idname.split(',')[0]] == undefined ? "" : rowselected[this.state.idname.split(',')[0]].toString() }]
 
                 })
-                console.log("this.state.listid",this.state.listid);
+                console.log("this.state.listid", this.state.listid);
             // this.props.history.push({ pathname: '/myapp/crm/company/companydetail', state: { listid: [{ id:rowselected.companyID.toString()}] } })
 
         }

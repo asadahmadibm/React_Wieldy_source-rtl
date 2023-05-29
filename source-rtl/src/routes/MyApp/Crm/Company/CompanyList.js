@@ -101,7 +101,7 @@ class CompanyList extends Component {
         {
           columnDefs: [
 
-            { field: 'companyID', hide: true, sortable: true, headerName: "شناسه  ", filter: 'agNumberColumnFilter', width: 50 },
+            { field: 'companyID', hide: false, sortable: true, headerName: "شناسه  ", filter: 'agNumberColumnFilter', width: 50 },
             { field: 'rowID', sortable: true, headerName: " ردیف ", filter: 'agNumberColumnFilter', width: 75 },
             {
               field: 'productID', sortable: true, headerName: "  کد محصول", filter: 'agSetColumnFilter', width: 130,
@@ -119,11 +119,12 @@ class CompanyList extends Component {
         } }],
           apiname: 'CrmCompanyProduct',
           title: 'لیست محصولات',
+          idname:"companyID,rowID"
         },
         {
           columnDefs: [
 
-            { field: 'companyID', hide: true, sortable: true, headerName: "شناسه  ", filter: 'agNumberColumnFilter', width: 120 },
+            { field: 'companyID', hide: false, sortable: true, headerName: "شناسه  ", filter: 'agNumberColumnFilter', width: 120 },
             { field: 'rowID', sortable: true, headerName: " ردیف ", filter: 'agNumberColumnFilter', width: 75 },
             { field: 'data', sortable: true, headerName: "  تلفن", filter: 'agTextColumnFilter', width: 200 },
             { field: 'dataType', sortable: true, headerName: "نوع  ", filter: 'agTextColumnFilter', width: 250 },
@@ -133,9 +134,9 @@ class CompanyList extends Component {
           filterExternal: [{ Field: 'companyID', Condition1: { filterType: 'number', type: 'equals', 
           filter: "2"
          } }],
-         idname:"companyID",
           apiname: 'CrmCompanyTelephone',
           title: 'لیست تلفن ها',
+          idname:"companyID,rowID"
         }
 
 
@@ -154,7 +155,7 @@ class CompanyList extends Component {
     this.GetDataBase(false);
   }
 
-  GetDataBase = (isSOCLog) => {
+  GetDataBase =(isSOCLog) => {
 
     var data = { id: null };
 
@@ -167,7 +168,7 @@ class CompanyList extends Component {
       columnDefostansokoonat.options = this.state.ostan;
       columnDefs[indexostansokoonat] = columnDefostansokoonat
 
-      this.setState({ columnDefs });
+     this.setState({ columnDefs });
 
     }, () => { }, isSOCLog)
 
@@ -184,7 +185,7 @@ class CompanyList extends Component {
     }, () => { }, isSOCLog)
 
 
-    httpCaller.Industry.GetDropDown((result) => {
+    httpCaller.Industry.GetDropDown  ((result) => {
 
       this.setState({ industry: result.data });
       let columnDefs = [...this.state.columnDefs];

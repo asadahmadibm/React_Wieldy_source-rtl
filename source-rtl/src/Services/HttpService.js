@@ -745,26 +745,12 @@ const CRUDGrid = {
 
   },
   GetById: async (apiname, data, onFulfilled, onRejected) => {
-    switch (apiname) {
-      case "EcarSales":
-        httpCall.Post(`/EcarSales/GetById`, data, onFulfilled, onRejected);
-        break;
-      case "CrmCompany":
-        httpCall.Post(`/CrmCompany/GetById`, data, onFulfilled, onRejected);
-        break;
-    }
-
+    httpCall.Post("/"+apiname+"/GetById", data, onFulfilled, onRejected);
   },
   Upsert: async (apiname, data, onFulfilled, onRejected) => {
-    switch (apiname) {
-      case "EcarSales":
-        httpCall.Post(`/EcarSales/Upsert`, data, onFulfilled, onRejected);
-        break;
-      case "CrmCompany":
-        httpCall.Post(`/CrmCompany/Upsert`, data, onFulfilled, onRejected);
-        break;
-    }
-  },
+    console.log("data",data);
+      httpCall.Post("/"+apiname+"/Upsert", data, onFulfilled, onRejected);
+   },
   Delete: async (apiname, data, onFulfilled, onRejected) => {
     switch (apiname) {
       case "EcarSales":
