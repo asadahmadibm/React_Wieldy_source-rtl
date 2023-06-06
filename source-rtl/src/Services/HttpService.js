@@ -700,8 +700,8 @@ const newsinformation = {
 }
 
 const EcarSales = {
-  GetDropDown: async (data, onFulfilled, onRejected) => httpCall.Post(`/CRM_Region/GetDropDown`, data, onFulfilled, onRejected),
-  GetCRM_Region: async (data, onFulfilled, onRejected) => httpCall.Post(`/CRM_Region/GetCRM_Region`, data, onFulfilled, onRejected),
+  GetDropDown:  (data, onFulfilled, onRejected) => httpCall.Post(`/CRM_Region/GetDropDown`, data, onFulfilled, onRejected),
+  GetCRM_Region:  (data, onFulfilled, onRejected) => httpCall.Post(`/CRM_Region/GetCRM_Region`, data, onFulfilled, onRejected),
   // GetById: async (data, onFulfilled, onRejected) => httpCall.Post(`/EcarSales/GetById`, data, onFulfilled, onRejected),
 }
 // const CrmCompany = {

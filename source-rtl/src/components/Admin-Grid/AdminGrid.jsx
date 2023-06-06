@@ -312,9 +312,18 @@ class AdminGrid extends Component {
     }
     componentWillReceiveProps = async (nextProps) => {
 
-        const dataSource = await this.getServerSideDatasource(this.state.filterExternal);
-        if (this.params != undefined) {
-            this.params.api.setDatasource(dataSource);
+       
+        if (nextProps.columnDefs != this.state.columnDefs) {
+            this.setState({ columnDefs: nextProps.columnDefs })
+        }
+        
+        if (nextProps.filterExternal != this.state.filterExternal && nextProps.apiname!=this.state.apiname) {
+            
+            await this.setState({ filterExternal: nextProps.filterExternal })
+            const dataSource = this.getServerSideDatasource(nextProps.filterExternal);
+            if (this.params != undefined) {
+                this.params.api.setDatasource(dataSource);
+            }
         }
 
     }
@@ -328,7 +337,7 @@ class AdminGrid extends Component {
             this.params.api.setDatasource(dataSource);
         }
     };
-    getServerSideDatasource = async (filterExternal) => {
+    getServerSideDatasource = (filterExternal) => {
 
 
         return {
@@ -444,9 +453,11 @@ class AdminGrid extends Component {
 
             case "Add":
                 // this.props.history.push({ pathname: '/myapp/crm/company/companydetail', state: { listid: null } })
+                if (this.state.subsets != undefined) {
                 this.state.subsets.map(item => {
                     item.filterExternal[0]["Condition1"]["filter"] = ""
                 })
+            }
                 this.setState({
                     visibledetail: true,
                     mode: "Add",
@@ -472,12 +483,12 @@ class AdminGrid extends Component {
                 }
                 let listid = []
                 this.state.idname.split(',').map(item => {
-                    let itemarray={id:rowselected[item].toString() }
+                    let itemarray = { id: rowselected[item].toString() }
                     listid.push(itemarray);
 
                 });
 
-               await this.setState({
+                await this.setState({
                     visibledetail: true,
                     mode: mode,
                     disable: mode == "Delete" || mode == "Detail" ? true : false,

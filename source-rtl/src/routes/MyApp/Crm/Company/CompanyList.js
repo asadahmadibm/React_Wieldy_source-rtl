@@ -151,41 +151,43 @@ class CompanyList extends Component {
     return foundItem.value;
   }
 
-  componentDidMount = () => {
-    this.GetDataBase(false);
+  componentDidMount =async () => {
+   await this.GetDataBase(false);
+    
   }
 
-  GetDataBase =(isSOCLog) => {
+  GetDataBase =async (isSOCLog) => {
 
     var data = { id: null };
+    httpCaller.EcarSales.GetDropDown(data, async (result) => {
 
-    httpCaller.EcarSales.GetDropDown(data, (result) => {
-
-      this.setState({ ostan: result.data.list });
       let columnDefs = [...this.state.columnDefs];
       const indexostansokoonat = this.state.columnDefs.findIndex(emp => emp.field === "regionID");
       let columnDefostansokoonat = { ...columnDefs[indexostansokoonat] };
       columnDefostansokoonat.options = this.state.ostan;
       columnDefs[indexostansokoonat] = columnDefostansokoonat
 
-     this.setState({ columnDefs });
+      await this.setState({ columnDefs });
 
     }, () => { }, isSOCLog)
 
-    httpCaller.Group.GetDropDown((result) => {
+    httpCaller.Group.GetDropDown(async (result) => {
+      console.log("result.data.group",result.data);
 
-      this.setState({ group: result.data });
+      await this.setState({ group: result.data });
+      console.log("this.state.group",this.state.group);
       let columnDefs = [...this.state.columnDefs];
       const indexgroupID = this.state.columnDefs.findIndex(emp => emp.field === "groupID");
       let columnDefgroupID = { ...columnDefs[indexgroupID] };
       columnDefgroupID.options = this.state.group;
       columnDefs[indexgroupID] = columnDefgroupID
-      this.setState({ columnDefs });
+      await this.setState({ columnDefs });
+      console.log("this.state.columnDefs",this.state.columnDefs)
 
     }, () => { }, isSOCLog)
 
 
-    httpCaller.Industry.GetDropDown  ((result) => {
+    httpCaller.Industry.GetDropDown  (async (result) => {
 
       this.setState({ industry: result.data });
       let columnDefs = [...this.state.columnDefs];
@@ -194,13 +196,13 @@ class CompanyList extends Component {
       columnDefindustryID.options = this.state.industry;
       columnDefs[indexindustryID] = columnDefindustryID
 
-      this.setState({ columnDefs });
+      await this.setState({ columnDefs });
 
     }, () => { }, isSOCLog)
 
-    httpCaller.Industry.GetDropDown((result) => {
+    httpCaller.Industry.GetDropDown(async(result) => {
 
-      this.setState({ productList: result.data });
+      await this.setState({ productList: result.data });
 
 
     }, () => { }, isSOCLog)

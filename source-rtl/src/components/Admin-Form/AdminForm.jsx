@@ -33,11 +33,13 @@ class AdminForm extends Component {
     }
 
   }
-  componentWillReceiveProps = async (nextProps) => {
+  componentWillReceiveProps = (nextProps) => {
     console.log("nextProps.columnDefs", nextProps.subsets);
-    if (nextProps.visibledetail != this.state.visibledetail || nextProps.listid != this.state.listid) {
+    if (nextProps.visibledetail != this.state.visibledetail || 
+        nextProps.listid != this.state.listid || 
+        nextProps.columnDefs!=this.state.columnDefs) {
 
-     await this.setState({
+     this.setState({
         visibledetail: nextProps.visibledetail,
         mode: nextProps.mode,
         disable: nextProps.disable,
@@ -47,7 +49,7 @@ class AdminForm extends Component {
       })
       console.log("nextProps.listid", nextProps.listid);
       if (nextProps.mode != undefined && nextProps.mode != "Add") {
-       await this.GetData(nextProps.listid, true);
+       this.GetData(nextProps.listid, true);
       }
     }
   }

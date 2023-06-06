@@ -112,28 +112,13 @@ class EcarSalesList extends Component {
   }
 
   getEnumValue = (code, formattingInfo) => {
-    // console.log("formattingInfo",formattingInfo);
     let foundItem = formattingInfo.find(({ key }) => key === code);
     if (!foundItem) return;
     return foundItem.value;
   }
 
-  componentDidMount = async () => {
-
-    // (async () => {
-    // })();
-
-    await this.GetDataBase(false);
-
-    // this.setState({columnDefs});
-    // const indexindustryID = this.state.columnDefs.findIndex(emp => emp.field === "industryID");
-    // let columnDefindustryID = {...columnDefs[indexindustryID]};
-    // columnDefindustryID.options=this.state.industry;
-    // columnDefs[indexindustryID]=columnDefindustryID
-    console.log("this.state.ostan", this.state.columnDefs);
-    // console.log("this.state.columnDefs",this.state.columnDefs);
-    console.log("this.state.columnDefs1", this.state.columnDefs);
-
+  componentDidMount = () => {
+    this.GetDataBase(false);
   }
 
   prepareData = (pageIdx) => {
@@ -148,17 +133,14 @@ class EcarSalesList extends Component {
       id: 1,
     }
   }
-  GetDataBase = async (isSOCLog) => {
+  GetDataBase = (isSOCLog) => {
 
     var data = {id: 1};
     httpCaller.EcarSales.GetDropDown(data,(result) => {
-      console.log("result.data.list.ostan", result.data.list);
       this.setState({ ostan: result.data.list });
-      console.log("this.state.ostan1",this.state.ostan);
       let columnDefs = [...this.state.columnDefs];
       const indexostansodoor = this.state.columnDefs.findIndex(emp => emp.field === "ostansodoor");
       let columnDefostansodoor = { ...columnDefs[indexostansodoor] };
-      console.log("this.state.ostanafter getdatabase",this.state.ostan);
       columnDefostansodoor.options = this.state.ostan;
       columnDefs[indexostansodoor] = columnDefostansodoor
       
@@ -183,7 +165,7 @@ class EcarSalesList extends Component {
     var data = { id: null };
 
     httpCaller.EcarSales.GetDropDown(data,(result) => {
-      console.log("result.data.list", result.data.list);
+
       this.setState({ city: result.data.list });
 
       let columnDefs = [...this.state.columnDefs];
@@ -206,48 +188,6 @@ class EcarSalesList extends Component {
       this.setState({columnDefs})
 
     }, () => { }, isSOCLog)
-
-  }
-
-
-  getEnumValue = (code, formattingInfo) => {
-    let foundItem = formattingInfo.find(({ key }) => key === code);
-    if (!foundItem) return;
-    return foundItem.value;
-  }
-
-
-  ClickCrud = (mode, rowselected) => {
-    console.log("rowselected", rowselected);
-    switch (mode) {
-
-      case "Add":
-        this.setState({ visibledetail: true, mode: "Add", refresh: false, columnDefs: this.state.columnDefs })
-        // this.props.history.push({ pathname: '/myapp/EcarSales', state: { mellicode: null } })
-        break;
-      case "Edit":
-      case "Delete":
-      case "Detail":
-        this.setState({ 
-          visibledetail: true, 
-          disable:mode=="Delete" || mode=="Detail" ? true : false ,
-          mode: mode, 
-          rowselected: rowselected, 
-          refresh: false, 
-          columnDefs: this.state.columnDefs })
-        // this.props.history.push({ pathname: '/myapp/EcarSales', state: { mellicode: rowselected.mellicode } })
-        break;
-    }
-  }
-
-  ClickForm = () => {
-    this.setState({ visibledetail: false, refresh: true })
-  }
-  Refreshlist = () => {
-    this.setState({
-      refresh: true,
-      visible: false,
-    });
 
   }
 
