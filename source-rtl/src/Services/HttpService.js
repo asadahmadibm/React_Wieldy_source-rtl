@@ -702,7 +702,7 @@ const newsinformation = {
 const EcarSales = {
   GetDropDown:  (data, onFulfilled, onRejected) => httpCall.Post(`/CRM_Region/GetDropDown`, data, onFulfilled, onRejected),
   GetCRM_Region:  (data, onFulfilled, onRejected) => httpCall.Post(`/CRM_Region/GetCRM_Region`, data, onFulfilled, onRejected),
-  // GetById: async (data, onFulfilled, onRejected) => httpCall.Post(`/EcarSales/GetById`, data, onFulfilled, onRejected),
+  // GetByNationalId: async (data, onFulfilled, onRejected) => httpCall.Post(`/EcarSales/GetByNationalId`, data, onFulfilled, onRejected),
 }
 // const CrmCompany = {
 //   GetById: async (data, onFulfilled, onRejected) => httpCall.Post(`/CrmCompany/GetById`, data, onFulfilled, onRejected),

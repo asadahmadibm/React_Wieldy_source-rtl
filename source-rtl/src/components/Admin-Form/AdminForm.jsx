@@ -35,21 +35,22 @@ class AdminForm extends Component {
   }
   componentWillReceiveProps = (nextProps) => {
     console.log("nextProps.columnDefs", nextProps.subsets);
-    if (nextProps.visibledetail != this.state.visibledetail || 
-        nextProps.listid != this.state.listid || 
-        nextProps.columnDefs!=this.state.columnDefs) {
+    if (nextProps.visibledetail != this.state.visibledetail ||
+      nextProps.listid != this.state.listid ||
+      nextProps.columnDefs != this.state.columnDefs) {
 
-     this.setState({
+      this.setState({
         visibledetail: nextProps.visibledetail,
         mode: nextProps.mode,
         disable: nextProps.disable,
         columnDefs: nextProps.columnDefs,
         listid: nextProps.listid,
-        subsets:nextProps.subsets
+        subsets: nextProps.subsets
       })
       console.log("nextProps.listid", nextProps.listid);
+      this.props.form.resetFields();
       if (nextProps.mode != undefined && nextProps.mode != "Add") {
-       this.GetData(nextProps.listid, true);
+        this.GetData(nextProps.listid, true);
       }
     }
   }
@@ -57,7 +58,6 @@ class AdminForm extends Component {
 
   GetData = async (listid, isSOCLog) => {
 
-    this.props.form.resetFields();
     await httpCaller.CRUDGrid.GetById(this.state.apiname, listid, (result) => {
       this.props.form.setFieldsValue(result.data);
     }, () => { }, isSOCLog)
@@ -65,9 +65,31 @@ class AdminForm extends Component {
   }
 
   prepareData = (data) => {
+    console.log("data", data);
     // data.mellicode = this.state.mellicode.mellicode;
     // data.birthdate = data.birthdate.format().replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
     // data.sodoordate = data.sodoordate.format().replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
+    console.log("columnDefs", this.state.columnDefs);
+    for (var key in data) {
+      console.log("key", key);
+      var result = this.state.columnDefs.filter(it => { return it.field == key })
+      console.log("result", result);
+      var value = data[key];
+      if (value == undefined) {
+        console.log("result[0]['filter']",result[0]["filter"]);
+        if (result[0]["filter"] == "agNumberColumnFilter") {
+          data[key] = 0
+        }
+        if (result[0]["filter"]== "agTextColumnFilter") {
+          data[key] = ""
+        }
+        if (result[0]["filter"]== "agSetColumnFilter") {
+          data[key] = 0
+        }
+        
+      }
+    }
+    console.log("data", data);
     return data;
   }
 
@@ -154,7 +176,7 @@ class AdminForm extends Component {
         onCancel={this.handleCancelButtonClick}
         okType={this.state.mode === "Delete" ? "danger" : "primary"}
         okText={this.state.mode === "Add" ? "ایجاد" : this.state.mode === "Edit" ? "ویرایش" : "حذف"}>
-      {/* <Card className="gx-card" style={{paddingRight:30}} title={(this.state.mode === "Add" ? "ایجاد" : this.state.mode === "Edit" ? "ویرایش" : this.state.mode === "Delete" ? "حذف" : "" ) + " " + this.state.title}> */}
+        {/* <Card className="gx-card" style={{paddingRight:30}} title={(this.state.mode === "Add" ? "ایجاد" : this.state.mode === "Edit" ? "ویرایش" : this.state.mode === "Delete" ? "حذف" : "" ) + " " + this.state.title}> */}
         <Form
 
           onSubmit={this.handleSubmit}
@@ -221,8 +243,8 @@ class AdminForm extends Component {
           </Row>
           <Row>
             <Col lg={8} md={12} xs={24} sm={12} xl={12}  >
-              { this.state.mode!="Detail" ?
-              <Button type={this.state.mode === "Delete" ? "danger" : "primary"} htmlType="submit"> {this.state.mode === "Add" ? "ایجاد" : this.state.mode === "Edit" ? "ویرایش" : "حذف"}</Button> : ""}
+              {this.state.mode != "Detail" ?
+                <Button type={this.state.mode === "Delete" ? "danger" : "primary"} htmlType="submit"> {this.state.mode === "Add" ? "ایجاد" : this.state.mode === "Edit" ? "ویرایش" : "حذف"}</Button> : ""}
               <Button onClick={this.handleReset}>پاکسازی فرم </Button>
               <Button htmlType="button" onClick={this.handleCancelButtonClick}>بازگشت</Button>
             </Col>
@@ -232,30 +254,30 @@ class AdminForm extends Component {
         <Row>
           {
             this.state.subsets != undefined && this.state.subsets.length != 0
-            ?
-          this.state.subsets.map(item =>
-            <Col lg={12}>
-              <Card className="gx-card" title={item.title} style={{paddingRight:20 }}>
-                <AdminGrid
-                  isshowInLoad={true}
-                  columnDefs={item.columnDefs}
-                  filterExternal={item.filterExternal}
-                  height="35vh" title="لیست محصولات"
-                  isshowbutton={true}
-                  idname={item.idname}
-                  // refresh={this.state.refresh}
-                  apiname={item.apiname}
-                  showfloatingFilter={false} />
-              </Card>
-            </Col>
-          
-          )
-          : ""
-        }
+              ?
+              this.state.subsets.map(item =>
+                <Col lg={12}>
+                  <Card className="gx-card" title={item.title} style={{ paddingRight: 20 }}>
+                    <AdminGrid
+                      isshowInLoad={true}
+                      columnDefs={item.columnDefs}
+                      filterExternal={item.filterExternal}
+                      height="35vh" title="لیست محصولات"
+                      isshowbutton={true}
+                      idname={item.idname}
+                      // refresh={this.state.refresh}
+                      apiname={item.apiname}
+                      showfloatingFilter={false} />
+                  </Card>
+                </Col>
+
+              )
+              : ""
+          }
         </Row>
 
 
-      {/* </Card> */}
+        {/* </Card> */}
       </Modal>
     )
   }

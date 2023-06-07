@@ -66,7 +66,8 @@ class EcarSalesDetail extends Component {
     this.props.form.setFieldsValue([]);
 
     var data =  [{ id: mellicode }];
-    httpCaller.EcarSales.GetById(data, (result) => {
+
+    httpCaller.CRUDGrid.GetById("EcarSales",data, (result) => {
       console.log("result.data", result.data);
       let res = result.data;
       if (res != null) {

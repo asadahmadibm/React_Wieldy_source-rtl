@@ -20,7 +20,7 @@ class EcarSalesList extends Component {
       city: [],
 
       columnDefs: [
-        { field: 'id', sortable: true, headerName: "شناسه  ", filter: 'agNumberColumnFilter', width: 120, required: true },
+        { field: 'id', sortable: true, headerName: "شناسه  ", filter: 'agNumberColumnFilter', width: 120,  },
         { field: 'name', sortable: true, headerName: " نام", filter: 'agTextColumnFilter', width: 138 },
         // {
         //     field: 'date', sortable: true, headerName: "تاریخ معامله ", filter: 'agNumberColumnFilter', width: 130,
