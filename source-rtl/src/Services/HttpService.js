@@ -5,7 +5,7 @@ import { NotificationManager } from 'react-notifications'
 import { object } from 'prop-types';
 
 
-const BASE_ADDRESS = process.env.NODE_ENV == 'development' ? "https://localhost:7012" : ""; //'https://swagger.tnlink.ir'//
+const BASE_ADDRESS = 'https://swagger.tnlink.ir'//
 
 const GetBaseAddress = () => { return BASE_ADDRESS; }
 

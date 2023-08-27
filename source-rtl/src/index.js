@@ -7,18 +7,18 @@ import registerServiceWorker from './registerServiceWorker';
 import {AppContainer} from 'react-hot-loader';
 import axios from 'axios';
 
-// axios.defaults.baseURL ='https://localhost:7012' //'https://swagger.tnlink.ir'//
-// axios.defaults.headers.post['Contetnt-Type'] = 'application/json';
-// axios.interceptors.request.use(function (config) {
-//   var token = localStorage.getItem('authUser');
-//   if (token == null) {
-//     console.log("NotLogin");
-//     // this.props.history.push('/signin');
+axios.defaults.baseURL ='https://localhost:7012' //'https://swagger.tnlink.ir'//
+axios.defaults.headers.post['Contetnt-Type'] = 'application/json';
+axios.interceptors.request.use(function (config) {
+  var token = localStorage.getItem('authUser');
+  if (token == null) {
+    console.log("NotLogin");
+    // this.props.history.push('/signin');
    
-//   }
-//   config.headers.Authorization = "Bearer " + token;
-//   return config;
-// });
+  }
+  config.headers.Authorization = "Bearer " + token;
+  return config;
+});
 
 
 // Wrap the rendering in a function:

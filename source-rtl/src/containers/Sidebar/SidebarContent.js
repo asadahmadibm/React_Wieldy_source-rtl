@@ -71,6 +71,7 @@ class SidebarContent extends Component {
                       <IntlMessages id="sidebar.myapp.ecarsales.ecarsalesList" />
                     </Link>
                   </Menu.Item>
+                
                 </SubMenu>
 
                 <SubMenu key="company" className={this.getNavStyleSubMenuClass(navStyle)}
@@ -90,8 +91,23 @@ class SidebarContent extends Component {
                   </Menu.Item>
                 </SubMenu>
 
+                <SubMenu key="ifb" className={this.getNavStyleSubMenuClass(navStyle)}
+                  title={<span> <i className="icon icon-dasbhoard" />
+                    <IntlMessages id="sidebar.myapp.ifb" /></span>}>
+                 <Menu.Item key="myapp/ifb/index">
+                    <Link to="/myapp/ifb/index">
+                      <i className="icon icon-profile2" />
+                      <IntlMessages id="sidebar.myapp.ifb.index" />
+                    </Link>
+                  </Menu.Item>
+
+                </SubMenu>
+
               </MenuItemGroup>
 
+
+
+            
               <MenuItemGroup key="main" className="gx-menu-group" title={<IntlMessages id="sidebar.main" />}>
                 <SubMenu key="dashboard" className={this.getNavStyleSubMenuClass(navStyle)}
                   title={<span> <i className="icon icon-dasbhoard" />
