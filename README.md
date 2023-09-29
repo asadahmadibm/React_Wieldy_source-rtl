@@ -2,15 +2,6 @@
  
 # Custumization
 
-## for route
-
-##### D:\Git\MyAntWiedlyTheme\src\routes  index.js         
-
-##### or in D:\Git\MyAntWiedlyTheme\src\routes/myapp  index.js        
-
-<Route exact path={`${match.url}/EcarSales/EcarSalesList`} component={EcarSalesList} />
-
-
 ## for menu
 
 D:\Git\MyAntWiedlyTheme\src\containers      navLinks.js    
@@ -24,6 +15,14 @@ D:\Git\MyAntWiedlyTheme\src\lngProvider\locales   fa_IR.json
 ## Change In css
 
 D:\Git\React_Wieldy_source-rtl\source-rtl\src\assets\vendors\RTL.css
+
+## for route
+
+##### D:\Git\MyAntWiedlyTheme\src\routes  index.js         
+
+##### or in D:\Git\MyAntWiedlyTheme\src\routes/myapp  index.js        
+
+<Route exact path={`${match.url}/EcarSales/EcarSalesList`} component={EcarSalesList} />
 
 
 ## Branches
