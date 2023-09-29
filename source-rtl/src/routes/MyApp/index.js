@@ -5,6 +5,7 @@ import asyncComponent from "util/asyncComponent";
 import EcarSalesList from "./EcarSales/EcarSalesList";
 import CompanyList from "./Crm/Company/CompanyList";
 import Ifb from "./Ifb";
+import brand from "./glasses/brand"
 
 const MyApp = ({match}) => (
   <Switch>
@@ -12,6 +13,7 @@ const MyApp = ({match}) => (
     <Route exact path={`${match.url}/EcarSales`} component={asyncComponent(() => import('./EcarSales/index'))}/>
     <Route exact path={`${match.url}/EcarSales/EcarSalesList`} component={EcarSalesList} />
     <Route exact path={`${match.url}/Ifb/index`} component={Ifb} />
+    <Route exact path={`${match.url}/glasses/brand`} component={brand} />
     <Route exact path={`${match.url}/crm/company/CompanyList`} component={CompanyList} />
     <Route exact path={`${match.url}/crm/company/CompanyDetail`} component={asyncComponent(() => import('./Crm/Company/CompanyDetail'))}/>
   </Switch>

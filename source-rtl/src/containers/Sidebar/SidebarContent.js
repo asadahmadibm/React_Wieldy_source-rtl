@@ -103,6 +103,18 @@ class SidebarContent extends Component {
 
                 </SubMenu>
 
+                <SubMenu key="glasses" className={this.getNavStyleSubMenuClass(navStyle)}
+                  title={<span> <i className="icon icon-dasbhoard" />
+                    <IntlMessages id="sidebar.myapp.glasses" /></span>}>
+                 <Menu.Item key="myapp/glasses/Brand">
+                    <Link to="/myapp/glasses/Brand">
+                      <i className="icon icon-profile2" />
+                      <IntlMessages id="sidebar.myapp.glasses.brand" />
+                    </Link>
+                  </Menu.Item>
+
+                </SubMenu>
+
               </MenuItemGroup>
 
 
