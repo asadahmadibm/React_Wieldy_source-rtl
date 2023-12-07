@@ -1,7 +1,22 @@
 # React_Wieldy_source-rtl
  
 # Custumization
+## install package
+npm install  --legacy-peer-deps
 
+npx update-browserslist-db@latest --force
+
+npm install caniuse-lite --force
+
+npx update-browserslist-db@latest --legacy-peer-deps
+
+npm install --save-dev html-webpack-plugin@3 --legacy-peer-deps
+
+npm install -g @aws-amplify/cli@latest
+
+npm run start
+
+npm run build
 ## for menu
 
 D:\Git\MyAntWiedlyTheme\src\containers      navLinks.js    
