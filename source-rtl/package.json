@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@amcharts/amcharts3-react": "^3.1.0",
+    "@ant-design/icons": "^5.2.6",
     "ag-grid-community": "^29.2.0",
     "ag-grid-enterprise": "^29.2.0",
     "ag-grid-react": "^29.2.0",
